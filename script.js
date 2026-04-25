@@ -14,6 +14,73 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+function abrirMenuMovil() {
+  const menu = document.getElementById("menuLateral");
+  const overlay = document.getElementById("menuOverlay");
+  const toggle = document.getElementById("menuToggle");
+  if (!menu || !overlay || !toggle) return;
+
+  menu.classList.remove("-translate-x-full");
+  menu.classList.add("translate-x-0");
+  menu.setAttribute("aria-hidden", "false");
+  overlay.classList.remove("hidden");
+  toggle.setAttribute("aria-expanded", "true");
+  document.body.classList.add("overflow-hidden");
+}
+
+function cerrarMenuMovil() {
+  const menu = document.getElementById("menuLateral");
+  const overlay = document.getElementById("menuOverlay");
+  const toggle = document.getElementById("menuToggle");
+  if (!menu || !overlay || !toggle) return;
+
+  menu.classList.remove("translate-x-0");
+  menu.classList.add("-translate-x-full");
+  menu.setAttribute("aria-hidden", "true");
+  overlay.classList.add("hidden");
+  toggle.setAttribute("aria-expanded", "false");
+  document.body.classList.remove("overflow-hidden");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const menuToggle = document.getElementById("menuToggle");
+  const menuClose = document.getElementById("menuClose");
+  const menuOverlay = document.getElementById("menuOverlay");
+  const menuLateral = document.getElementById("menuLateral");
+
+  if (menuToggle && menuClose && menuOverlay && menuLateral) {
+    menuToggle.addEventListener("click", () => {
+      const expanded = menuToggle.getAttribute("aria-expanded") === "true";
+      if (expanded) {
+        cerrarMenuMovil();
+      } else {
+        abrirMenuMovil();
+      }
+    });
+
+    menuClose.addEventListener("click", cerrarMenuMovil);
+    menuOverlay.addEventListener("click", cerrarMenuMovil);
+
+    document.querySelectorAll(".nav-link-mobile").forEach(link => {
+      link.addEventListener("click", () => {
+        cerrarMenuMovil();
+      });
+    });
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") {
+        cerrarMenuMovil();
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth >= 768) {
+        cerrarMenuMovil();
+      }
+    });
+  }
+});
+
 // Control de sesión
 auth.onAuthStateChanged(user => {
   if (user) {

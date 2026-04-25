@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,93 +24,123 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="images/Logo.png">
   <link rel="stylesheet" href="style.css">
 
 </head>
 
-<body class="min-h-screen bg-alborada-cream text-alborada-dark antialiased">
+<body class="min-h-screen overflow-x-hidden bg-alborada-cream text-alborada-dark antialiased">
   <div class="aurora fixed inset-0 -z-10"></div>
 
   <header class="border-b border-alborada-green/20 bg-white/80 backdrop-blur-sm">
-    <div class="mx-auto max-w-6xl px-5 py-8">
-      <h1 class="font-display text-4xl font-bold tracking-wide text-alborada-green md:text-5xl">Salones Terraza Alborada</h1>
-      <p class="mt-2 max-w-2xl text-lg text-alborada-dark/80">Sistema de Reservaciones para eventos sociales y corporativos.</p>
+    <div class="mx-auto max-w-6xl px-4 py-6 md:px-5 md:py-8">
+      <h1 class="font-display text-3xl font-bold tracking-wide text-alborada-green sm:text-4xl md:text-5xl">Salones Terraza Alborada</h1>
+      <p class="mt-2 max-w-2xl text-base text-alborada-dark/80 sm:text-lg">Sistema de Reservaciones para eventos sociales y corporativos.</p>
     </div>
   </header>
 
   <nav class="sticky top-0 z-20 border-b border-alborada-green/15 bg-alborada-dark text-white shadow-sm">
-    <div class="mx-auto flex max-w-6xl flex-wrap gap-3 px-5 py-3 text-sm font-semibold uppercase tracking-wide md:text-base">
-      <a href="#inicio" class="rounded-md px-3 py-1 transition hover:bg-alborada-gold hover:text-alborada-dark">Inicio</a>
-      <a href="#salones" class="rounded-md px-3 py-1 transition hover:bg-alborada-gold hover:text-alborada-dark">Salones</a>
-      <a href="#contacto" class="rounded-md px-3 py-1 transition hover:bg-alborada-gold hover:text-alborada-dark">Contacto</a>
-      <a href="#login" class="rounded-md px-3 py-1 transition hover:bg-alborada-gold hover:text-alborada-dark">Acceso</a>
-      <a href="#clientes" class="rounded-md px-3 py-1 transition hover:bg-alborada-gold hover:text-alborada-dark">Clientes</a>
+    <div class="mx-auto max-w-6xl px-4 py-3 text-sm font-semibold uppercase tracking-wide md:px-5 md:text-base">
+      <div class="flex items-center justify-between md:hidden">
+        <p class="font-display text-lg normal-case tracking-normal text-white">Catálogo General</p>
+        <button id="menuToggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="menuLateral" class="inline-flex items-center rounded-md border border-white/30 px-3 py-2 text-white transition hover:bg-white/10">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="hidden md:flex md:flex-row md:flex-wrap md:items-center md:justify-center md:gap-3">
+        <a href="#inicio" class="rounded-md px-3 py-2 transition hover:bg-alborada-gold hover:text-alborada-dark">Inicio</a>
+        <a href="#salones" class="rounded-md px-3 py-2 transition hover:bg-alborada-gold hover:text-alborada-dark">Salones</a>
+        <a href="#contacto" class="rounded-md px-3 py-2 transition hover:bg-alborada-gold hover:text-alborada-dark">Contacto</a>
+        <a href="#login" class="rounded-md px-3 py-2 transition hover:bg-alborada-gold hover:text-alborada-dark">Acceso</a>
+        <a href="#clientes" class="rounded-md px-3 py-2 transition hover:bg-alborada-gold hover:text-alborada-dark">Clientes</a>
+      </div>
     </div>
+
+    <div id="menuOverlay" class="fixed inset-0 z-30 hidden bg-black/45 md:hidden"></div>
+    <aside id="menuLateral" class="fixed inset-y-0 left-0 z-40 flex w-72 max-w-[85vw] -translate-x-full flex-col border-r border-alborada-gold/30 bg-alborada-dark px-5 py-6 text-white shadow-xl transition-transform duration-300 md:hidden" aria-hidden="true">
+      <div class="mb-6 flex items-center justify-between">
+        <p class="font-display text-xl normal-case text-white">Menú</p>
+        <button id="menuClose" type="button" aria-label="Cerrar menú" class="rounded-md border border-white/30 px-3 py-1.5 text-sm font-bold transition hover:bg-white/10">X</button>
+      </div>
+      <div class="flex flex-col gap-2 text-sm font-semibold uppercase tracking-wide">
+        <a href="#inicio" class="nav-link-mobile rounded-md px-3 py-2 transition hover:bg-alborada-gold hover:text-alborada-dark">Inicio</a>
+        <a href="#salones" class="nav-link-mobile rounded-md px-3 py-2 transition hover:bg-alborada-gold hover:text-alborada-dark">Salones</a>
+        <a href="#contacto" class="nav-link-mobile rounded-md px-3 py-2 transition hover:bg-alborada-gold hover:text-alborada-dark">Contacto</a>
+        <a href="#login" class="nav-link-mobile rounded-md px-3 py-2 transition hover:bg-alborada-gold hover:text-alborada-dark">Acceso</a>
+        <a href="#clientes" class="nav-link-mobile rounded-md px-3 py-2 transition hover:bg-alborada-gold hover:text-alborada-dark">Clientes</a>
+        <a href="#login" class="nav-link-mobile mt-2 rounded-md bg-alborada-gold px-3 py-2 text-center text-alborada-dark transition hover:brightness-95">Reservar Salón</a>
+      </div>
+    </aside>
   </nav>
 
-  <main class="mx-auto grid max-w-6xl gap-6 px-5 py-8">
-<section id="inicio" class="glass-card fade-up p-6 md:p-8">
-  <h2 class="font-display text-3xl text-alborada-green">Quiénes somos</h2>
-  <p class="mt-3 max-w-3xl text-lg leading-relaxed text-alborada-dark/85">
+  <main class="mx-auto grid max-w-6xl gap-5 px-4 py-5 sm:gap-6 sm:py-6 md:px-5 md:py-8">
+<section id="inicio" class="glass-card fade-up p-5 sm:p-6 md:p-8">
+  <h2 class="font-display text-2xl text-alborada-green sm:text-3xl">Quiénes somos</h2>
+  <p class="mt-3 max-w-3xl text-base leading-relaxed text-alborada-dark/85 sm:text-lg">
     Somos un recinto para eventos con atención personalizada...
   </p>
   <div class="mt-6 rounded-xl border border-alborada-green/20 bg-gradient-to-b from-white to-alborada-cream/60 p-4 shadow-md md:p-6">
-    <div class="mb-4 flex items-center justify-between gap-3">
-      <h3 class="font-display text-2xl text-alborada-green">Tabla de Paquetes de Eventos</h3>
+    <div class="mb-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+      <h3 class="font-display text-xl text-alborada-green sm:text-2xl">Tabla de Paquetes de Eventos</h3>
       <span class="rounded-full border border-alborada-gold/70 bg-alborada-gold/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-alborada-dark">Elegancia Rustica</span>
     </div>
     <div class="overflow-x-auto rounded-lg border border-alborada-green/25 bg-white/90">
-      <table class="min-w-[760px] w-full border-collapse text-left text-sm text-alborada-dark md:text-base">
+      <table class="min-w-[680px] w-full border-collapse text-left text-xs text-alborada-dark sm:text-sm md:text-base">
         <thead>
           <tr class="bg-alborada-green text-white">
-            <th class="border border-alborada-green/40 px-4 py-3 font-semibold">Servicios</th>
-            <th class="border border-alborada-green/40 px-4 py-3 font-semibold">Paquete Esencial</th>
-            <th class="border border-alborada-green/40 px-4 py-3 font-semibold">Paquete Selecto</th>
-            <th class="border border-alborada-green/40 px-4 py-3 font-semibold">Paquete Gran Gala</th>
+            <th class="border border-alborada-green/40 px-3 py-2 font-semibold sm:px-4 sm:py-3">Servicios</th>
+            <th class="border border-alborada-green/40 px-3 py-2 font-semibold sm:px-4 sm:py-3">Paquete Esencial</th>
+            <th class="border border-alborada-green/40 px-3 py-2 font-semibold sm:px-4 sm:py-3">Paquete Selecto</th>
+            <th class="border border-alborada-green/40 px-3 py-2 font-semibold sm:px-4 sm:py-3">Paquete Gran Gala</th>
           </tr>
         </thead>
         <tbody>
           <tr class="transition hover:bg-gray-50">
-            <td class="border border-alborada-green/30 px-4 py-3">Renta de Salon (5 hrs)</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+            <td class="border border-alborada-green/30 px-3 py-2 sm:px-4 sm:py-3">Renta de Salon (5 hrs)</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
           </tr>
           <tr class="transition hover:bg-gray-50">
-            <td class="border border-alborada-green/30 px-4 py-3">Mobiliario (Mesas/Sillas)</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+            <td class="border border-alborada-green/30 px-3 py-2 sm:px-4 sm:py-3">Mobiliario (Mesas/Sillas)</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
           </tr>
           <tr class="transition hover:bg-gray-50">
-            <td class="border border-alborada-green/30 px-4 py-3">Manteleria</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+            <td class="border border-alborada-green/30 px-3 py-2 sm:px-4 sm:py-3">Manteleria</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
           </tr>
           <tr class="transition hover:bg-gray-50">
-            <td class="border border-alborada-green/30 px-4 py-3">Sonido e Iluminacion</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-xl text-gray-400">—</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+            <td class="border border-alborada-green/30 px-3 py-2 sm:px-4 sm:py-3">Sonido e Iluminacion</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-lg text-gray-400 sm:px-4 sm:py-3 sm:text-xl">—</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
           </tr>
           <tr class="transition hover:bg-gray-50">
-            <td class="border border-alborada-green/30 px-4 py-3">Refrescos/Hielo</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-xl text-gray-400">—</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+            <td class="border border-alborada-green/30 px-3 py-2 sm:px-4 sm:py-3">Refrescos/Hielo</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-lg text-gray-400 sm:px-4 sm:py-3 sm:text-xl">—</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
           </tr>
           <tr class="transition hover:bg-gray-50">
-            <td class="border border-alborada-green/30 px-4 py-3">Banquete (tiempos)</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-xl text-gray-400">—</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-xl text-gray-400">—</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+            <td class="border border-alborada-green/30 px-3 py-2 sm:px-4 sm:py-3">Banquete (tiempos)</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-lg text-gray-400 sm:px-4 sm:py-3 sm:text-xl">—</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-lg text-gray-400 sm:px-4 sm:py-3 sm:text-xl">—</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
           </tr>
           <tr class="transition hover:bg-gray-50">
-            <td class="border border-alborada-green/30 px-4 py-3">Meseros</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-xl text-gray-400">—</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-xl text-gray-400">—</td>
-            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+            <td class="border border-alborada-green/30 px-3 py-2 sm:px-4 sm:py-3">Meseros</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-lg text-gray-400 sm:px-4 sm:py-3 sm:text-xl">—</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-lg text-gray-400 sm:px-4 sm:py-3 sm:text-xl">—</td>
+            <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
           </tr>
         </tbody>
       </table>
@@ -118,15 +148,15 @@
   </div>
 </section>
 
-    <section id="salones" class="glass-card fade-up p-6 md:p-8">
-      <h2 class="font-display text-3xl text-alborada-green">Nuestros Salones</h2>
-      <p class="mt-3 max-w-3xl text-lg leading-relaxed text-alborada-dark/85">Explora nuestros espacios con estilo de elegancia rústica y reserva el salón ideal para tu celebración.</p>
+    <section id="salones" class="glass-card fade-up p-5 sm:p-6 md:p-8">
+      <h2 class="font-display text-2xl text-alborada-green sm:text-3xl">Nuestros Salones</h2>
+      <p class="mt-3 max-w-3xl text-base leading-relaxed text-alborada-dark/85 sm:text-lg">Explora nuestros espacios con estilo de elegancia rústica y reserva el salón ideal para tu celebración.</p>
 
-      <div class="mt-6 grid grid-cols-1 gap-5 md:grid-cols-3">
-        <article class="glass-card overflow-hidden rounded-xl border border-alborada-gold/35 transition-all duration-300 hover:scale-105">
-          <img src="/images/Balam.png" alt="Salón Balam" class="h-52 w-full object-cover object-right">
-          <div class="space-y-4 p-5">
-            <h3 class="font-display text-2xl text-alborada-green">Balam</h3>
+      <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+        <article class="glass-card overflow-hidden rounded-xl border border-alborada-gold/35 transition-all duration-300 hover:scale-[1.02] sm:hover:scale-105">
+          <img src="images/Balam.png" alt="Salón Balam" class="h-52 w-full object-cover object-right sm:h-56">
+          <div class="space-y-4 p-4 sm:p-5">
+            <h3 class="font-display text-xl text-alborada-green sm:text-2xl">Balam</h3>
             <p class="text-sm text-alborada-dark/85">Iluminación LED dinámica, pista de baile iluminada, techos con arreglos florales suspendidos.</p>
             <p class="text-sm font-semibold text-alborada-dark">Capacidad: 150 personas</p>
             <div>
@@ -140,14 +170,14 @@
               </ul>
               <p class="mt-2 text-xs text-alborada-dark/70">Personaliza tu experiencia eligiendo entre nuestros paquetes Esencial, Selecto o Gran Gala.</p>
             </div>
-            <a href="#login" class="inline-block rounded-lg bg-alborada-green px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-alborada-dark">Ver disponibilidad</a>
+            <a href="#login" class="inline-flex w-full items-center justify-center rounded-lg bg-alborada-green px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-alborada-dark sm:inline-flex sm:w-auto">Ver disponibilidad</a>
           </div>
         </article>
 
-        <article class="glass-card overflow-hidden rounded-xl border border-alborada-gold/35 transition-all duration-300 hover:scale-105">
-          <img src="/images/Kukulkan.png" alt="Salón Kukulkan" class="h-52 w-full object-cover object-center">
-          <div class="space-y-4 p-5">
-            <h3 class="font-display text-2xl text-alborada-green">Kukulkan</h3>
+        <article class="glass-card overflow-hidden rounded-xl border border-alborada-gold/35 transition-all duration-300 hover:scale-[1.02] sm:hover:scale-105">
+          <img src="images/Kukulkan.png" alt="Salón Kukulkan" class="h-52 w-full object-cover object-center sm:h-56">
+          <div class="space-y-4 p-4 sm:p-5">
+            <h3 class="font-display text-xl text-alborada-green sm:text-2xl">Kukulkan</h3>
             <p class="text-sm text-alborada-dark/85">Diseño tipo cabaña, madera sólida, muros de piedra, zona de asador/parrilla integrada.</p>
             <p class="text-sm font-semibold text-alborada-dark">Capacidad: 200 personas</p>
             <div>
@@ -161,14 +191,14 @@
               </ul>
               <p class="mt-2 text-xs text-alborada-dark/70">Personaliza tu experiencia eligiendo entre nuestros paquetes Esencial, Selecto o Gran Gala.</p>
             </div>
-            <a href="#login" class="inline-block rounded-lg bg-alborada-green px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-alborada-dark">Ver disponibilidad</a>
+            <a href="#login" class="inline-flex w-full items-center justify-center rounded-lg bg-alborada-green px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-alborada-dark sm:inline-flex sm:w-auto">Ver disponibilidad</a>
           </div>
         </article>
 
-        <article class="glass-card overflow-hidden rounded-xl border border-alborada-gold/35 transition-all duration-300 hover:scale-105">
-          <img src="/images/Diamante.png" alt="Salón Diamante" class="h-52 w-full object-cover object-left">
-          <div class="space-y-4 p-5">
-            <h3 class="font-display text-2xl text-alborada-green">Diamante</h3>
+        <article class="glass-card overflow-hidden rounded-xl border border-alborada-gold/35 transition-all duration-300 hover:scale-[1.02] sm:hover:scale-105 sm:col-span-2 xl:col-span-1">
+          <img src="images/Diamante.png" alt="Salón Diamante" class="h-52 w-full object-cover object-left sm:h-56">
+          <div class="space-y-4 p-4 sm:p-5">
+            <h3 class="font-display text-xl text-alborada-green sm:text-2xl">Diamante</h3>
             <p class="text-sm text-alborada-dark/85">Estética moderna, arreglos de flores suspendidos, pantallas de alta definición.</p>
             <p class="text-sm font-semibold text-alborada-dark">Capacidad: 300 personas</p>
             <div>
@@ -182,39 +212,83 @@
               </ul>
               <p class="mt-2 text-xs text-alborada-dark/70">Personaliza tu experiencia eligiendo entre nuestros paquetes Esencial, Selecto o Gran Gala.</p>
             </div>
-            <a href="#login" class="inline-block rounded-lg bg-alborada-green px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-alborada-dark">Ver disponibilidad</a>
+            <a href="#login" class="inline-flex w-full items-center justify-center rounded-lg bg-alborada-green px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-alborada-dark sm:inline-flex sm:w-auto">Ver disponibilidad</a>
           </div>
         </article>
       </div>
     </section>
 
-    <section id="contacto" class="glass-card fade-up p-6 md:p-8">
-      <h2 class="font-display text-3xl text-alborada-green">Contacto</h2>
-      <img src="contactanos.png" alt="Contacto de Salones Terraza Alborada" class="mt-5 h-72 w-full rounded-xl object-cover shadow-lg md:h-96">
-      <div class="mt-5 space-y-1 text-lg text-alborada-dark/90">
-        <p>Tel: (+52) 990-243-5568</p>
-        <p>Email: contacto@terrazaalborada.com</p>
+    <section id="contacto" class="glass-card fade-up p-5 sm:p-6 md:p-8">
+      <h2 class="font-display text-2xl text-alborada-green sm:text-3xl">Contacto</h2>
+      <div class="mt-5 grid gap-4 lg:grid-cols-2">
+        <article class="glass-card rounded-2xl border border-alborada-green/20 bg-white/85 p-4 sm:p-5 md:p-6">
+          <p class="text-sm text-alborada-dark/80">Estamos listos para ayudarte a planear tu evento.</p>
+
+          <div class="mt-5 space-y-4">
+            <a href="tel:+529902435568" class="group flex items-center gap-3 rounded-xl border border-alborada-gold/40 bg-white px-3 py-3 sm:px-4 transition hover:border-alborada-green hover:bg-alborada-cream/60">
+              <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-alborada-green text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.86 19.86 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.89.33 1.76.62 2.6a2 2 0 0 1-.45 2.11L8 9.91a16 16 0 0 0 6 6l1.48-1.28a2 2 0 0 1 2.11-.45c.84.29 1.71.5 2.6.62A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+              </span>
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-wide text-alborada-gold">Llámanos</p>
+                <p class="text-base font-semibold text-alborada-dark group-hover:text-alborada-green">(+52) 990-243-5568</p>
+              </div>
+            </a>
+
+            <a href="mailto:contacto@terrazaalborada.com" class="group flex items-center gap-3 rounded-xl border border-alborada-gold/40 bg-white px-3 py-3 sm:px-4 transition hover:border-alborada-green hover:bg-alborada-cream/60">
+              <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-alborada-green text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+              </span>
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-wide text-alborada-gold">Correo</p>
+                <p class="text-base font-semibold text-alborada-dark group-hover:text-alborada-green">contacto@terrazaalborada.com</p>
+              </div>
+            </a>
+          </div>
+
+          <a href="https://wa.me/529902435568?text=Hola%2C%20quiero%20informaci%C3%B3n%20para%20reservar%20un%20sal%C3%B3n%20en%20Terraza%20Alborada" target="_blank" rel="noopener noreferrer" class="mt-5 inline-flex w-full items-center justify-center rounded-xl bg-green-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-green-700">
+            Enviar Mensaje por WhatsApp
+          </a>
+        </article>
+
+        <article class="glass-card rounded-2xl border border-alborada-green/20 bg-white/85 p-3 md:p-4">
+          <div class="h-64 overflow-hidden rounded-xl sm:h-72 md:h-full md:min-h-[22rem]">
+            <iframe
+              title="Ubicación Salones Terraza Alborada en Valladolid, Yucatán"
+              src="https://www.google.com/maps?q=Valladolid%2C%20Yucat%C3%A1n&output=embed"
+              class="h-full w-full border-0"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              allowfullscreen>
+            </iframe>
+          </div>
+        </article>
       </div>
     </section>
 
-    <section id="login" class="glass-card fade-up p-6 md:p-8">
-      <h2 class="font-display text-3xl text-alborada-green">Acceso de usuarios</h2>
+    <section id="login" class="glass-card fade-up p-5 sm:p-6 md:p-8">
+      <h2 class="font-display text-2xl text-alborada-green sm:text-3xl">Acceso de usuarios</h2>
       <div class="mt-5 grid gap-3 md:max-w-md">
         <input type="email" id="email" placeholder="Correo" class="rounded-lg border border-alborada-green/30 bg-white px-4 py-3 outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
         <input type="password" id="password" placeholder="Contraseña" class="rounded-lg border border-alborada-green/30 bg-white px-4 py-3 outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
       </div>
 
-      <div class="mt-4 flex flex-wrap gap-3">
-        <button onclick="registrar()" class="rounded-lg bg-alborada-green px-5 py-2.5 font-semibold text-white transition hover:bg-alborada-dark">Registrarse</button>
-        <button onclick="login()" class="rounded-lg bg-alborada-gold px-5 py-2.5 font-semibold text-alborada-dark transition hover:brightness-95">Iniciar sesión</button>
-        <button onclick="logout()" class="rounded-lg border border-alborada-green px-5 py-2.5 font-semibold text-alborada-green transition hover:bg-alborada-green hover:text-white">Cerrar sesión</button>
+      <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <button onclick="registrar()" class="w-full rounded-lg bg-alborada-green px-5 py-2.5 font-semibold text-white transition hover:bg-alborada-dark sm:w-auto">Registrarse</button>
+        <button onclick="login()" class="w-full rounded-lg bg-alborada-gold px-5 py-2.5 font-semibold text-alborada-dark transition hover:brightness-95 sm:w-auto">Iniciar sesión</button>
+        <button onclick="logout()" class="w-full rounded-lg border border-alborada-green px-5 py-2.5 font-semibold text-alborada-green transition hover:bg-alborada-green hover:text-white sm:w-auto">Cerrar sesión</button>
       </div>
 
       <p id="estado" class="mt-4 rounded-lg bg-white/70 px-4 py-3 text-sm font-medium text-alborada-dark/90"></p>
     </section>
 
-    <section id="zonaPrivada" class="glass-card fade-up hidden p-6 md:p-8">
-      <h2 class="font-display text-3xl text-alborada-green">Reservar Fecha</h2>
+    <section id="zonaPrivada" class="glass-card fade-up hidden p-5 sm:p-6 md:p-8">
+      <h2 class="font-display text-2xl text-alborada-green sm:text-3xl">Reservar Fecha</h2>
 
       <div class="mt-5 grid gap-3 md:grid-cols-2">
         <input type="text" id="clienteEmpresa" placeholder="Nombre del Cliente o Empresa" class="rounded-lg border border-alborada-green/30 bg-white px-4 py-3 outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30 md:col-span-2">
@@ -234,10 +308,10 @@
         </select>
       </div>
 
-      <button onclick="guardarReservacion()" class="mt-5 rounded-lg bg-alborada-green px-6 py-3 font-semibold text-white transition hover:bg-alborada-dark">Reservar Fecha</button>
+      <button onclick="guardarReservacion()" class="mt-5 w-full rounded-lg bg-alborada-green px-6 py-3 font-semibold text-white transition hover:bg-alborada-dark sm:w-auto">Reservar Fecha</button>
 
       <section id="clientes" class="mt-8 rounded-xl border border-alborada-gold/30 bg-white/65 p-5">
-        <h3 class="font-display text-2xl text-alborada-green">Clientes y reservaciones registradas</h3>
+        <h3 class="font-display text-xl text-alborada-green sm:text-2xl">Clientes y reservaciones registradas</h3>
         <div id="listaReservaciones" class="mt-4 grid gap-3"></div>
       </section>
     </section>
