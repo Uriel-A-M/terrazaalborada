@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Consultorio Dental Sonrisa Perfecta</title>
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<header>
+  <h1>Consultorio Dental Sonrisa Perfecta</h1>
+  <p>Tu sonrisa es nuestra prioridad</p>
+</header>
+
+<nav>
+  <a href="#inicio">Inicio</a>
+  <a href="#servicios">Servicios</a>
+  <a href="#contacto">Contacto</a>
+  <a href="#login">Acceso</a>
+</nav>
+
+<section id="inicio">
+  <h2>Quiénes somos</h2>
+  <p>Somos un consultorio dental profesional con atención de calidad, tecnología moderna y especialistas certificados.</p>
+  <img src="quienessomos.jpg">
+</section>
+
+<section id="servicios">
+  <h2>Servicios</h2>
+  <img src="Servicios.png" class="imagen-servicios">
+  <ul>
+    <li>Limpieza dental</li>
+    <li>Blanqueamiento</li>
+    <li>Ortodoncia</li>
+    <li>Extracciones</li>
+    <li>Consultas generales</li>
+  </ul>
+</section>
+
+<section id="contacto">
+  <h2>Contacto</h2>
+  <img src="contactanos.png" class="imagen-contacto">
+  <p>Tel: 999-123-4567</p>
+  <p>Email: contacto@sonrisaperfecta.com</p>
+</section>
+
+<section id="login">
+  <h2>Acceso de usuarios</h2>
+
+  <input type="email" id="email" placeholder="Correo"><br>
+  <input type="password" id="password" placeholder="Contraseña"><br>
+
+  <button onclick="registrar()">Registrarse</button>
+  <button onclick="login()">Iniciar sesión</button>
+  <button onclick="logout()">Cerrar sesión</button>
+
+  <p id="estado"></p>
+</section>
+
+<section id="zonaPrivada" class="oculto">
+  <h2>Agendar cita dental</h2>
+
+  <input type="text" id="nombre" placeholder="Nombre completo"><br>
+  <input type="text" id="servicio" placeholder="Servicio"><br>
+  <input type="date" id="fecha"><br>
+
+  <button onclick="guardarCita()">Agendar cita</button>
+</section>
+
+<section>
+  <h2>Citas registradas</h2>
+  <div id="listaCitas"></div>
+</section>
+
+<footer>
+  <p>© 2026 Consultorio Dental Sonrisa Perfecta</p>
+</footer>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
