@@ -17,11 +17,17 @@ const db = firebase.firestore();
 // Control de sesión
 auth.onAuthStateChanged(user => {
   if (user) {
-    document.getElementById("zonaPrivada").classList.remove("oculto");
+    document.getElementById("zonaPrivada").classList.remove("hidden");
     document.getElementById("estado").innerText = "Sesión iniciada: " + user.email;
+    cargarReservaciones();
   } else {
-    document.getElementById("zonaPrivada").classList.add("oculto");
+    document.getElementById("zonaPrivada").classList.add("hidden");
     document.getElementById("estado").innerText = "No has iniciado sesión";
+
+    const lista = document.getElementById("listaReservaciones");
+    if (lista) {
+      lista.innerHTML = "";
+    }
   }
 });
 
@@ -50,34 +56,79 @@ function logout() {
   auth.signOut();
 }
 
-// Guardar cita
-function guardarCita() {
-  let nombre = document.getElementById("nombre").value;
-  let servicio = document.getElementById("servicio").value;
-  let fecha = document.getElementById("fecha").value;
+// Guardar reservación
+function guardarReservacion() {
+  if (!auth.currentUser) {
+    alert("Debes iniciar sesión para reservar.");
+    return;
+  }
 
-  db.collection("citas").add({
-    nombre,
-    servicio,
-    fecha,
-    usuario: auth.currentUser.email
-  });
+  const clienteEmpresa = document.getElementById("clienteEmpresa").value.trim();
+  const fechaEvento = document.getElementById("fechaEvento").value;
+  const tipoPaquete = document.getElementById("tipoPaquete").value;
+  const numeroInvitados = document.getElementById("numeroInvitados").value;
+  const salonSeleccionado = document.getElementById("salonSeleccionado").value;
 
-  alert("Cita registrada");
-  cargarCitas();
-}
+  if (!clienteEmpresa || !fechaEvento || !tipoPaquete || !numeroInvitados || !salonSeleccionado) {
+    alert("Completa todos los campos de la reservación.");
+    return;
+  }
 
-// Mostrar citas
-function cargarCitas() {
-  db.collection("citas").get().then(snapshot => {
-    let lista = document.getElementById("listaCitas");
-    lista.innerHTML = "";
+  db.collection("reservaciones").add({
+    clienteEmpresa,
+    fechaEvento,
+    tipoPaquete,
+    numeroInvitados: Number(numeroInvitados),
+    salonSeleccionado,
+    usuario: auth.currentUser.email,
+    creadoEn: firebase.firestore.FieldValue.serverTimestamp()
+  })
+    .then(() => {
+      alert("Reservación registrada");
 
-    snapshot.forEach(doc => {
-      let d = doc.data();
-      lista.innerHTML += `<p>${d.nombre} - ${d.servicio} - ${d.fecha}</p>`;
+      document.getElementById("clienteEmpresa").value = "";
+      document.getElementById("fechaEvento").value = "";
+      document.getElementById("tipoPaquete").value = "";
+      document.getElementById("numeroInvitados").value = "";
+      document.getElementById("salonSeleccionado").value = "";
+
+      cargarReservaciones();
+    })
+    .catch(e => {
+      alert("Error al guardar la reservación: " + e.message);
     });
-  });
 }
 
-cargarCitas();
+// Mostrar reservaciones del usuario logueado
+function cargarReservaciones() {
+  if (!auth.currentUser) return;
+
+  db.collection("reservaciones")
+    .where("usuario", "==", auth.currentUser.email)
+    .get()
+    .then(snapshot => {
+      const lista = document.getElementById("listaReservaciones");
+      if (!lista) return;
+
+      lista.innerHTML = "";
+
+      const reservaciones = [];
+      snapshot.forEach(doc => reservaciones.push(doc.data()));
+
+      reservaciones.sort((a, b) => a.fechaEvento.localeCompare(b.fechaEvento));
+
+      reservaciones.forEach(d => {
+        const item = document.createElement("article");
+        item.className = "rounded-lg border border-alborada-green/20 bg-white px-4 py-3 shadow-sm";
+        item.textContent = `${d.clienteEmpresa} | ${d.salonSeleccionado} | ${d.fechaEvento} | ${d.tipoPaquete} | Invitados: ${d.numeroInvitados}`;
+        lista.appendChild(item);
+      });
+
+      if (!reservaciones.length) {
+        lista.innerHTML = "<p class='text-sm text-alborada-dark/70'>No hay reservaciones registradas para este usuario.</p>";
+      }
+    })
+    .catch(e => {
+      alert("Error al cargar reservaciones: " + e.message);
+    });
+}

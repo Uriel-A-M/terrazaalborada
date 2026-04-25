@@ -1,93 +1,52 @@
+:root {
+  --alborada-gold: #c9a227;
+  --alborada-green: #1f5a3d;
+  --alborada-cream: #f8f5ea;
+}
+
+html,
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
-  background-color: #f4f8fb;
+  min-height: 100%;
+  font-family: "Source Sans 3", sans-serif;
 }
 
-header {
-  background-color: #0077b6;
-  color: white;
-  padding: 20px;
-  text-align: center;
+.font-display {
+  font-family: "Playfair Display", serif;
 }
 
-nav {
-  background-color: #023e8a;
-  padding: 10px;
-  text-align: center;
+.aurora {
+  background:
+    radial-gradient(circle at 10% 15%, rgba(201, 162, 39, 0.18), transparent 35%),
+    radial-gradient(circle at 85% 20%, rgba(31, 90, 61, 0.14), transparent 32%),
+    radial-gradient(circle at 40% 85%, rgba(201, 162, 39, 0.12), transparent 28%),
+    linear-gradient(180deg, #fcfbf5 0%, var(--alborada-cream) 100%);
 }
 
-nav a {
-  color: white;
-  margin: 10px;
-  text-decoration: none;
-  font-weight: bold;
+.glass-card {
+  border: 1px solid rgba(31, 90, 61, 0.15);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.72));
+  border-radius: 1rem;
+  box-shadow: 0 14px 35px rgba(23, 58, 42, 0.08);
 }
 
-section {
-  padding: 20px;
-  margin: 10px;
-  background-color: white;
-  border-radius: 10px;
+.fade-up {
+  animation: fade-up 0.65s ease both;
 }
 
-h2 {
-  color: #0077b6;
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-input {
-  padding: 8px;
-  margin: 5px;
-  width: 250px;
-}
-
-button {
-  padding: 10px;
-  background-color: #0077b6;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #023e8a;
-}
-
-footer {
-  background-color: #023e8a;
-  color: white;
-  text-align: center;
-  padding: 15px;
-  margin-top: 20px;
-}
-
-.oculto {
-  display: none;
-}
-
-.imagen-principal {
-  width: 800px;
-  height: 400px;
-  object-fit: cover;
-  display: block;
-  margin: 20px auto;
-  border-radius: 10px;
-}
-
-.imagen-servicios {
-  width: 800px;
-  height: 400px;
-  object-fit: cover;
-  display: block;
-  margin: 20px auto;
-  border-radius: 10px;
-}
-
-.imagen-contacto {
-  width: 800px;
-  height: 400px;
-  object-fit: cover;
-  display: block;
-  margin: 20px auto;
-  border-radius: 10px;
+@media (max-width: 768px) {
+  .glass-card {
+    border-radius: 0.9rem;
+  }
 }

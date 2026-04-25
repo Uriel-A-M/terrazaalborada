@@ -2,81 +2,250 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Consultorio Dental Sonrisa Perfecta</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salones Terraza Alborada | Sistema de Reservaciones</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            alborada: {
+              gold: "#C9A227",
+              green: "#1F5A3D",
+              cream: "#F8F5EA",
+              dark: "#173A2A"
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 
 </head>
 
-<body>
+<body class="min-h-screen bg-alborada-cream text-alborada-dark antialiased">
+  <div class="aurora fixed inset-0 -z-10"></div>
 
-<header>
-  <h1>Consultorio Dental Sonrisa Perfecta</h1>
-  <p>Tu sonrisa es nuestra prioridad</p>
-</header>
+  <header class="border-b border-alborada-green/20 bg-white/80 backdrop-blur-sm">
+    <div class="mx-auto max-w-6xl px-5 py-8">
+      <h1 class="font-display text-4xl font-bold tracking-wide text-alborada-green md:text-5xl">Salones Terraza Alborada</h1>
+      <p class="mt-2 max-w-2xl text-lg text-alborada-dark/80">Sistema de Reservaciones para eventos sociales y corporativos.</p>
+    </div>
+  </header>
 
-<nav>
-  <a href="#inicio">Inicio</a>
-  <a href="#servicios">Servicios</a>
-  <a href="#contacto">Contacto</a>
-  <a href="#login">Acceso</a>
-</nav>
+  <nav class="sticky top-0 z-20 border-b border-alborada-green/15 bg-alborada-dark text-white shadow-sm">
+    <div class="mx-auto flex max-w-6xl flex-wrap gap-3 px-5 py-3 text-sm font-semibold uppercase tracking-wide md:text-base">
+      <a href="#inicio" class="rounded-md px-3 py-1 transition hover:bg-alborada-gold hover:text-alborada-dark">Inicio</a>
+      <a href="#salones" class="rounded-md px-3 py-1 transition hover:bg-alborada-gold hover:text-alborada-dark">Salones</a>
+      <a href="#contacto" class="rounded-md px-3 py-1 transition hover:bg-alborada-gold hover:text-alborada-dark">Contacto</a>
+      <a href="#login" class="rounded-md px-3 py-1 transition hover:bg-alborada-gold hover:text-alborada-dark">Acceso</a>
+      <a href="#clientes" class="rounded-md px-3 py-1 transition hover:bg-alborada-gold hover:text-alborada-dark">Clientes</a>
+    </div>
+  </nav>
 
-<section id="inicio">
-  <h2>Quiénes somos</h2>
-  <p>Somos un consultorio dental profesional con atención de calidad, tecnología moderna y especialistas certificados.</p>
-  <img src="quienessomos.jpg">
+  <main class="mx-auto grid max-w-6xl gap-6 px-5 py-8">
+<section id="inicio" class="glass-card fade-up p-6 md:p-8">
+  <h2 class="font-display text-3xl text-alborada-green">Quiénes somos</h2>
+  <p class="mt-3 max-w-3xl text-lg leading-relaxed text-alborada-dark/85">
+    Somos un recinto para eventos con atención personalizada...
+  </p>
+  <div class="mt-6 rounded-xl border border-alborada-green/20 bg-gradient-to-b from-white to-alborada-cream/60 p-4 shadow-md md:p-6">
+    <div class="mb-4 flex items-center justify-between gap-3">
+      <h3 class="font-display text-2xl text-alborada-green">Tabla de Paquetes de Eventos</h3>
+      <span class="rounded-full border border-alborada-gold/70 bg-alborada-gold/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-alborada-dark">Elegancia Rustica</span>
+    </div>
+    <div class="overflow-x-auto rounded-lg border border-alborada-green/25 bg-white/90">
+      <table class="min-w-[760px] w-full border-collapse text-left text-sm text-alborada-dark md:text-base">
+        <thead>
+          <tr class="bg-alborada-green text-white">
+            <th class="border border-alborada-green/40 px-4 py-3 font-semibold">Servicios</th>
+            <th class="border border-alborada-green/40 px-4 py-3 font-semibold">Paquete Esencial</th>
+            <th class="border border-alborada-green/40 px-4 py-3 font-semibold">Paquete Selecto</th>
+            <th class="border border-alborada-green/40 px-4 py-3 font-semibold">Paquete Gran Gala</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="transition hover:bg-gray-50">
+            <td class="border border-alborada-green/30 px-4 py-3">Renta de Salon (5 hrs)</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+          </tr>
+          <tr class="transition hover:bg-gray-50">
+            <td class="border border-alborada-green/30 px-4 py-3">Mobiliario (Mesas/Sillas)</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+          </tr>
+          <tr class="transition hover:bg-gray-50">
+            <td class="border border-alborada-green/30 px-4 py-3">Manteleria</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+          </tr>
+          <tr class="transition hover:bg-gray-50">
+            <td class="border border-alborada-green/30 px-4 py-3">Sonido e Iluminacion</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-xl text-gray-400">—</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+          </tr>
+          <tr class="transition hover:bg-gray-50">
+            <td class="border border-alborada-green/30 px-4 py-3">Refrescos/Hielo</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-xl text-gray-400">—</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+          </tr>
+          <tr class="transition hover:bg-gray-50">
+            <td class="border border-alborada-green/30 px-4 py-3">Banquete (tiempos)</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-xl text-gray-400">—</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-xl text-gray-400">—</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+          </tr>
+          <tr class="transition hover:bg-gray-50">
+            <td class="border border-alborada-green/30 px-4 py-3">Meseros</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-xl text-gray-400">—</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-xl text-gray-400">—</td>
+            <td class="border border-alborada-green/30 px-4 py-3 text-center text-lg font-bold text-green-600">✓</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </section>
 
-<section id="servicios">
-  <h2>Servicios</h2>
-  <img src="Servicios.png" class="imagen-servicios">
-  <ul>
-    <li>Limpieza dental</li>
-    <li>Blanqueamiento</li>
-    <li>Ortodoncia</li>
-    <li>Extracciones</li>
-    <li>Consultas generales</li>
-  </ul>
-</section>
+    <section id="salones" class="glass-card fade-up p-6 md:p-8">
+      <h2 class="font-display text-3xl text-alborada-green">Nuestros Salones</h2>
+      <p class="mt-3 max-w-3xl text-lg leading-relaxed text-alborada-dark/85">Explora nuestros espacios con estilo de elegancia rústica y reserva el salón ideal para tu celebración.</p>
 
-<section id="contacto">
-  <h2>Contacto</h2>
-  <img src="contactanos.png" class="imagen-contacto">
-  <p>Tel: 999-123-4567</p>
-  <p>Email: contacto@sonrisaperfecta.com</p>
-</section>
+      <div class="mt-6 grid grid-cols-1 gap-5 md:grid-cols-3">
+        <article class="glass-card overflow-hidden rounded-xl border border-alborada-gold/35 transition-all duration-300 hover:scale-105">
+          <img src="/images/Balam.png" alt="Salón Balam" class="h-52 w-full object-cover object-right">
+          <div class="space-y-4 p-5">
+            <h3 class="font-display text-2xl text-alborada-green">Balam</h3>
+            <p class="text-sm text-alborada-dark/85">Iluminación LED dinámica, pista de baile iluminada, techos con arreglos florales suspendidos.</p>
+            <p class="text-sm font-semibold text-alborada-dark">Capacidad: 150 personas</p>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wide text-alborada-gold">Amenidades Base</p>
+              <ul class="mt-2 space-y-1 text-sm text-alborada-dark/90">
+                <li>• Clima</li>
+                <li>• Iluminación Ambiental</li>
+                <li>• Wi-Fi para invitados</li>
+                <li>• Mobiliario Estándar</li>
+                <li>• Acceso a Cocina</li>
+              </ul>
+              <p class="mt-2 text-xs text-alborada-dark/70">Personaliza tu experiencia eligiendo entre nuestros paquetes Esencial, Selecto o Gran Gala.</p>
+            </div>
+            <a href="#login" class="inline-block rounded-lg bg-alborada-green px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-alborada-dark">Ver disponibilidad</a>
+          </div>
+        </article>
 
-<section id="login">
-  <h2>Acceso de usuarios</h2>
+        <article class="glass-card overflow-hidden rounded-xl border border-alborada-gold/35 transition-all duration-300 hover:scale-105">
+          <img src="/images/Kukulkan.png" alt="Salón Kukulkan" class="h-52 w-full object-cover object-center">
+          <div class="space-y-4 p-5">
+            <h3 class="font-display text-2xl text-alborada-green">Kukulkan</h3>
+            <p class="text-sm text-alborada-dark/85">Diseño tipo cabaña, madera sólida, muros de piedra, zona de asador/parrilla integrada.</p>
+            <p class="text-sm font-semibold text-alborada-dark">Capacidad: 200 personas</p>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wide text-alborada-gold">Amenidades Base</p>
+              <ul class="mt-2 space-y-1 text-sm text-alborada-dark/90">
+                <li>• Clima</li>
+                <li>• Iluminación Ambiental</li>
+                <li>• Wi-Fi para invitados</li>
+                <li>• Mobiliario Estándar</li>
+                <li>• Acceso a Cocina</li>
+              </ul>
+              <p class="mt-2 text-xs text-alborada-dark/70">Personaliza tu experiencia eligiendo entre nuestros paquetes Esencial, Selecto o Gran Gala.</p>
+            </div>
+            <a href="#login" class="inline-block rounded-lg bg-alborada-green px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-alborada-dark">Ver disponibilidad</a>
+          </div>
+        </article>
 
-  <input type="email" id="email" placeholder="Correo"><br>
-  <input type="password" id="password" placeholder="Contraseña"><br>
+        <article class="glass-card overflow-hidden rounded-xl border border-alborada-gold/35 transition-all duration-300 hover:scale-105">
+          <img src="/images/Diamante.png" alt="Salón Diamante" class="h-52 w-full object-cover object-left">
+          <div class="space-y-4 p-5">
+            <h3 class="font-display text-2xl text-alborada-green">Diamante</h3>
+            <p class="text-sm text-alborada-dark/85">Estética moderna, arreglos de flores suspendidos, pantallas de alta definición.</p>
+            <p class="text-sm font-semibold text-alborada-dark">Capacidad: 300 personas</p>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wide text-alborada-gold">Amenidades Base</p>
+              <ul class="mt-2 space-y-1 text-sm text-alborada-dark/90">
+                <li>• Clima</li>
+                <li>• Iluminación Ambiental</li>
+                <li>• Wi-Fi para invitados</li>
+                <li>• Mobiliario Estándar</li>
+                <li>• Acceso a Cocina</li>
+              </ul>
+              <p class="mt-2 text-xs text-alborada-dark/70">Personaliza tu experiencia eligiendo entre nuestros paquetes Esencial, Selecto o Gran Gala.</p>
+            </div>
+            <a href="#login" class="inline-block rounded-lg bg-alborada-green px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-alborada-dark">Ver disponibilidad</a>
+          </div>
+        </article>
+      </div>
+    </section>
 
-  <button onclick="registrar()">Registrarse</button>
-  <button onclick="login()">Iniciar sesión</button>
-  <button onclick="logout()">Cerrar sesión</button>
+    <section id="contacto" class="glass-card fade-up p-6 md:p-8">
+      <h2 class="font-display text-3xl text-alborada-green">Contacto</h2>
+      <img src="contactanos.png" alt="Contacto de Salones Terraza Alborada" class="mt-5 h-72 w-full rounded-xl object-cover shadow-lg md:h-96">
+      <div class="mt-5 space-y-1 text-lg text-alborada-dark/90">
+        <p>Tel: (+52) 990-243-5568</p>
+        <p>Email: contacto@terrazaalborada.com</p>
+      </div>
+    </section>
 
-  <p id="estado"></p>
-</section>
+    <section id="login" class="glass-card fade-up p-6 md:p-8">
+      <h2 class="font-display text-3xl text-alborada-green">Acceso de usuarios</h2>
+      <div class="mt-5 grid gap-3 md:max-w-md">
+        <input type="email" id="email" placeholder="Correo" class="rounded-lg border border-alborada-green/30 bg-white px-4 py-3 outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+        <input type="password" id="password" placeholder="Contraseña" class="rounded-lg border border-alborada-green/30 bg-white px-4 py-3 outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+      </div>
 
-<section id="zonaPrivada" class="oculto">
-  <h2>Agendar cita dental</h2>
+      <div class="mt-4 flex flex-wrap gap-3">
+        <button onclick="registrar()" class="rounded-lg bg-alborada-green px-5 py-2.5 font-semibold text-white transition hover:bg-alborada-dark">Registrarse</button>
+        <button onclick="login()" class="rounded-lg bg-alborada-gold px-5 py-2.5 font-semibold text-alborada-dark transition hover:brightness-95">Iniciar sesión</button>
+        <button onclick="logout()" class="rounded-lg border border-alborada-green px-5 py-2.5 font-semibold text-alborada-green transition hover:bg-alborada-green hover:text-white">Cerrar sesión</button>
+      </div>
 
-  <input type="text" id="nombre" placeholder="Nombre completo"><br>
-  <input type="text" id="servicio" placeholder="Servicio"><br>
-  <input type="date" id="fecha"><br>
+      <p id="estado" class="mt-4 rounded-lg bg-white/70 px-4 py-3 text-sm font-medium text-alborada-dark/90"></p>
+    </section>
 
-  <button onclick="guardarCita()">Agendar cita</button>
-</section>
+    <section id="zonaPrivada" class="glass-card fade-up hidden p-6 md:p-8">
+      <h2 class="font-display text-3xl text-alborada-green">Reservar Fecha</h2>
 
-<section>
-  <h2>Citas registradas</h2>
-  <div id="listaCitas"></div>
-</section>
+      <div class="mt-5 grid gap-3 md:grid-cols-2">
+        <input type="text" id="clienteEmpresa" placeholder="Nombre del Cliente o Empresa" class="rounded-lg border border-alborada-green/30 bg-white px-4 py-3 outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30 md:col-span-2">
+        <input type="date" id="fechaEvento" class="rounded-lg border border-alborada-green/30 bg-white px-4 py-3 outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+        <select id="tipoPaquete" class="rounded-lg border border-alborada-green/30 bg-white px-4 py-3 outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+          <option value="">Tipo de Paquete</option>
+          <option value="Esencial">Esencial</option>
+          <option value="Selecto">Selecto</option>
+          <option value="Gran Gala">Gran Gala</option>
+        </select>
+        <input type="number" id="numeroInvitados" min="1" placeholder="Número de Invitados" class="rounded-lg border border-alborada-green/30 bg-white px-4 py-3 outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+        <select id="salonSeleccionado" class="rounded-lg border border-alborada-green/30 bg-white px-4 py-3 outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+          <option value="">Salón Seleccionado</option>
+          <option value="Kukulcán">Kukulcán</option>
+          <option value="Balam">Balam</option>
+          <option value="Diamante">Diamante</option>
+        </select>
+      </div>
 
-<footer>
-  <p>© 2026 Consultorio Dental Sonrisa Perfecta</p>
-</footer>
+      <button onclick="guardarReservacion()" class="mt-5 rounded-lg bg-alborada-green px-6 py-3 font-semibold text-white transition hover:bg-alborada-dark">Reservar Fecha</button>
+
+      <section id="clientes" class="mt-8 rounded-xl border border-alborada-gold/30 bg-white/65 p-5">
+        <h3 class="font-display text-2xl text-alborada-green">Clientes y reservaciones registradas</h3>
+        <div id="listaReservaciones" class="mt-4 grid gap-3"></div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="mt-8 border-t border-alborada-green/20 bg-alborada-dark px-5 py-6 text-center text-white">
+    <p>© 2026 Salones Terraza Alborada</p>
+  </footer>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
