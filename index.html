@@ -84,6 +84,20 @@
   <p class="mt-3 max-w-3xl text-base leading-relaxed text-alborada-dark/85 sm:text-lg">
     Somos un recinto para eventos con atención personalizada...
   </p>
+  <div class="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+    <article class="stat-card">
+      <p class="stat-value">10+</p>
+      <p class="stat-label">Años de experiencia</p>
+    </article>
+    <article class="stat-card">
+      <p class="stat-value">650+</p>
+      <p class="stat-label">Eventos realizados</p>
+    </article>
+    <article class="stat-card">
+      <p class="stat-value">3</p>
+      <p class="stat-label">Salones temáticos</p>
+    </article>
+  </div>
   <div class="mt-6 rounded-xl border border-alborada-green/20 bg-gradient-to-b from-white to-alborada-cream/60 p-4 shadow-md md:p-6">
     <div class="mb-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
       <h3 class="font-display text-xl text-alborada-green sm:text-2xl">Tabla de Paquetes de Eventos</h3>
@@ -324,6 +338,16 @@
   <footer class="mt-8 border-t border-alborada-green/20 bg-alborada-dark px-5 py-6 text-center text-white">
     <p>© 2026 Salones Terraza Alborada</p>
   </footer>
+
+  <div id="siteModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalMessage">
+    <div class="modal-panel" role="document">
+      <button id="modalClose" type="button" class="modal-close" aria-label="Cerrar notificación">×</button>
+      <div id="modalIcon" class="modal-icon" aria-hidden="true">i</div>
+      <h3 id="modalTitle" class="modal-title">Notificación</h3>
+      <p id="modalMessage" class="modal-message">Mensaje del sistema.</p>
+      <button id="modalAccept" type="button" class="modal-cta">Entendido</button>
+    </div>
+  </div>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>

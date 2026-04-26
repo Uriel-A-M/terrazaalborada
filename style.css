@@ -2,6 +2,9 @@
   --alborada-gold: #c9a227;
   --alborada-green: #1f5a3d;
   --alborada-cream: #f8f5ea;
+  --alborada-ink: #0f2a1f;
+  --alborada-lime: #3f7f5d;
+  --alborada-surface: #fffcf2;
 }
 
 html,
@@ -10,6 +13,8 @@ body {
   min-height: 100%;
   font-family: "Source Sans 3", sans-serif;
   overflow-x: hidden;
+  color: var(--alborada-ink);
+  background: linear-gradient(180deg, #fffef8 0%, #f7f2e3 55%, #f3ede0 100%);
 }
 
 section[id] {
@@ -35,21 +40,219 @@ a {
 
 .aurora {
   background:
-    radial-gradient(circle at 10% 15%, rgba(201, 162, 39, 0.18), transparent 35%),
-    radial-gradient(circle at 85% 20%, rgba(31, 90, 61, 0.14), transparent 32%),
-    radial-gradient(circle at 40% 85%, rgba(201, 162, 39, 0.12), transparent 28%),
-    linear-gradient(180deg, #fcfbf5 0%, var(--alborada-cream) 100%);
+    radial-gradient(circle at 9% 14%, rgba(201, 162, 39, 0.22), transparent 35%),
+    radial-gradient(circle at 83% 18%, rgba(31, 90, 61, 0.16), transparent 34%),
+    radial-gradient(circle at 45% 88%, rgba(201, 162, 39, 0.15), transparent 30%),
+    linear-gradient(180deg, #fffef8 0%, var(--alborada-cream) 58%, #f2ecdf 100%);
 }
 
 .glass-card {
-  border: 1px solid rgba(31, 90, 61, 0.15);
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.72));
-  border-radius: 1rem;
-  box-shadow: 0 14px 35px rgba(23, 58, 42, 0.08);
+  border: 1px solid rgba(31, 90, 61, 0.18);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.94), rgba(255, 252, 243, 0.85)),
+    radial-gradient(circle at top right, rgba(201, 162, 39, 0.1), transparent 45%);
+  border-radius: 1.15rem;
+  box-shadow: 0 16px 34px rgba(15, 42, 31, 0.1);
+  backdrop-filter: blur(5px);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(15, 42, 31, 0.12);
 }
 
 .fade-up {
   animation: fade-up 0.65s ease both;
+}
+
+header {
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.9), rgba(248, 245, 234, 0.82)),
+    radial-gradient(circle at left top, rgba(201, 162, 39, 0.2), transparent 44%);
+}
+
+nav {
+  background: linear-gradient(90deg, #183c2c, #22553d 44%, #1e4c37);
+}
+
+#inicio {
+  position: relative;
+  overflow: hidden;
+}
+
+#inicio::after {
+  content: "";
+  position: absolute;
+  right: -120px;
+  top: -120px;
+  width: 280px;
+  height: 280px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(201, 162, 39, 0.18), transparent 72%);
+  pointer-events: none;
+}
+
+.stat-card {
+  border: 1px solid rgba(31, 90, 61, 0.2);
+  border-radius: 0.9rem;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 250, 236, 0.88));
+  padding: 0.85rem 1rem;
+  box-shadow: 0 8px 18px rgba(15, 42, 31, 0.08);
+}
+
+.stat-value {
+  margin: 0;
+  font-family: "Playfair Display", serif;
+  color: var(--alborada-green);
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.stat-label {
+  margin: 0.2rem 0 0;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(15, 42, 31, 0.75);
+  font-weight: 700;
+}
+
+#salones article img {
+  transition: transform 0.35s ease;
+}
+
+#salones article:hover img {
+  transform: scale(1.04);
+}
+
+#contacto iframe {
+  filter: saturate(0.9) contrast(1.02);
+}
+
+#estado {
+  border: 1px solid rgba(31, 90, 61, 0.18);
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(8, 20, 15, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+.modal-backdrop.show {
+  display: flex;
+  animation: modal-fade 0.2s ease both;
+}
+
+.modal-panel {
+  position: relative;
+  width: min(92vw, 420px);
+  border-radius: 1rem;
+  border: 1px solid rgba(31, 90, 61, 0.26);
+  background:
+    linear-gradient(180deg, #fffefb 0%, #f7f2e3 100%),
+    radial-gradient(circle at top right, rgba(201, 162, 39, 0.18), transparent 46%);
+  box-shadow: 0 20px 50px rgba(8, 20, 15, 0.3);
+  padding: 1.2rem 1.1rem 1rem;
+  text-align: center;
+  animation: modal-rise 0.24s ease both;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.6rem;
+  border: 0;
+  border-radius: 999px;
+  width: 1.8rem;
+  height: 1.8rem;
+  background: rgba(31, 90, 61, 0.1);
+  color: var(--alborada-green);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.modal-icon {
+  margin: 0 auto 0.55rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 1.45rem;
+  font-weight: 700;
+  background: rgba(31, 90, 61, 0.12);
+  color: var(--alborada-green);
+}
+
+.modal-title {
+  margin: 0;
+  font-family: "Playfair Display", serif;
+  color: var(--alborada-green);
+  font-size: 1.5rem;
+}
+
+.modal-message {
+  margin: 0.55rem 0 1rem;
+  color: rgba(15, 42, 31, 0.88);
+  line-height: 1.5;
+}
+
+.modal-cta {
+  border: 0;
+  width: 100%;
+  border-radius: 0.75rem;
+  padding: 0.66rem 1rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(140deg, #1f5a3d, #245f42);
+}
+
+.modal-panel.success .modal-icon {
+  background: rgba(39, 174, 96, 0.15);
+  color: #1a7d47;
+}
+
+.modal-panel.error .modal-icon {
+  background: rgba(209, 57, 57, 0.14);
+  color: #b22323;
+}
+
+.modal-panel.error .modal-cta {
+  background: linear-gradient(140deg, #a42b2b, #8f2020);
+}
+
+.modal-panel.info .modal-icon {
+  background: rgba(201, 162, 39, 0.22);
+  color: #805f09;
+}
+
+@keyframes modal-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @keyframes fade-up {
@@ -67,6 +270,14 @@ a {
   .glass-card {
     border-radius: 0.9rem;
     box-shadow: 0 10px 22px rgba(23, 58, 42, 0.08);
+  }
+
+  .stat-value {
+    font-size: 1.55rem;
+  }
+
+  .modal-panel {
+    padding: 1.05rem 1rem 0.95rem;
   }
 
   section[id] {
@@ -100,6 +311,11 @@ a {
 
 @media (prefers-reduced-motion: reduce) {
   .fade-up {
+    animation: none;
+  }
+
+  .modal-backdrop,
+  .modal-panel {
     animation: none;
   }
 }

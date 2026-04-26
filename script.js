@@ -14,6 +14,40 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+const modalBackdrop = document.getElementById("siteModal");
+const modalPanel = modalBackdrop ? modalBackdrop.querySelector(".modal-panel") : null;
+const modalIcon = document.getElementById("modalIcon");
+const modalTitle = document.getElementById("modalTitle");
+const modalMessage = document.getElementById("modalMessage");
+const modalClose = document.getElementById("modalClose");
+const modalAccept = document.getElementById("modalAccept");
+
+function mostrarModal(tipo, titulo, mensaje) {
+  if (!modalBackdrop || !modalPanel || !modalIcon || !modalTitle || !modalMessage) return;
+
+  modalPanel.classList.remove("success", "error", "info");
+  modalPanel.classList.add(tipo);
+
+  if (tipo === "success") {
+    modalIcon.textContent = "✓";
+  } else if (tipo === "error") {
+    modalIcon.textContent = "!";
+  } else {
+    modalIcon.textContent = "i";
+  }
+
+  modalTitle.textContent = titulo;
+  modalMessage.textContent = mensaje;
+  modalBackdrop.classList.remove("hidden");
+  modalBackdrop.classList.add("show");
+}
+
+function cerrarModal() {
+  if (!modalBackdrop) return;
+  modalBackdrop.classList.remove("show");
+  modalBackdrop.classList.add("hidden");
+}
+
 function abrirMenuMovil() {
   const menu = document.getElementById("menuLateral");
   const overlay = document.getElementById("menuOverlay");
@@ -48,6 +82,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const menuOverlay = document.getElementById("menuOverlay");
   const menuLateral = document.getElementById("menuLateral");
 
+  if (modalClose && modalAccept && modalBackdrop) {
+    modalClose.addEventListener("click", cerrarModal);
+    modalAccept.addEventListener("click", cerrarModal);
+
+    modalBackdrop.addEventListener("click", e => {
+      if (e.target === modalBackdrop) {
+        cerrarModal();
+      }
+    });
+  }
+
   if (menuToggle && menuClose && menuOverlay && menuLateral) {
     menuToggle.addEventListener("click", () => {
       const expanded = menuToggle.getAttribute("aria-expanded") === "true";
@@ -70,6 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("keydown", e => {
       if (e.key === "Escape") {
         cerrarMenuMovil();
+        cerrarModal();
       }
     });
 
@@ -104,8 +150,8 @@ function registrar() {
   let password = document.getElementById("password").value;
 
   auth.createUserWithEmailAndPassword(email, password)
-    .then(() => alert("Usuario registrado"))
-    .catch(e => alert(e.message));
+    .then(() => mostrarModal("success", "Registro exitoso", "Tu cuenta fue creada correctamente. Ya puedes iniciar sesión."))
+    .catch(e => mostrarModal("error", "No se pudo registrar", e.message));
 }
 
 // Login
@@ -114,8 +160,8 @@ function login() {
   let password = document.getElementById("password").value;
 
   auth.signInWithEmailAndPassword(email, password)
-    .then(() => alert("Bienvenido"))
-    .catch(() => alert("Error en login"));
+    .then(() => mostrarModal("success", "Bienvenido", "Inicio de sesión correcto. Ahora puedes registrar tu reservación."))
+    .catch(() => mostrarModal("error", "Contraseña incorrecta", "Verifica tu correo y contraseña para continuar."));
 }
 
 // Logout
@@ -126,7 +172,7 @@ function logout() {
 // Guardar reservación
 function guardarReservacion() {
   if (!auth.currentUser) {
-    alert("Debes iniciar sesión para reservar.");
+    mostrarModal("info", "Acceso requerido", "Debes iniciar sesión para reservar.");
     return;
   }
 
@@ -137,7 +183,7 @@ function guardarReservacion() {
   const salonSeleccionado = document.getElementById("salonSeleccionado").value;
 
   if (!clienteEmpresa || !fechaEvento || !tipoPaquete || !numeroInvitados || !salonSeleccionado) {
-    alert("Completa todos los campos de la reservación.");
+    mostrarModal("info", "Faltan datos", "Completa todos los campos de la reservación.");
     return;
   }
 
@@ -151,7 +197,7 @@ function guardarReservacion() {
     creadoEn: firebase.firestore.FieldValue.serverTimestamp()
   })
     .then(() => {
-      alert("Reservación registrada");
+      mostrarModal("success", "Reservación registrada", "Tu fecha fue apartada correctamente.");
 
       document.getElementById("clienteEmpresa").value = "";
       document.getElementById("fechaEvento").value = "";
@@ -162,7 +208,7 @@ function guardarReservacion() {
       cargarReservaciones();
     })
     .catch(e => {
-      alert("Error al guardar la reservación: " + e.message);
+      mostrarModal("error", "Error al guardar", "No se pudo registrar la reservación: " + e.message);
     });
 }
 
@@ -196,6 +242,6 @@ function cargarReservaciones() {
       }
     })
     .catch(e => {
-      alert("Error al cargar reservaciones: " + e.message);
+      mostrarModal("error", "Error al cargar", "No fue posible cargar tus reservaciones: " + e.message);
     });
 }
