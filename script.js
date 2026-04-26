@@ -21,6 +21,7 @@ const modalTitle = document.getElementById("modalTitle");
 const modalMessage = document.getElementById("modalMessage");
 const modalClose = document.getElementById("modalClose");
 const modalAccept = document.getElementById("modalAccept");
+let modalTimer = null;
 
 function mostrarModal(tipo, titulo, mensaje) {
   if (!modalBackdrop || !modalPanel || !modalIcon || !modalTitle || !modalMessage) return;
@@ -40,12 +41,42 @@ function mostrarModal(tipo, titulo, mensaje) {
   modalMessage.textContent = mensaje;
   modalBackdrop.classList.remove("hidden");
   modalBackdrop.classList.add("show");
+
+  if (modalTimer) {
+    clearTimeout(modalTimer);
+    modalTimer = null;
+  }
+
+  if (tipo === "success") {
+    modalTimer = setTimeout(() => {
+      cerrarModal();
+    }, 2200);
+  }
 }
 
 function cerrarModal() {
   if (!modalBackdrop) return;
+
+  if (modalTimer) {
+    clearTimeout(modalTimer);
+    modalTimer = null;
+  }
+
   modalBackdrop.classList.remove("show");
   modalBackdrop.classList.add("hidden");
+}
+
+function setButtonLoading(buttonId, loading, loadingText) {
+  const button = document.getElementById(buttonId);
+  if (!button) return;
+
+  if (!button.dataset.defaultText) {
+    button.dataset.defaultText = button.textContent;
+  }
+
+  button.classList.toggle("loading", loading);
+  button.disabled = loading;
+  button.textContent = loading ? loadingText : button.dataset.defaultText;
 }
 
 function abrirMenuMovil() {
@@ -146,22 +177,48 @@ auth.onAuthStateChanged(user => {
 
 // Registro
 function registrar() {
-  let email = document.getElementById("email").value;
+  let email = document.getElementById("email").value.trim();
   let password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    mostrarModal("info", "Datos requeridos", "Ingresa correo y contraseña para registrarte.");
+    return;
+  }
+
+  setButtonLoading("btnRegister", true, "Registrando...");
 
   auth.createUserWithEmailAndPassword(email, password)
     .then(() => mostrarModal("success", "Registro exitoso", "Tu cuenta fue creada correctamente. Ya puedes iniciar sesión."))
-    .catch(e => mostrarModal("error", "No se pudo registrar", e.message));
+    .catch(e => mostrarModal("error", "No se pudo registrar", e.message))
+    .finally(() => setButtonLoading("btnRegister", false, "Registrarse"));
 }
 
 // Login
 function login() {
-  let email = document.getElementById("email").value;
+  let email = document.getElementById("email").value.trim();
   let password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    mostrarModal("info", "Datos requeridos", "Ingresa correo y contraseña para iniciar sesión.");
+    return;
+  }
+
+  setButtonLoading("btnLogin", true, "Ingresando...");
 
   auth.signInWithEmailAndPassword(email, password)
     .then(() => mostrarModal("success", "Bienvenido", "Inicio de sesión correcto. Ahora puedes registrar tu reservación."))
-    .catch(() => mostrarModal("error", "Contraseña incorrecta", "Verifica tu correo y contraseña para continuar."));
+    .catch(e => {
+      if (e.code === "auth/wrong-password" || e.code === "auth/invalid-credential") {
+        mostrarModal("error", "Contraseña incorrecta", "Verifica tu correo y contraseña para continuar.");
+        return;
+      }
+      if (e.code === "auth/user-not-found") {
+        mostrarModal("error", "Usuario no encontrado", "No existe una cuenta con ese correo electrónico.");
+        return;
+      }
+      mostrarModal("error", "Error en login", "No fue posible iniciar sesión: " + e.message);
+    })
+    .finally(() => setButtonLoading("btnLogin", false, "Iniciar sesión"));
 }
 
 // Logout
@@ -187,6 +244,8 @@ function guardarReservacion() {
     return;
   }
 
+  setButtonLoading("btnReservar", true, "Guardando...");
+
   db.collection("reservaciones").add({
     clienteEmpresa,
     fechaEvento,
@@ -209,7 +268,8 @@ function guardarReservacion() {
     })
     .catch(e => {
       mostrarModal("error", "Error al guardar", "No se pudo registrar la reservación: " + e.message);
-    });
+    })
+    .finally(() => setButtonLoading("btnReservar", false, "Reservar Fecha"));
 }
 
 // Mostrar reservaciones del usuario logueado
@@ -232,13 +292,13 @@ function cargarReservaciones() {
 
       reservaciones.forEach(d => {
         const item = document.createElement("article");
-        item.className = "rounded-lg border border-alborada-green/20 bg-white px-4 py-3 shadow-sm";
+        item.className = "rounded-xl border border-white/10 bg-[#102742]/35 px-4 py-3 text-gray-100 shadow-md";
         item.textContent = `${d.clienteEmpresa} | ${d.salonSeleccionado} | ${d.fechaEvento} | ${d.tipoPaquete} | Invitados: ${d.numeroInvitados}`;
         lista.appendChild(item);
       });
 
       if (!reservaciones.length) {
-        lista.innerHTML = "<p class='text-sm text-alborada-dark/70'>No hay reservaciones registradas para este usuario.</p>";
+        lista.innerHTML = "<p class='text-sm text-gray-300'>No hay reservaciones registradas para este usuario.</p>";
       }
     })
     .catch(e => {
