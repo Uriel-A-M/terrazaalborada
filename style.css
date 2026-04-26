@@ -9,6 +9,24 @@ body {
   margin: 0;
   min-height: 100%;
   font-family: "Source Sans 3", sans-serif;
+  overflow-x: hidden;
+}
+
+section[id] {
+  scroll-margin-top: 84px;
+}
+
+img,
+iframe,
+table {
+  max-width: 100%;
+}
+
+input,
+select,
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
 }
 
 .font-display {
@@ -48,5 +66,40 @@ body {
 @media (max-width: 768px) {
   .glass-card {
     border-radius: 0.9rem;
+    box-shadow: 0 10px 22px rgba(23, 58, 42, 0.08);
+  }
+
+  section[id] {
+    scroll-margin-top: 74px;
+  }
+
+  .fade-up {
+    animation-duration: 0.45s;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    line-height: 1.45;
+  }
+
+  #menuLateral {
+    width: min(88vw, 320px);
+  }
+
+  table th,
+  table td {
+    word-break: keep-all;
+    white-space: nowrap;
+  }
+
+  .glass-card {
+    backdrop-filter: blur(3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-up {
+    animation: none;
   }
 }
