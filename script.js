@@ -14,6 +14,52 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+// Theme Toggle Logic
+const htmlEl = document.documentElement;
+
+function setTheme(theme) {
+  if (theme === 'light') {
+    htmlEl.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+    updateToggles('light');
+  } else {
+    htmlEl.classList.add('dark');
+    localStorage.setItem('theme', 'dark');
+    updateToggles('dark');
+  }
+}
+
+function updateToggles(theme) {
+  const navToggle = document.getElementById('themeToggleNav');
+  const mobToggle = document.getElementById('themeToggleMobile');
+  
+  if (navToggle) {
+    navToggle.querySelector('.theme-icon').textContent = theme === 'light' ? '☀' : '☾';
+    navToggle.querySelector('.theme-text').textContent = theme === 'light' ? 'Claro' : 'Oscuro';
+  }
+  if (mobToggle) {
+    mobToggle.querySelector('.theme-icon').textContent = theme === 'light' ? '☀' : '☾';
+    mobToggle.querySelector('.theme-text').textContent = theme === 'light' ? 'Modo Claro' : 'Modo Oscuro';
+  }
+}
+
+function toggleTheme() {
+  if (htmlEl.classList.contains('dark')) {
+    setTheme('light');
+  } else {
+    setTheme('dark');
+  }
+}
+
+// Initialize Theme
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+  setTheme(savedTheme);
+} else {
+  // Default to dark as it was the original design
+  setTheme('dark');
+}
+
 const modalBackdrop = document.getElementById("siteModal");
 const modalPanel = modalBackdrop ? modalBackdrop.querySelector(".modal-panel") : null;
 const modalIcon = document.getElementById("modalIcon");
@@ -138,27 +184,8 @@ document.addEventListener("DOMContentLoaded", () => {
     menuOverlay.addEventListener("click", cerrarMenuMovil);
 
     document.querySelectorAll(".nav-link-mobile").forEach(link => {
-      link.addEventListener("click", e => {
-        const href = link.getAttribute("href");
-        if (!href || !href.startsWith("#")) {
-          cerrarMenuMovil();
-          return;
-        }
-
-        e.preventDefault();
-
-        const destino = document.querySelector(href);
-        const login = document.getElementById("login");
-        const destinoOculto = destino && destino.classList.contains("hidden");
-        const objetivoFinal = !destino || destinoOculto ? login : destino;
-
+      link.addEventListener("click", () => {
         cerrarMenuMovil();
-
-        if (objetivoFinal) {
-          setTimeout(() => {
-            objetivoFinal.scrollIntoView({ behavior: "smooth", block: "start" });
-          }, 220);
-        }
       });
     });
 
@@ -175,6 +202,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  const themeToggleNav = document.getElementById('themeToggleNav');
+  if (themeToggleNav) themeToggleNav.addEventListener('click', toggleTheme);
+  
+  const themeToggleMobile = document.getElementById('themeToggleMobile');
+  if (themeToggleMobile) themeToggleMobile.addEventListener('click', toggleTheme);
 });
 
 // Control de sesión
@@ -227,15 +260,7 @@ function login() {
   auth.signInWithEmailAndPassword(email, password)
     .then(() => mostrarModal("success", "Bienvenido", "Inicio de sesión correcto. Ahora puedes registrar tu reservación."))
     .catch(e => {
-      if (e.code === "auth/wrong-password" || e.code === "auth/invalid-credential") {
-        mostrarModal("error", "Contraseña incorrecta", "Verifica tu correo y contraseña para continuar.");
-        return;
-      }
-      if (e.code === "auth/user-not-found") {
-        mostrarModal("error", "Usuario no encontrado", "No existe una cuenta con ese correo electrónico.");
-        return;
-      }
-      mostrarModal("error", "Error en login", "No fue posible iniciar sesión: " + e.message);
+      mostrarModal("error", "Error de acceso", "Correo o contraseña incorrectos. Verifica tus datos e intenta nuevamente.");
     })
     .finally(() => setButtonLoading("btnLogin", false, "Iniciar sesión"));
 }
