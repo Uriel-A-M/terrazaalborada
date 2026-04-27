@@ -138,8 +138,27 @@ document.addEventListener("DOMContentLoaded", () => {
     menuOverlay.addEventListener("click", cerrarMenuMovil);
 
     document.querySelectorAll(".nav-link-mobile").forEach(link => {
-      link.addEventListener("click", () => {
+      link.addEventListener("click", e => {
+        const href = link.getAttribute("href");
+        if (!href || !href.startsWith("#")) {
+          cerrarMenuMovil();
+          return;
+        }
+
+        e.preventDefault();
+
+        const destino = document.querySelector(href);
+        const login = document.getElementById("login");
+        const destinoOculto = destino && destino.classList.contains("hidden");
+        const objetivoFinal = !destino || destinoOculto ? login : destino;
+
         cerrarMenuMovil();
+
+        if (objetivoFinal) {
+          setTimeout(() => {
+            objetivoFinal.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 220);
+        }
       });
     });
 

@@ -74,6 +74,22 @@
     <div class="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-[#12263f]"></div>
   </section>
 
+  <div id="menuOverlay" class="fixed inset-0 z-[180] hidden bg-black/70 backdrop-blur-[1px] md:hidden"></div>
+  <aside id="menuLateral" class="fixed inset-y-0 left-0 z-[190] flex w-72 max-w-[85vw] -translate-x-full flex-col overflow-y-auto border-r border-alborada-gold/35 bg-[#0c1d33]/95 px-5 py-6 text-white shadow-xl transition-transform duration-300 md:hidden" aria-hidden="true">
+    <div class="mb-6 flex items-center justify-between">
+      <p class="font-display text-xl normal-case text-white">Menú</p>
+      <button id="menuClose" type="button" aria-label="Cerrar menú" class="rounded-md border border-white/30 px-3 py-1.5 text-sm font-bold transition hover:bg-white/10">X</button>
+    </div>
+    <div class="flex flex-col gap-2 text-sm font-semibold uppercase tracking-wide">
+      <a href="#inicio" class="nav-link-mobile rounded-md px-3 py-3 transition hover:bg-alborada-gold hover:text-alborada-dark">Inicio</a>
+      <a href="#salones" class="nav-link-mobile rounded-md px-3 py-3 transition hover:bg-alborada-gold hover:text-alborada-dark">Salones</a>
+      <a href="#contacto" class="nav-link-mobile rounded-md px-3 py-3 transition hover:bg-alborada-gold hover:text-alborada-dark">Contacto</a>
+      <a href="#login" class="nav-link-mobile rounded-md px-3 py-3 transition hover:bg-alborada-gold hover:text-alborada-dark">Acceso</a>
+      <a href="#clientes" class="nav-link-mobile rounded-md px-3 py-3 transition hover:bg-alborada-gold hover:text-alborada-dark">Clientes</a>
+      <a href="#login" class="nav-link-mobile mt-2 rounded-md bg-alborada-gold px-3 py-3 text-center text-alborada-dark transition hover:brightness-95">Reservar Salón</a>
+    </div>
+  </aside>
+
   <main class="-mt-px w-full bg-transparent">
     <section id="inicio" class="fade-up w-full pb-16 pt-10 md:pb-20 md:pt-14">
       <div class="mx-auto max-w-6xl px-5">
@@ -372,27 +388,6 @@
   <footer class="mt-8 border-t border-white/10 bg-[#091525]/75 px-5 py-6 text-center text-white">
     <p>© 2026 Salones Terraza Alborada</p>
   </footer>
-
-  <div id="menuOverlay" class="fixed inset-0 z-[110] hidden bg-[#081528]/60 md:hidden"></div>
-  <aside id="menuLateral" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/60 backdrop-blur-3xl transition-all duration-500 md:hidden" aria-hidden="true">
-    <button id="menuClose" type="button" aria-label="Cerrar menú" class="absolute right-8 top-6 text-4xl text-white">×</button>
-
-    <nav class="flex flex-col items-center gap-8">
-      <a href="#inicio" class="nav-link-mobile block py-4 font-display text-4xl text-white transition-all duration-300 hover:text-alborada-gold">Inicio</a>
-      <a href="#salones" class="nav-link-mobile block py-4 font-display text-4xl text-white transition-all duration-300 hover:text-alborada-gold">Salones</a>
-      <a href="#contacto" class="nav-link-mobile block py-4 font-display text-4xl text-white transition-all duration-300 hover:text-alborada-gold">Contacto</a>
-      <a href="#clientes" class="nav-link-mobile block py-4 font-display text-4xl text-white transition-all duration-300 hover:text-alborada-gold">Clientes</a>
-    </nav>
-
-    <div class="mt-12 flex w-full flex-col gap-4 px-10">
-      <button onclick="document.getElementById('zonaPrivada').scrollIntoView({behavior:'smooth'}); cerrarMenuMovil();" class="rounded-full bg-alborada-gold px-8 py-4 font-bold text-alborada-dark transition-all duration-300 text-xl hover:scale-105 hover:brightness-110">
-        Reservar
-      </button>
-      <button onclick="document.getElementById('login').scrollIntoView({behavior:'smooth'}); cerrarMenuMovil();" class="rounded-full border border-white/30 px-8 py-3 font-semibold text-white transition-all duration-300 hover:bg-white/10">
-        Login
-      </button>
-    </div>
-  </aside>
 
   <div id="siteModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalMessage">
     <div class="modal-panel" role="document">
