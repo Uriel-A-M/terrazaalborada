@@ -14,6 +14,9 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+// Inicializar EmailJS
+emailjs.init("8qxF4pHW13zLqaX96");
+
 // Theme Toggle Logic
 const htmlEl = document.documentElement;
 
@@ -203,6 +206,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  const fechaInput = document.getElementById("fechaEvento");
+  if (fechaInput) {
+    const tzOffset = new Date().getTimezoneOffset() * 60000;
+    const localISOTime = (new Date(Date.now() - tzOffset)).toISOString().split('T')[0];
+    fechaInput.setAttribute("min", localISOTime);
+  }
+
   const themeToggleNav = document.getElementById('themeToggleNav');
   if (themeToggleNav) themeToggleNav.addEventListener('click', toggleTheme);
   
@@ -300,6 +310,23 @@ function guardarReservacion() {
     creadoEn: firebase.firestore.FieldValue.serverTimestamp()
   })
     .then(() => {
+      // Enviar notificación por correo con EmailJS
+      emailjs.send("service_axx0wmq", "template_fg1xpla", {
+        clienteEmpresa: clienteEmpresa,
+        salonSeleccionado: salonSeleccionado,
+        fechaEvento: fechaEvento,
+        tipoPaquete: tipoPaquete,
+        numeroInvitados: numeroInvitados,
+        email_cliente: auth.currentUser.email
+      }).then(
+        function(response) {
+          console.log("Email enviado con éxito:", response.status, response.text);
+        },
+        function(error) {
+          console.error("Error al enviar el email:", error);
+        }
+      );
+
       mostrarModal("success", "Reservación registrada", "Tu fecha fue apartada correctamente.");
 
       document.getElementById("clienteEmpresa").value = "";
@@ -336,13 +363,47 @@ function cargarReservaciones() {
 
       reservaciones.forEach(d => {
         const item = document.createElement("article");
-        item.className = "rounded-xl border border-white/10 bg-[#102742]/35 px-4 py-3 text-gray-100 shadow-md";
-        item.textContent = `${d.clienteEmpresa} | ${d.salonSeleccionado} | ${d.fechaEvento} | ${d.tipoPaquete} | Invitados: ${d.numeroInvitados}`;
+        item.className = "flex flex-col gap-4 rounded-2xl border border-[#0F2A1F]/10 dark:border-white/10 bg-white/60 dark:bg-white/5 p-4 shadow-lg backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:bg-[#0F2A1F]/5 dark:hover:bg-white/10 hover:shadow-xl sm:flex-row sm:items-center sm:justify-between md:p-5";
+        
+        item.innerHTML = `
+          <div class="flex flex-col gap-2">
+            <h4 class="text-lg font-bold text-[#0F2A1F] dark:text-white">${d.clienteEmpresa}</h4>
+            <div class="flex flex-wrap items-center gap-3 text-sm text-[#4A4636] dark:text-gray-400">
+              <span class="inline-flex items-center gap-1.5 font-semibold text-alborada-gold">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                </svg>
+                ${d.salonSeleccionado}
+              </span>
+              <span class="hidden opacity-40 sm:inline">•</span>
+              <span class="inline-flex items-center gap-1.5">
+                📦 Paquete ${d.tipoPaquete}
+              </span>
+              <span class="hidden opacity-40 sm:inline">•</span>
+              <span class="inline-flex items-center gap-1.5">
+                👥 ${d.numeroInvitados} invitados
+              </span>
+            </div>
+          </div>
+          <div class="shrink-0 mt-2 sm:mt-0">
+            <span class="inline-flex items-center gap-1.5 rounded-lg bg-[#0F2A1F]/10 dark:bg-white/10 px-4 py-2 text-sm font-bold text-[#0F2A1F] dark:text-white transition-colors duration-[400ms]">
+              📅 ${d.fechaEvento}
+            </span>
+          </div>
+        `;
         lista.appendChild(item);
       });
 
       if (!reservaciones.length) {
-        lista.innerHTML = "<p class='text-sm text-gray-300'>No hay reservaciones registradas para este usuario.</p>";
+        lista.innerHTML = `
+          <div class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#0F2A1F]/20 dark:border-white/20 bg-white/30 dark:bg-white/5 py-12 text-center backdrop-blur-sm transition-colors duration-[400ms]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-4 h-16 w-16 text-[#0F2A1F]/30 dark:text-white/20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <p class="font-display text-xl font-medium text-[#0F2A1F] dark:text-white">Aún no hay reservaciones</p>
+            <p class="mt-2 text-sm text-[#4A4636] dark:text-gray-400">Las fechas que reserves aparecerán aquí.</p>
+          </div>
+        `;
       }
     })
     .catch(e => {

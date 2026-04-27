@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth dark">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Salones Terraza Alborada | Sistema de Reservaciones</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -24,29 +26,42 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Source+Sans+3:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="icon" type="image/png" href="images/Logo.png">
   <link rel="stylesheet" href="style.css">
 
 </head>
 
-<body class="min-h-screen overflow-x-hidden bg-[#FDFCF7] dark:bg-[#0f2036] text-[15px] text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] ease-in-out antialiased sm:text-base">
+<body
+  class="min-h-screen overflow-x-hidden bg-[#FDFCF7] dark:bg-[#0f2036] text-[15px] text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] ease-in-out antialiased sm:text-base">
   <div class="aurora fixed inset-0 -z-10"></div>
 
-  <section class="relative isolate w-full min-h-[100dvh] overflow-x-hidden bg-[url('images/Diamante.png')] bg-cover bg-center">
-    <div class="absolute inset-0 bg-gradient-to-b from-[#FDFCF7]/50 via-[#FDFCF7]/20 to-transparent dark:from-[#081528]/80 dark:via-[#102742]/68 dark:to-[#0f2036]/78 backdrop-blur-[2px] dark:backdrop-blur-none transition-all duration-[400ms] ease-in-out"></div>
+  <section
+    class="relative isolate w-full min-h-[100dvh] overflow-x-hidden bg-[url('images/Diamante.png')] bg-cover bg-center">
+    <div
+      class="absolute inset-0 bg-gradient-to-b from-[#FDFCF7]/50 via-[#FDFCF7]/20 to-transparent dark:from-[#081528]/80 dark:via-[#102742]/68 dark:to-[#0f2036]/78 backdrop-blur-[2px] dark:backdrop-blur-none transition-all duration-[400ms] ease-in-out">
+    </div>
 
-    <nav class="absolute inset-x-0 top-0 z-[90] border-b border-[#0F2A1F]/10 dark:border-white/15 bg-white/60 dark:bg-white/10 text-[#0F2A1F] dark:text-white backdrop-blur-md transition-colors duration-[400ms] ease-in-out">
+    <nav
+      class="absolute inset-x-0 top-0 z-[90] border-b border-[#0F2A1F]/10 dark:border-white/15 bg-white/60 dark:bg-white/10 text-[#0F2A1F] dark:text-white backdrop-blur-md transition-colors duration-[400ms] ease-in-out">
       <div class="mx-auto max-w-6xl px-4 py-3 text-sm font-semibold uppercase tracking-wide md:px-5 md:text-base">
         <div class="flex w-full min-w-0 items-center justify-between gap-3 md:hidden">
-          <p class="min-w-0 flex-1 truncate font-display text-base normal-case tracking-normal text-[#0F2A1F] dark:text-white sm:text-lg">Catálogo General</p>
+          <p
+            class="min-w-0 flex-1 truncate font-display text-base normal-case tracking-normal text-[#0F2A1F] dark:text-white sm:text-lg">
+            Terraza Alborada</p>
           <div class="flex items-center gap-3">
-            <button id="themeToggleMobile" class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#0F2A1F]/20 bg-black/5 text-lg text-[#0F2A1F] backdrop-blur-md transition hover:bg-[#0F2A1F]/10 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20">
+            <button id="themeToggleMobile"
+              class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#0F2A1F]/20 bg-black/5 text-lg text-[#0F2A1F] backdrop-blur-md transition hover:bg-[#0F2A1F]/10 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20">
               <span class="theme-icon">☾</span>
               <span class="theme-text hidden">Modo Oscuro</span>
             </button>
-            <button id="menuToggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="menuLateral" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-[#0F2A1F]/40 dark:border-white/40 text-[#0F2A1F] dark:text-white transition-all duration-[400ms] hover:bg-[#0F2A1F]/10 dark:hover:bg-white/15">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <button id="menuToggle" type="button" aria-label="Abrir menú" aria-expanded="false"
+              aria-controls="menuLateral"
+              class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-[#0F2A1F]/40 dark:border-white/40 text-[#0F2A1F] dark:text-white transition-all duration-[400ms] hover:bg-[#0F2A1F]/10 dark:hover:bg-white/15">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <line x1="3" y1="6" x2="21" y2="6"></line>
                 <line x1="3" y1="12" x2="21" y2="12"></line>
                 <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -56,37 +71,58 @@
         </div>
 
         <div class="hidden md:flex md:flex-row md:flex-wrap md:items-center md:justify-center md:gap-3">
-          <a href="#inicio" class="rounded-md px-3 py-2 text-[#0F2A1F] dark:text-white transition-all duration-[400ms] hover:bg-[#0F2A1F]/10 dark:hover:bg-white/15">Inicio</a>
-          <a href="#salones" class="rounded-md px-3 py-2 text-[#0F2A1F] dark:text-white transition-all duration-[400ms] hover:bg-[#0F2A1F]/10 dark:hover:bg-white/15">Salones</a>
-          <a href="#contacto" class="rounded-md px-3 py-2 text-[#0F2A1F] dark:text-white transition-all duration-[400ms] hover:bg-[#0F2A1F]/10 dark:hover:bg-white/15">Contacto</a>
-          <a href="#login" class="rounded-md px-3 py-2 text-[#0F2A1F] dark:text-white transition-all duration-[400ms] hover:bg-[#0F2A1F]/10 dark:hover:bg-white/15">Acceso</a>
-          <a href="#clientes" class="rounded-md px-3 py-2 text-[#0F2A1F] dark:text-white transition hover:bg-[#0F2A1F]/10 dark:hover:bg-white/15">Clientes</a>
-          <button id="themeToggleNav" class="ml-4 flex items-center gap-2 rounded-full border border-[#0F2A1F]/20 dark:border-white/20 bg-white/40 dark:bg-black/20 px-4 py-2 text-sm font-semibold text-[#0F2A1F] dark:text-white backdrop-blur-md transition-all duration-[400ms] hover:bg-white/70 dark:hover:bg-black/40 shadow-sm"><span class="theme-icon">☾</span><span class="theme-text">Oscuro</span></button>
+          <a href="#inicio"
+            class="rounded-md px-3 py-2 text-[#0F2A1F] dark:text-white transition-all duration-[400ms] hover:bg-[#0F2A1F]/10 dark:hover:bg-white/15">Inicio</a>
+          <a href="#salones"
+            class="rounded-md px-3 py-2 text-[#0F2A1F] dark:text-white transition-all duration-[400ms] hover:bg-[#0F2A1F]/10 dark:hover:bg-white/15">Salones</a>
+          <a href="#contacto"
+            class="rounded-md px-3 py-2 text-[#0F2A1F] dark:text-white transition-all duration-[400ms] hover:bg-[#0F2A1F]/10 dark:hover:bg-white/15">Contacto</a>
+          <a href="#login"
+            class="rounded-md px-3 py-2 text-[#0F2A1F] dark:text-white transition-all duration-[400ms] hover:bg-[#0F2A1F]/10 dark:hover:bg-white/15">Acceso</a>
+          <a href="#clientes"
+            class="rounded-md px-3 py-2 text-[#0F2A1F] dark:text-white transition hover:bg-[#0F2A1F]/10 dark:hover:bg-white/15">Clientes</a>
+          <button id="themeToggleNav"
+            class="ml-4 flex items-center gap-2 rounded-full border border-[#0F2A1F]/20 dark:border-white/20 bg-white/40 dark:bg-black/20 px-4 py-2 text-sm font-semibold text-[#0F2A1F] dark:text-white backdrop-blur-md transition-all duration-[400ms] hover:bg-white/70 dark:hover:bg-black/40 shadow-sm"><span
+              class="theme-icon">☾</span><span class="theme-text">Oscuro</span></button>
         </div>
       </div>
 
     </nav>
 
-    <div class="relative z-20 mx-auto flex min-h-[100dvh] max-w-6xl flex-col items-center justify-center px-4 pb-14 pt-24 text-center md:px-5 md:pb-16 md:pt-28">
-      <span class="inline-flex items-center rounded-full border border-white/45 bg-white/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-white sm:text-xs">
+    <div
+      class="relative z-20 mx-auto flex min-h-[100dvh] max-w-6xl flex-col items-center justify-center px-4 pb-14 pt-24 text-center md:px-5 md:pb-16 md:pt-28">
+      <span
+        class="inline-flex items-center rounded-full border border-white/45 bg-white/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-white sm:text-xs">
         Eventos sociales y corporativos en Valladolid, Yucatán
       </span>
-      <h1 class="mt-5 font-display text-5xl font-bold leading-tight text-white drop-shadow-lg sm:text-6xl md:text-7xl transition-colors duration-[400ms]">Salones Terraza Alborada</h1>
-      <p class="mt-4 max-w-2xl text-base text-white/95 drop-shadow-md transition-colors duration-[400ms] sm:text-lg md:text-xl">Sistema de reservaciones para celebraciones memorables con una atmósfera elegante y atención personalizada.</p>
+      <h1
+        class="mt-5 font-display text-5xl font-bold leading-tight text-white drop-shadow-lg sm:text-6xl md:text-7xl transition-colors duration-[400ms]">
+        Salones Terraza Alborada</h1>
+      <p
+        class="mt-4 max-w-2xl text-base text-white/95 drop-shadow-md transition-colors duration-[400ms] sm:text-lg md:text-xl">
+        Sistema de reservaciones para celebraciones memorables con una atmósfera elegante y atención personalizada.</p>
       <div class="mt-8 flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:justify-center">
-        <a href="#login" class="inline-flex w-full items-center justify-center rounded-xl bg-alborada-gold px-6 py-3 text-sm font-bold uppercase tracking-wide text-alborada-dark transition hover:brightness-110 sm:w-auto">Reservar ahora</a>
-        <a href="#salones" class="inline-flex w-full items-center justify-center rounded-xl border-2 border-white px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition-all duration-[400ms] hover:bg-white/20 sm:w-auto backdrop-blur-[2px]">Explorar salones</a>
+        <a href="#login"
+          class="inline-flex w-full items-center justify-center rounded-xl bg-alborada-gold px-6 py-3 text-sm font-bold uppercase tracking-wide text-alborada-dark transition hover:brightness-110 sm:w-auto">Reservar
+          ahora</a>
+        <a href="#salones"
+          class="inline-flex w-full items-center justify-center rounded-xl border-2 border-white px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition-all duration-[400ms] hover:bg-white/20 sm:w-auto backdrop-blur-[2px]">Explorar
+          salones</a>
       </div>
     </div>
 
-    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-[#12263f]"></div>
+    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-[#12263f]">
+    </div>
   </section>
 
   <main class="-mt-px w-full bg-transparent">
     <section id="inicio" class="fade-up w-full pb-16 pt-10 md:pb-20 md:pt-14">
       <div class="mx-auto max-w-6xl px-5">
-        <h2 class="text-center font-display text-4xl text-[#0F2A1F] dark:text-white md:text-5xl transition-colors duration-[400ms]">Quiénes somos</h2>
-        <p class="mx-auto mt-4 max-w-3xl text-center text-base leading-relaxed text-[#4A4636] dark:text-white/80 transition-colors duration-[400ms] sm:text-lg">
+        <h2
+          class="text-center font-display text-4xl text-[#0F2A1F] dark:text-white md:text-5xl transition-colors duration-[400ms]">
+          Quiénes somos</h2>
+        <p
+          class="mx-auto mt-4 max-w-3xl text-center text-base leading-relaxed text-[#4A4636] dark:text-white/80 transition-colors duration-[400ms] sm:text-lg">
           Somos un recinto para eventos con atención personalizada...
         </p>
 
@@ -105,68 +141,122 @@
           </article>
         </div>
 
-        <div class="mt-10 overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-5 shadow-2xl shadow-[#071426]/35 backdrop-blur-md md:p-8">
+        <div
+          class="mt-10 overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-5 shadow-2xl shadow-[#071426]/35 backdrop-blur-md md:p-8">
           <div class="mb-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
-            <h3 class="font-display text-xl text-[#0F2A1F] dark:text-white sm:text-2xl transition-colors duration-[400ms]">Tabla de Paquetes de Eventos</h3>
-            <span class="rounded-full border border-alborada-gold/70 bg-alborada-gold/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-alborada-gold">Elegancia Rustica</span>
+            <h3
+              class="font-display text-xl text-[#0F2A1F] dark:text-white sm:text-2xl transition-colors duration-[400ms]">
+              Tabla de Paquetes de Eventos</h3>
+            <span
+              class="rounded-full border border-alborada-gold/70 bg-alborada-gold/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-alborada-gold">Elegancia
+              Rustica</span>
           </div>
-          <div class="relative w-full max-w-full overflow-x-auto whitespace-nowrap rounded-2xl border border-white/10 bg-white/50 dark:bg-[#0f2239]/45 transition-colors duration-[400ms]">
-            <table class="min-w-[680px] w-full border-collapse text-left text-xs text-[#0F2A1F] dark:text-gray-200 transition-colors duration-[400ms] sm:text-sm md:text-base">
+          <div
+            class="relative w-full max-w-full overflow-x-auto whitespace-nowrap rounded-2xl border border-white/10 bg-white/50 dark:bg-[#0f2239]/45 transition-colors duration-[400ms]">
+            <table
+              class="min-w-[680px] w-full border-collapse text-left text-xs text-[#0F2A1F] dark:text-gray-200 transition-colors duration-[400ms] sm:text-sm md:text-base">
               <thead>
-                <tr class="bg-[#0F2A1F]/5 dark:bg-white/10 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms]">
+                <tr
+                  class="bg-[#0F2A1F]/5 dark:bg-white/10 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms]">
                   <th class="border border-alborada-green/40 px-3 py-2 font-semibold sm:px-4 sm:py-3">Servicios</th>
-                  <th class="border border-alborada-green/40 px-3 py-2 font-semibold sm:px-4 sm:py-3">Paquete Esencial</th>
-                  <th class="border border-alborada-green/40 px-3 py-2 font-semibold sm:px-4 sm:py-3">Paquete Selecto</th>
-                  <th class="border border-alborada-green/40 px-3 py-2 font-semibold sm:px-4 sm:py-3">Paquete Gran Gala</th>
+                  <th class="border border-alborada-green/40 px-3 py-2 font-semibold sm:px-4 sm:py-3">Paquete Esencial
+                  </th>
+                  <th class="border border-alborada-green/40 px-3 py-2 font-semibold sm:px-4 sm:py-3">Paquete Selecto
+                  </th>
+                  <th class="border border-alborada-green/40 px-3 py-2 font-semibold sm:px-4 sm:py-3">Paquete Gran Gala
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 <tr class="transition hover:bg-[#0F2A1F]/5 dark:hover:bg-white/5 transition-colors duration-[400ms]">
                   <td class="border border-alborada-green/30 px-3 py-2 sm:px-4 sm:py-3">Renta de Salon (5 hrs)</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">
+                    ✓</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">
+                    ✓</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">
+                    ✓</td>
                 </tr>
                 <tr class="transition hover:bg-[#0F2A1F]/5 dark:hover:bg-white/5 transition-colors duration-[400ms]">
                   <td class="border border-alborada-green/30 px-3 py-2 sm:px-4 sm:py-3">Mobiliario (Mesas/Sillas)</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">
+                    ✓</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">
+                    ✓</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">
+                    ✓</td>
                 </tr>
                 <tr class="transition hover:bg-[#0F2A1F]/5 dark:hover:bg-white/5 transition-colors duration-[400ms]">
                   <td class="border border-alborada-green/30 px-3 py-2 sm:px-4 sm:py-3">Manteleria</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">
+                    ✓</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">
+                    ✓</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">
+                    ✓</td>
                 </tr>
                 <tr class="transition hover:bg-[#0F2A1F]/5 dark:hover:bg-white/5 transition-colors duration-[400ms]">
                   <td class="border border-alborada-green/30 px-3 py-2 sm:px-4 sm:py-3">Sonido e Iluminacion</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-lg text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] sm:px-4 sm:py-3 sm:text-xl">—</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-lg text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] sm:px-4 sm:py-3 sm:text-xl">
+                    —</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">
+                    ✓</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">
+                    ✓</td>
                 </tr>
                 <tr class="transition hover:bg-[#0F2A1F]/5 dark:hover:bg-white/5 transition-colors duration-[400ms]">
                   <td class="border border-alborada-green/30 px-3 py-2 sm:px-4 sm:py-3">Refrescos/Hielo</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-lg text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] sm:px-4 sm:py-3 sm:text-xl">—</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-lg text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] sm:px-4 sm:py-3 sm:text-xl">
+                    —</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">
+                    ✓</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">
+                    ✓</td>
                 </tr>
                 <tr class="transition hover:bg-[#0F2A1F]/5 dark:hover:bg-white/5 transition-colors duration-[400ms]">
                   <td class="border border-alborada-green/30 px-3 py-2 sm:px-4 sm:py-3">Banquete (tiempos)</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-lg text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] sm:px-4 sm:py-3 sm:text-xl">—</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-lg text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] sm:px-4 sm:py-3 sm:text-xl">—</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-lg text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] sm:px-4 sm:py-3 sm:text-xl">
+                    —</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-lg text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] sm:px-4 sm:py-3 sm:text-xl">
+                    —</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">
+                    ✓</td>
                 </tr>
                 <tr class="transition hover:bg-[#0F2A1F]/5 dark:hover:bg-white/5 transition-colors duration-[400ms]">
                   <td class="border border-alborada-green/30 px-3 py-2 sm:px-4 sm:py-3">Meseros</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-lg text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] sm:px-4 sm:py-3 sm:text-xl">—</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-lg text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] sm:px-4 sm:py-3 sm:text-xl">—</td>
-                  <td class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">✓</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-lg text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] sm:px-4 sm:py-3 sm:text-xl">
+                    —</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-lg text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] sm:px-4 sm:py-3 sm:text-xl">
+                    —</td>
+                  <td
+                    class="border border-alborada-green/30 px-3 py-2 text-center text-base font-bold text-green-600 sm:px-4 sm:py-3 sm:text-lg">
+                    ✓</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <p class="mt-3 inline-flex items-center gap-2 rounded-full bg-alborada-gold/20 px-3 py-1 text-xs font-semibold text-alborada-gold md:hidden">
+          <p
+            class="mt-3 inline-flex items-center gap-2 rounded-full bg-alborada-gold/20 px-3 py-1 text-xs font-semibold text-alborada-gold md:hidden">
             <span aria-hidden="true">↔</span>
             Desliza la tabla lateralmente
           </p>
@@ -176,15 +266,22 @@
 
     <section id="salones" class="fade-up w-full py-16 md:py-20">
       <div class="mx-auto max-w-6xl px-5">
-        <h2 class="text-center font-display text-4xl text-[#0F2A1F] dark:text-white md:text-5xl transition-colors duration-[400ms]">Nuestros Salones</h2>
-        <p class="mx-auto mt-4 max-w-3xl text-center text-base leading-relaxed text-[#4A4636] dark:text-white/80 transition-colors duration-[400ms] sm:text-lg">Explora nuestros espacios con estilo de elegancia rústica y reserva el salón ideal para tu celebración.</p>
+        <h2
+          class="text-center font-display text-4xl text-[#0F2A1F] dark:text-white md:text-5xl transition-colors duration-[400ms]">
+          Nuestros Salones</h2>
+        <p
+          class="mx-auto mt-4 max-w-3xl text-center text-base leading-relaxed text-[#4A4636] dark:text-white/80 transition-colors duration-[400ms] sm:text-lg">
+          Explora nuestros espacios con estilo de elegancia rústica y reserva el salón ideal para tu celebración.</p>
 
         <div class="mt-12 grid grid-cols-1 gap-7 md:grid-cols-3">
-          <article class="group overflow-hidden rounded-3xl border border-[#0F2A1F]/10 bg-white/70 shadow-md shadow-black/5 backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:shadow-2xl dark:shadow-[#071426]/35 dark:backdrop-blur-md transition-all duration-[400ms] transition-all duration-300 hover:-translate-y-1 hover:border-alborada-gold/50">
+          <article
+            class="group overflow-hidden rounded-3xl border border-[#0F2A1F]/10 bg-white/70 shadow-md shadow-black/5 backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:shadow-2xl dark:shadow-[#071426]/35 dark:backdrop-blur-md transition-all duration-[400ms] transition-all duration-300 hover:-translate-y-1 hover:border-alborada-gold/50">
             <img src="images/Balam.png" alt="Salón Balam" class="aspect-video w-full object-cover object-right">
             <div class="flex h-full flex-col space-y-4 p-6">
-              <h3 class="font-display text-2xl text-[#0F2A1F] dark:text-white transition-colors duration-[400ms]">Balam</h3>
-              <p class="text-sm text-[#4A4636] dark:text-gray-300 transition-colors duration-[400ms]">Iluminación LED dinámica, pista de baile iluminada, techos con arreglos florales suspendidos.</p>
+              <h3 class="font-display text-2xl text-[#0F2A1F] dark:text-white transition-colors duration-[400ms]">Balam
+              </h3>
+              <p class="text-sm text-[#4A4636] dark:text-gray-300 transition-colors duration-[400ms]">Iluminación LED
+                dinámica, pista de baile iluminada, techos con arreglos florales suspendidos.</p>
               <p class="text-sm font-semibold text-white">Capacidad: 150 personas</p>
               <div>
                 <p class="text-xs font-semibold uppercase tracking-wide text-alborada-gold">Amenidades Base</p>
@@ -195,17 +292,23 @@
                   <li>• Mobiliario Estándar</li>
                   <li>• Acceso a Cocina</li>
                 </ul>
-                <p class="mt-2 text-xs text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms]">Personaliza tu experiencia eligiendo entre nuestros paquetes Esencial, Selecto o Gran Gala.</p>
+                <p class="mt-2 text-xs text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms]">Personaliza
+                  tu experiencia eligiendo entre nuestros paquetes Esencial, Selecto o Gran Gala.</p>
               </div>
-              <a href="#login" class="mt-auto inline-flex w-full items-center justify-center rounded-full border border-alborada-gold px-8 py-3 text-sm font-semibold text-alborada-gold transition-all hover:-translate-y-1 hover:bg-alborada-gold hover:text-alborada-dark hover:shadow-lg sm:w-auto">Ver disponibilidad</a>
+              <a href="#login"
+                class="mt-auto inline-flex w-full items-center justify-center rounded-full border border-alborada-gold px-8 py-3 text-sm font-semibold text-alborada-gold transition-all hover:-translate-y-1 hover:bg-alborada-gold hover:text-alborada-dark hover:shadow-lg sm:w-auto">Ver
+                disponibilidad</a>
             </div>
           </article>
 
-          <article class="group overflow-hidden rounded-3xl border border-[#0F2A1F]/10 bg-white/70 shadow-md shadow-black/5 backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:shadow-2xl dark:shadow-[#071426]/35 dark:backdrop-blur-md transition-all duration-[400ms] transition-all duration-300 hover:-translate-y-1 hover:border-alborada-gold/50">
+          <article
+            class="group overflow-hidden rounded-3xl border border-[#0F2A1F]/10 bg-white/70 shadow-md shadow-black/5 backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:shadow-2xl dark:shadow-[#071426]/35 dark:backdrop-blur-md transition-all duration-[400ms] transition-all duration-300 hover:-translate-y-1 hover:border-alborada-gold/50">
             <img src="images/Kukulkan.png" alt="Salón Kukulkan" class="aspect-video w-full object-cover object-center">
             <div class="flex h-full flex-col space-y-4 p-6">
-              <h3 class="font-display text-2xl text-[#0F2A1F] dark:text-white transition-colors duration-[400ms]">Kukulkan</h3>
-              <p class="text-sm text-[#4A4636] dark:text-gray-300 transition-colors duration-[400ms]">Diseño tipo cabaña, madera sólida, muros de piedra, zona de asador/parrilla integrada.</p>
+              <h3 class="font-display text-2xl text-[#0F2A1F] dark:text-white transition-colors duration-[400ms]">
+                Kukulkan</h3>
+              <p class="text-sm text-[#4A4636] dark:text-gray-300 transition-colors duration-[400ms]">Diseño tipo
+                cabaña, madera sólida, muros de piedra, zona de asador/parrilla integrada.</p>
               <p class="text-sm font-semibold text-white">Capacidad: 200 personas</p>
               <div>
                 <p class="text-xs font-semibold uppercase tracking-wide text-alborada-gold">Amenidades Base</p>
@@ -216,17 +319,23 @@
                   <li>• Mobiliario Estándar</li>
                   <li>• Acceso a Cocina</li>
                 </ul>
-                <p class="mt-2 text-xs text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms]">Personaliza tu experiencia eligiendo entre nuestros paquetes Esencial, Selecto o Gran Gala.</p>
+                <p class="mt-2 text-xs text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms]">Personaliza
+                  tu experiencia eligiendo entre nuestros paquetes Esencial, Selecto o Gran Gala.</p>
               </div>
-              <a href="#login" class="mt-auto inline-flex w-full items-center justify-center rounded-full border border-alborada-gold px-8 py-3 text-sm font-semibold text-alborada-gold transition-all hover:-translate-y-1 hover:bg-alborada-gold hover:text-alborada-dark hover:shadow-lg sm:w-auto">Ver disponibilidad</a>
+              <a href="#login"
+                class="mt-auto inline-flex w-full items-center justify-center rounded-full border border-alborada-gold px-8 py-3 text-sm font-semibold text-alborada-gold transition-all hover:-translate-y-1 hover:bg-alborada-gold hover:text-alborada-dark hover:shadow-lg sm:w-auto">Ver
+                disponibilidad</a>
             </div>
           </article>
 
-          <article class="group overflow-hidden rounded-3xl border border-[#0F2A1F]/10 bg-white/70 shadow-md shadow-black/5 backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:shadow-2xl dark:shadow-[#071426]/35 dark:backdrop-blur-md transition-all duration-[400ms] transition-all duration-300 hover:-translate-y-1 hover:border-alborada-gold/50">
+          <article
+            class="group overflow-hidden rounded-3xl border border-[#0F2A1F]/10 bg-white/70 shadow-md shadow-black/5 backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:shadow-2xl dark:shadow-[#071426]/35 dark:backdrop-blur-md transition-all duration-[400ms] transition-all duration-300 hover:-translate-y-1 hover:border-alborada-gold/50">
             <img src="images/Diamante.png" alt="Salón Diamante" class="aspect-video w-full object-cover object-left">
             <div class="flex h-full flex-col space-y-4 p-6">
-              <h3 class="font-display text-2xl text-[#0F2A1F] dark:text-white transition-colors duration-[400ms]">Diamante</h3>
-              <p class="text-sm text-[#4A4636] dark:text-gray-300 transition-colors duration-[400ms]">Estética moderna, arreglos de flores suspendidos, pantallas de alta definición.</p>
+              <h3 class="font-display text-2xl text-[#0F2A1F] dark:text-white transition-colors duration-[400ms]">
+                Diamante</h3>
+              <p class="text-sm text-[#4A4636] dark:text-gray-300 transition-colors duration-[400ms]">Estética moderna,
+                arreglos de flores suspendidos, pantallas de alta definición.</p>
               <p class="text-sm font-semibold text-white">Capacidad: 300 personas</p>
               <div>
                 <p class="text-xs font-semibold uppercase tracking-wide text-alborada-gold">Amenidades Base</p>
@@ -237,9 +346,12 @@
                   <li>• Mobiliario Estándar</li>
                   <li>• Acceso a Cocina</li>
                 </ul>
-                <p class="mt-2 text-xs text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms]">Personaliza tu experiencia eligiendo entre nuestros paquetes Esencial, Selecto o Gran Gala.</p>
+                <p class="mt-2 text-xs text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms]">Personaliza
+                  tu experiencia eligiendo entre nuestros paquetes Esencial, Selecto o Gran Gala.</p>
               </div>
-              <a href="#login" class="mt-auto inline-flex w-full items-center justify-center rounded-full border border-alborada-gold px-8 py-3 text-sm font-semibold text-alborada-gold transition-all hover:-translate-y-1 hover:bg-alborada-gold hover:text-alborada-dark hover:shadow-lg sm:w-auto">Ver disponibilidad</a>
+              <a href="#login"
+                class="mt-auto inline-flex w-full items-center justify-center rounded-full border border-alborada-gold px-8 py-3 text-sm font-semibold text-alborada-gold transition-all hover:-translate-y-1 hover:bg-alborada-gold hover:text-alborada-dark hover:shadow-lg sm:w-auto">Ver
+                disponibilidad</a>
             </div>
           </article>
         </div>
@@ -249,8 +361,13 @@
     <section class="fade-up w-full py-16 md:py-20">
       <div class="mx-auto max-w-6xl px-5">
         <div class="surface-line mx-auto"></div>
-        <h2 class="text-center font-display text-4xl text-[#0F2A1F] dark:text-white md:text-5xl transition-colors duration-[400ms]">Experiencias memorables</h2>
-        <p class="mx-auto mt-3 max-w-3xl text-center text-[#4A4636] dark:text-white/80 transition-colors duration-[400ms]">Diseñamos eventos con atmósferas únicas: bodas íntimas, celebraciones familiares y encuentros empresariales con identidad propia.</p>
+        <h2
+          class="text-center font-display text-4xl text-[#0F2A1F] dark:text-white md:text-5xl transition-colors duration-[400ms]">
+          Experiencias memorables</h2>
+        <p
+          class="mx-auto mt-3 max-w-3xl text-center text-[#4A4636] dark:text-white/80 transition-colors duration-[400ms]">
+          Diseñamos eventos con atmósferas únicas: bodas íntimas, celebraciones familiares y encuentros empresariales
+          con identidad propia.</p>
         <div class="mt-8 grid gap-4 md:grid-cols-3">
           <article class="testimonial-card">
             <p>"La atención fue impecable y el salón lucía espectacular. Todo salió mejor de lo que imaginábamos."</p>
@@ -270,51 +387,69 @@
 
     <section id="contacto" class="fade-up w-full py-16 md:py-20">
       <div class="mx-auto max-w-6xl px-5">
-        <h2 class="text-center font-display text-4xl text-[#0F2A1F] dark:text-white md:text-5xl transition-colors duration-[400ms]">Contacto</h2>
+        <h2
+          class="text-center font-display text-4xl text-[#0F2A1F] dark:text-white md:text-5xl transition-colors duration-[400ms]">
+          Contacto</h2>
         <div class="mt-10 grid gap-6 lg:grid-cols-2">
-          <article class="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-2xl shadow-[#071426]/35 backdrop-blur-md sm:p-6 md:p-7">
-            <p class="text-sm text-[#4A4636] dark:text-gray-300 transition-colors duration-[400ms]">Estamos listos para ayudarte a planear tu evento.</p>
+          <article
+            class="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-2xl shadow-[#071426]/35 backdrop-blur-md sm:p-6 md:p-7">
+            <p class="text-sm text-[#4A4636] dark:text-gray-300 transition-colors duration-[400ms]">Estamos listos para
+              ayudarte a planear tu evento.</p>
 
             <div class="mt-5 space-y-4">
-              <a href="tel:+529902435568" class="group flex min-w-0 items-center gap-3 rounded-2xl border border-white/10 bg-white/60 dark:bg-[#102742]/35 transition-colors duration-[400ms] px-4 py-3 transition hover:border-alborada-gold/70 hover:bg-white/80 dark:bg-[#163557]/52 transition-colors duration-[400ms]">
-                <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-alborada-green text-white">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.86 19.86 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.89.33 1.76.62 2.6a2 2 0 0 1-.45 2.11L8 9.91a16 16 0 0 0 6 6l1.48-1.28a2 2 0 0 1 2.11-.45c.84.29 1.71.5 2.6.62A2 2 0 0 1 22 16.92z"></path>
+              <a href="tel:+529902435568"
+                class="group flex min-w-0 items-center gap-3 rounded-2xl border border-white/10 bg-white/60 dark:bg-[#102742]/35 transition-colors duration-[400ms] px-4 py-3 transition hover:border-alborada-gold/70 hover:bg-white/80 dark:bg-[#163557]/52 transition-colors duration-[400ms]">
+                <span
+                  class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-alborada-green text-white">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
+                    <path
+                      d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.86 19.86 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.89.33 1.76.62 2.6a2 2 0 0 1-.45 2.11L8 9.91a16 16 0 0 0 6 6l1.48-1.28a2 2 0 0 1 2.11-.45c.84.29 1.71.5 2.6.62A2 2 0 0 1 22 16.92z">
+                    </path>
                   </svg>
                 </span>
                 <div>
                   <p class="text-xs font-semibold uppercase tracking-wide text-alborada-gold">Llámanos</p>
-                  <p class="text-base font-semibold text-[#0F2A1F] dark:text-white group-hover:text-alborada-gold transition-colors duration-[400ms]">(+52) 990-243-5568</p>
+                  <p
+                    class="text-base font-semibold text-[#0F2A1F] dark:text-white group-hover:text-alborada-gold transition-colors duration-[400ms]">
+                    (+52) 990-243-5568</p>
                 </div>
               </a>
 
-              <a href="mailto:contacto@terrazaalborada.com" class="group flex min-w-0 items-center gap-3 rounded-2xl border border-white/10 bg-white/60 dark:bg-[#102742]/35 transition-colors duration-[400ms] px-4 py-3 transition hover:border-alborada-gold/70 hover:bg-white/80 dark:bg-[#163557]/52 transition-colors duration-[400ms]">
-                <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-alborada-green text-white">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <a href="mailto:contacto@terrazaalborada.com"
+                class="group flex min-w-0 items-center gap-3 rounded-2xl border border-white/10 bg-white/60 dark:bg-[#102742]/35 transition-colors duration-[400ms] px-4 py-3 transition hover:border-alborada-gold/70 hover:bg-white/80 dark:bg-[#163557]/52 transition-colors duration-[400ms]">
+                <span
+                  class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-alborada-green text-white">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
                     <rect x="2" y="4" width="20" height="16" rx="2"></rect>
                     <polyline points="22,6 12,13 2,6"></polyline>
                   </svg>
                 </span>
                 <div>
                   <p class="text-xs font-semibold uppercase tracking-wide text-alborada-gold">Correo</p>
-                  <p class="break-all text-sm font-semibold text-[#0F2A1F] dark:text-white group-hover:text-alborada-gold transition-colors duration-[400ms] sm:text-base">contacto@terrazaalborada.com</p>
+                  <p
+                    class="break-all text-sm font-semibold text-[#0F2A1F] dark:text-white group-hover:text-alborada-gold transition-colors duration-[400ms] sm:text-base">
+                    contacto@terrazaalborada.com</p>
                 </div>
               </a>
             </div>
 
-            <a href="https://wa.me/529902435568?text=Hola%2C%20quiero%20informaci%C3%B3n%20para%20reservar%20un%20sal%C3%B3n%20en%20Terraza%20Alborada" target="_blank" rel="noopener noreferrer" class="mt-6 inline-flex w-full items-center justify-center rounded-full border border-alborada-gold bg-transparent px-8 py-3 text-sm font-bold text-alborada-gold transition-all hover:-translate-y-1 hover:bg-alborada-gold hover:text-alborada-dark hover:shadow-lg">
+            <a href="https://wa.me/529902435568?text=Hola%2C%20quiero%20informaci%C3%B3n%20para%20reservar%20un%20sal%C3%B3n%20en%20Terraza%20Alborada"
+              target="_blank" rel="noopener noreferrer"
+              class="mt-6 inline-flex w-full items-center justify-center rounded-full border border-alborada-gold bg-transparent px-8 py-3 text-sm font-bold text-alborada-gold transition-all hover:-translate-y-1 hover:bg-alborada-gold hover:text-alborada-dark hover:shadow-lg">
               Enviar Mensaje por WhatsApp
             </a>
           </article>
 
-          <article class="rounded-3xl border border-white/10 bg-white/5 p-3 shadow-2xl shadow-[#071426]/35 backdrop-blur-md md:p-4">
+          <article
+            class="rounded-3xl border border-white/10 bg-white/5 p-3 shadow-2xl shadow-[#071426]/35 backdrop-blur-md md:p-4">
             <div class="h-64 overflow-hidden rounded-2xl sm:h-72 md:h-full md:min-h-[22rem]">
-              <iframe
-                title="Ubicación Salones Terraza Alborada en Valladolid, Yucatán"
+              <iframe title="Ubicación Salones Terraza Alborada en Valladolid, Yucatán"
                 src="https://www.google.com/maps?q=Valladolid%2C%20Yucat%C3%A1n&output=embed"
-                class="h-full w-full border-0"
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
+                class="h-full w-full border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
                 allowfullscreen>
               </iframe>
             </div>
@@ -325,40 +460,60 @@
 
     <section id="login" class="fade-up w-full py-16 md:py-20">
       <div class="mx-auto max-w-6xl px-5">
-        <div class="mx-auto max-w-3xl rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-[#071426]/35 backdrop-blur-md sm:p-8">
-          <h2 class="text-center font-display text-4xl text-[#0F2A1F] dark:text-white md:text-5xl transition-colors duration-[400ms]">Acceso de usuarios</h2>
-          <div class="mx-auto mt-6 grid gap-3 md:max-w-md">
-            <input type="email" id="email" placeholder="Correo" class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
-            <input type="password" id="password" placeholder="Contraseña" class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+        <div
+          class="mx-auto max-w-3xl rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-[#071426]/35 backdrop-blur-md sm:p-8">
+          <h2
+            class="text-center font-display text-4xl text-[#0F2A1F] dark:text-white md:text-5xl transition-colors duration-[400ms]">
+            Acceso de usuarios</h2>
+          <div class="mt-6 grid gap-4">
+            <input type="email" id="email" placeholder="Correo"
+              class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+            <input type="password" id="password" placeholder="Contraseña"
+              class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
           </div>
 
-          <div class="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
-            <button id="btnRegister" onclick="registrar()" class="action-btn action-btn-primary w-full rounded-full border border-alborada-gold bg-transparent px-8 py-3 font-semibold text-alborada-gold transition-all hover:-translate-y-1 hover:bg-alborada-gold hover:text-alborada-dark hover:shadow-lg sm:w-auto">Registrarse</button>
-            <button id="btnLogin" onclick="login()" class="action-btn action-btn-gold w-full rounded-full bg-alborada-gold px-8 py-3 font-semibold text-alborada-dark transition-all hover:-translate-y-1 hover:shadow-lg sm:w-auto">Iniciar sesión</button>
-            <button id="btnLogout" onclick="logout()" class="action-btn action-btn-outline w-full rounded-full border border-[#0F2A1F]/20 dark:border-white/25 bg-white/50 dark:bg-white/5 transition-colors duration-[400ms] px-8 py-3 font-semibold text-[#0F2A1F] dark:text-white transition-all hover:-translate-y-1 hover:bg-[#0F2A1F]/10 dark:hover:bg-white/15 hover:shadow-lg sm:w-auto">Cerrar sesión</button>
+          <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:justify-center">
+            <button id="btnRegister" onclick="registrar()"
+              class="action-btn action-btn-primary w-full rounded-full border border-alborada-gold bg-transparent px-8 py-3 font-semibold text-alborada-gold transition-all hover:-translate-y-1 hover:bg-alborada-gold hover:text-alborada-dark hover:shadow-lg sm:w-auto">Registrarse</button>
+            <button id="btnLogin" onclick="login()"
+              class="action-btn action-btn-gold w-full rounded-full bg-alborada-gold px-8 py-3 font-semibold text-alborada-dark transition-all hover:-translate-y-1 hover:shadow-lg sm:w-auto">Iniciar
+              sesión</button>
+            <button id="btnLogout" onclick="logout()"
+              class="action-btn action-btn-outline w-full rounded-full border border-[#0F2A1F]/20 dark:border-white/25 bg-white/50 dark:bg-white/5 transition-colors duration-[400ms] px-8 py-3 font-semibold text-[#0F2A1F] dark:text-white transition-all hover:-translate-y-1 hover:bg-[#0F2A1F]/10 dark:hover:bg-white/15 hover:shadow-lg sm:w-auto">Cerrar
+              sesión</button>
           </div>
 
-          <p id="estado" class="mt-4 rounded-xl border border-white/10 bg-[#102742]/45 px-4 py-3 text-sm font-medium text-[#0F2A1F] dark:text-gray-200 transition-colors duration-[400ms]"></p>
+          <p id="estado"
+            class="mt-4 rounded-xl border border-white/10 bg-[#102742]/45 px-4 py-3 text-sm font-medium text-[#0F2A1F] dark:text-gray-200 transition-colors duration-[400ms]">
+          </p>
         </div>
       </div>
     </section>
 
     <section id="zonaPrivada" class="fade-up hidden w-full py-16 md:py-20">
       <div class="mx-auto max-w-6xl px-5">
-        <div class="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-[#071426]/35 backdrop-blur-md sm:p-8">
-          <h2 class="text-center font-display text-4xl text-[#0F2A1F] dark:text-white md:text-5xl transition-colors duration-[400ms]">Reservar Fecha</h2>
+        <div
+          class="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-[#071426]/35 backdrop-blur-md sm:p-8">
+          <h2
+            class="text-center font-display text-4xl text-[#0F2A1F] dark:text-white md:text-5xl transition-colors duration-[400ms]">
+            Reservar Fecha</h2>
 
           <div class="mt-6 grid gap-3 md:grid-cols-2">
-            <input type="text" id="clienteEmpresa" placeholder="Nombre del Cliente o Empresa" class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30 md:col-span-2">
-            <input type="date" id="fechaEvento" class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
-            <select id="tipoPaquete" class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+            <input type="text" id="clienteEmpresa" placeholder="Nombre del Cliente o Empresa"
+              class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30 md:col-span-2">
+            <input type="date" id="fechaEvento"
+              class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+            <select id="tipoPaquete"
+              class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
               <option value="">Tipo de Paquete</option>
               <option value="Esencial">Esencial</option>
               <option value="Selecto">Selecto</option>
               <option value="Gran Gala">Gran Gala</option>
             </select>
-            <input type="number" id="numeroInvitados" min="1" placeholder="Número de Invitados" class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
-            <select id="salonSeleccionado" class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+            <input type="number" id="numeroInvitados" min="1" placeholder="Número de Invitados"
+              class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+            <select id="salonSeleccionado"
+              class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
               <option value="">Salón Seleccionado</option>
               <option value="Kukulcán">Kukulcán</option>
               <option value="Balam">Balam</option>
@@ -366,10 +521,15 @@
             </select>
           </div>
 
-          <button id="btnReservar" onclick="guardarReservacion()" class="action-btn action-btn-primary mt-6 w-full rounded-full border border-alborada-gold bg-transparent px-8 py-3 font-semibold text-alborada-gold transition-all hover:-translate-y-1 hover:bg-alborada-gold hover:text-alborada-dark hover:shadow-lg sm:w-auto">Reservar Fecha</button>
+          <button id="btnReservar" onclick="guardarReservacion()"
+            class="action-btn action-btn-primary mt-6 w-full rounded-full border border-alborada-gold bg-transparent px-8 py-3 font-semibold text-alborada-gold transition-all hover:-translate-y-1 hover:bg-alborada-gold hover:text-alborada-dark hover:shadow-lg sm:w-auto">Reservar
+            Fecha</button>
 
-          <div id="clientes" class="mt-10 rounded-3xl border border-white/10 bg-white/60 dark:bg-[#102742]/35 transition-colors duration-[400ms] p-5">
-            <h3 class="font-display text-xl text-[#0F2A1F] dark:text-white sm:text-2xl transition-colors duration-[400ms]">Clientes y reservaciones registradas</h3>
+          <div id="clientes"
+            class="mt-10 rounded-3xl border border-white/10 bg-white/60 dark:bg-[#102742]/35 transition-colors duration-[400ms] p-5">
+            <h3
+              class="font-display text-xl text-[#0F2A1F] dark:text-white sm:text-2xl transition-colors duration-[400ms]">
+              Clientes y reservaciones registradas</h3>
             <div id="listaReservaciones" class="mt-4 grid gap-3"></div>
           </div>
         </div>
@@ -377,11 +537,13 @@
     </section>
   </main>
 
-  <footer class="mt-8 border-t border-[#0F2A1F]/10 dark:border-white/10 bg-[#FDFCF7]/90 dark:bg-[#091525]/75 px-5 py-6 text-center text-[#0F2A1F] dark:text-white transition-colors duration-[400ms]">
+  <footer
+    class="mt-8 border-t border-[#0F2A1F]/10 dark:border-white/10 bg-[#FDFCF7]/90 dark:bg-[#091525]/75 px-5 py-6 text-center text-[#0F2A1F] dark:text-white transition-colors duration-[400ms]">
     <p>© 2026 Salones Terraza Alborada</p>
   </footer>
 
-  <div id="siteModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalMessage">
+  <div id="siteModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle"
+    aria-describedby="modalMessage">
     <div class="modal-panel" role="document">
       <button id="modalClose" type="button" class="modal-close" aria-label="Cerrar notificación">×</button>
       <div id="modalIcon" class="modal-icon" aria-hidden="true">i</div>
@@ -392,34 +554,44 @@
   </div>
 
   <div id="menuOverlay" class="fixed inset-0 z-[100] hidden bg-[#081528]/60 backdrop-blur-sm md:hidden"></div>
-  <aside id="menuLateral" class="fixed left-0 top-0 z-[110] flex h-full w-72 -translate-x-full flex-col bg-[#081528]/90 backdrop-blur-2xl transition-transform duration-500 ease-in-out md:hidden" aria-hidden="true">
+  <aside id="menuLateral"
+    class="fixed left-0 top-0 z-[110] flex h-full w-72 -translate-x-full flex-col bg-[#081528]/90 backdrop-blur-2xl transition-transform duration-500 ease-in-out md:hidden"
+    aria-hidden="true">
     <div class="flex items-center justify-between px-6 py-6">
       <span class="font-display text-2xl font-bold text-white">Menú</span>
-      <button id="menuClose" type="button" aria-label="Cerrar menú" class="flex h-8 w-8 items-center justify-center rounded-md border border-white/20 text-white transition hover:bg-white/10">
+      <button id="menuClose" type="button" aria-label="Cerrar menú"
+        class="flex h-8 w-8 items-center justify-center rounded-md border border-white/20 text-white transition hover:bg-white/10">
         <span class="text-xl leading-none">×</span>
       </button>
     </div>
 
     <nav class="flex flex-col py-2">
-      <a href="#inicio" class="nav-link-mobile block w-full px-6 py-4 font-display text-sm font-bold tracking-widest text-white transition hover:text-alborada-gold text-left uppercase">Inicio</a>
-      <a href="#salones" class="nav-link-mobile block w-full px-6 py-4 font-display text-sm font-bold tracking-widest text-white transition hover:text-alborada-gold text-left uppercase">Salones</a>
-      <a href="#contacto" class="nav-link-mobile block w-full px-6 py-4 font-display text-sm font-bold tracking-widest text-white transition hover:text-alborada-gold text-left uppercase">Contacto</a>
-      <a href="#login" class="nav-link-mobile block w-full px-6 py-4 font-display text-sm font-bold tracking-widest text-white transition hover:text-alborada-gold text-left uppercase">Acceso</a>
-      <a href="#clientes" class="nav-link-mobile block w-full px-6 py-4 font-display text-sm font-bold tracking-widest text-white transition hover:text-alborada-gold text-left uppercase">Clientes</a>
+      <a href="#inicio"
+        class="nav-link-mobile block w-full px-6 py-4 font-display text-sm font-bold tracking-widest text-white transition hover:text-alborada-gold text-left uppercase">Inicio</a>
+      <a href="#salones"
+        class="nav-link-mobile block w-full px-6 py-4 font-display text-sm font-bold tracking-widest text-white transition hover:text-alborada-gold text-left uppercase">Salones</a>
+      <a href="#contacto"
+        class="nav-link-mobile block w-full px-6 py-4 font-display text-sm font-bold tracking-widest text-white transition hover:text-alborada-gold text-left uppercase">Contacto</a>
+      <a href="#login"
+        class="nav-link-mobile block w-full px-6 py-4 font-display text-sm font-bold tracking-widest text-white transition hover:text-alborada-gold text-left uppercase">Acceso</a>
+      <a href="#clientes"
+        class="nav-link-mobile block w-full px-6 py-4 font-display text-sm font-bold tracking-widest text-white transition hover:text-alborada-gold text-left uppercase">Clientes</a>
     </nav>
 
     <div class="mt-auto px-6 pb-10">
-      <button onclick="document.getElementById('zonaPrivada').scrollIntoView({behavior:'smooth'}); cerrarMenuMovil();" class="w-full rounded-lg bg-alborada-gold py-4 text-sm font-bold text-alborada-dark transition hover:brightness-110 uppercase tracking-wide">
+      <button onclick="document.getElementById('zonaPrivada').scrollIntoView({behavior:'smooth'}); cerrarMenuMovil();"
+        class="w-full rounded-lg bg-alborada-gold py-4 text-sm font-bold text-alborada-dark transition hover:brightness-110 uppercase tracking-wide">
         Reservar Salón
       </button>
     </div>
   </aside>
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-<script src="script.js"></script>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="script.js"></script>
 
 </body>
+
 </html>
