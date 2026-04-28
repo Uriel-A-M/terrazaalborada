@@ -460,31 +460,63 @@
 
     <section id="login" class="fade-up w-full py-16 md:py-20">
       <div class="mx-auto max-w-6xl px-5">
-        <div
-          class="mx-auto max-w-3xl rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-[#071426]/35 backdrop-blur-md sm:p-8">
-          <h2
-            class="text-center font-display text-4xl text-[#0F2A1F] dark:text-white md:text-5xl transition-colors duration-[400ms]">
-            Acceso de usuarios</h2>
-          <div class="mt-6 grid gap-4">
-            <input type="email" id="email" placeholder="Correo"
-              class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
-            <input type="password" id="password" placeholder="Contraseña"
-              class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+        <div class="relative mx-auto max-w-md overflow-hidden rounded-3xl border border-[#0F2A1F]/10 bg-white/70 p-6 shadow-md shadow-black/5 backdrop-blur-xl transition-colors duration-[400ms] dark:border-white/10 dark:bg-white/5 dark:shadow-2xl dark:shadow-[#071426]/35 dark:backdrop-blur-md sm:p-8">
+          
+          <!-- Elementos decorativos (Glow) -->
+          <div class="absolute -right-10 -top-10 -z-10 h-32 w-32 rounded-full bg-alborada-gold/20 blur-3xl"></div>
+          <div class="absolute -bottom-10 -left-10 -z-10 h-32 w-32 rounded-full bg-[#0F2A1F]/10 blur-3xl dark:bg-[#102742]/30"></div>
+
+          <div class="text-center">
+            <h2 class="font-display text-3xl font-bold text-[#0F2A1F] drop-shadow-sm transition-colors duration-[400ms] dark:text-white md:text-4xl">
+              Bienvenido
+            </h2>
+            <p class="mt-2 text-sm text-[#4A4636] transition-colors duration-[400ms] dark:text-gray-300">
+              Ingresa tus credenciales para continuar
+            </p>
           </div>
 
-          <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:justify-center">
-            <button id="btnRegister" onclick="registrar()"
-              class="action-btn action-btn-primary w-full rounded-full border border-alborada-gold bg-transparent px-8 py-3 font-semibold text-alborada-gold transition-all hover:-translate-y-1 hover:bg-alborada-gold hover:text-alborada-dark hover:shadow-lg sm:w-auto">Registrarse</button>
+          <div class="mt-8 grid gap-4">
+            <!-- Correo -->
+            <div class="relative">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
+                  <path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z" />
+                  <path d="M19 8.839l-7.77 3.885a2.75 2.75 0 01-2.46 0L1 8.839V14a2 2 0 002 2h14a2 2 0 002-2V8.839z" />
+                </svg>
+              </div>
+              <input type="email" id="email" placeholder="Correo electrónico"
+                class="w-full rounded-xl border border-[#0F2A1F]/20 bg-white/60 py-3 pl-11 pr-4 text-[#0F2A1F] placeholder:text-[#4A4636] outline-none transition transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30 dark:border-white/15 dark:bg-[#102742]/45 dark:text-white dark:placeholder:text-gray-400">
+            </div>
+
+            <!-- Contraseña -->
+            <div class="relative">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
+                  <path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <input type="password" id="password" placeholder="Contraseña"
+                class="w-full rounded-xl border border-[#0F2A1F]/20 bg-white/60 py-3 pl-11 pr-4 text-[#0F2A1F] placeholder:text-[#4A4636] outline-none transition transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30 dark:border-white/15 dark:bg-[#102742]/45 dark:text-white dark:placeholder:text-gray-400">
+            </div>
+          </div>
+
+          <div class="mt-8 flex flex-col gap-3">
             <button id="btnLogin" onclick="login()"
-              class="action-btn action-btn-gold w-full rounded-full bg-alborada-gold px-8 py-3 font-semibold text-alborada-dark transition-all hover:-translate-y-1 hover:shadow-lg sm:w-auto">Iniciar
-              sesión</button>
+              class="w-full rounded-xl bg-alborada-gold px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-alborada-dark shadow-md transition-all hover:-translate-y-0.5 hover:bg-[#D4AF37] hover:shadow-lg">
+              Iniciar sesión
+            </button>
+            <button id="btnRegister" onclick="registrar()"
+              class="w-full rounded-xl border border-[#0F2A1F]/30 bg-transparent px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-[#0F2A1F] transition-all hover:bg-[#0F2A1F]/5 dark:border-white/30 dark:text-white dark:hover:bg-white/10">
+              Registrarse
+            </button>
             <button id="btnLogout" onclick="logout()"
-              class="action-btn action-btn-outline w-full rounded-full border border-[#0F2A1F]/20 dark:border-white/25 bg-white/50 dark:bg-white/5 transition-colors duration-[400ms] px-8 py-3 font-semibold text-[#0F2A1F] dark:text-white transition-all hover:-translate-y-1 hover:bg-[#0F2A1F]/10 dark:hover:bg-white/15 hover:shadow-lg sm:w-auto">Cerrar
-              sesión</button>
+              class="w-full rounded-xl border border-[#0F2A1F]/20 bg-white/50 px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-[#0F2A1F] transition-all hover:bg-[#0F2A1F]/10 dark:border-white/20 dark:bg-white/5 dark:text-white dark:hover:bg-white/10">
+              Cerrar sesión
+            </button>
           </div>
 
           <p id="estado"
-            class="mt-4 rounded-xl border border-white/10 bg-[#102742]/45 px-4 py-3 text-sm font-medium text-[#0F2A1F] dark:text-gray-200 transition-colors duration-[400ms]">
+            class="mt-5 rounded-lg border border-alborada-gold/30 bg-alborada-gold/10 px-4 py-3 text-center text-sm font-medium text-[#0F2A1F] backdrop-blur-sm transition-all duration-[400ms] empty:hidden dark:text-white">
           </p>
         </div>
       </div>
@@ -499,30 +531,74 @@
             Reservar Fecha</h2>
 
           <div class="mt-6 grid gap-3 md:grid-cols-2">
-            <input type="text" id="clienteEmpresa" placeholder="Nombre del Cliente o Empresa"
-              class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30 md:col-span-2">
-            <input type="date" id="fechaEvento"
-              class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
-            <select id="tipoPaquete"
-              class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
-              <option value="">Tipo de Paquete</option>
-              <option value="Esencial">Esencial</option>
-              <option value="Selecto">Selecto</option>
-              <option value="Gran Gala">Gran Gala</option>
-            </select>
-            <input type="number" id="numeroInvitados" min="1" placeholder="Número de Invitados"
-              class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
-            <select id="salonSeleccionado"
-              class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 px-4 py-3 text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
-              <option value="">Salón Seleccionado</option>
-              <option value="Kukulcán">Kukulcán</option>
-              <option value="Balam">Balam</option>
-              <option value="Diamante">Diamante</option>
-            </select>
+            <!-- Cliente -->
+            <div class="relative md:col-span-2">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
+                  <path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 00-13.074.003z" />
+                </svg>
+              </div>
+              <input type="text" id="clienteEmpresa" placeholder="Nombre del Cliente o Empresa"
+                class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+            </div>
+
+            <!-- Fecha -->
+            <div class="relative">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
+                  <path fill-rule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.75 2.75 0 0118 6.75v8.5A2.75 2.75 0 0115.25 18H4.75A2.75 2.75 0 012 15.25v-8.5A2.75 2.75 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <input type="date" id="fechaEvento"
+                class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+            </div>
+
+            <!-- Paquete -->
+            <div class="relative">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
+                  <path d="M11.983 1.907a.75.75 0 00-1.292-.656l-8.5 9.5A.75.75 0 002.75 12h6.572l-1.305 6.093a.75.75 0 001.292.656l8.5-9.5A.75.75 0 0017.25 8h-6.572l1.305-6.093z" />
+                </svg>
+              </div>
+              <select id="tipoPaquete"
+                class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+                <option value="">Tipo de Paquete</option>
+                <option value="Esencial">Esencial</option>
+                <option value="Selecto">Selecto</option>
+                <option value="Gran Gala">Gran Gala</option>
+              </select>
+            </div>
+
+            <!-- Invitados -->
+            <div class="relative">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
+                  <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+                </svg>
+              </div>
+              <input type="number" id="numeroInvitados" min="1" placeholder="Número de Invitados"
+                class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+            </div>
+
+            <!-- Salón -->
+            <div class="relative">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
+                  <path fill-rule="evenodd" d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <select id="salonSeleccionado"
+                class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+                <option value="">Salón Seleccionado</option>
+                <option value="Kukulcán">Kukulcán</option>
+                <option value="Balam">Balam</option>
+                <option value="Diamante">Diamante</option>
+              </select>
+            </div>
           </div>
 
           <button id="btnReservar" onclick="guardarReservacion()"
-            class="action-btn action-btn-primary mt-6 w-full rounded-full border border-alborada-gold bg-transparent px-8 py-3 font-semibold text-alborada-gold transition-all hover:-translate-y-1 hover:bg-alborada-gold hover:text-alborada-dark hover:shadow-lg sm:w-auto">Reservar
+            class="mt-8 w-full rounded-xl border-2 border-alborada-gold bg-alborada-gold px-8 py-3.5 text-center text-sm font-bold uppercase tracking-wide text-alborada-dark shadow-md transition-all duration-300 hover:-translate-y-1 hover:bg-transparent hover:text-alborada-gold hover:shadow-[0_8px_20px_rgba(212,175,55,0.3)] dark:hover:shadow-[0_8px_20px_rgba(212,175,55,0.2)]">Reservar
             Fecha</button>
 
           <div id="clientes"

@@ -287,16 +287,36 @@ function guardarReservacion() {
     return;
   }
 
+  const camposIds = ["clienteEmpresa", "fechaEvento", "tipoPaquete", "numeroInvitados", "salonSeleccionado"];
+  let tieneError = false;
+
+  camposIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el.value.trim()) {
+      tieneError = true;
+      // Añadir bordes rojos
+      el.classList.remove("border-[#0F2A1F]/20", "dark:border-white/15", "focus:border-alborada-gold");
+      el.classList.add("border-red-500", "dark:border-red-500", "focus:border-red-500", "focus:ring-red-500/30");
+      
+      // Limpiar el error cuando el usuario empiece a escribir
+      el.addEventListener("input", function clearError() {
+        el.classList.remove("border-red-500", "dark:border-red-500", "focus:border-red-500", "focus:ring-red-500/30");
+        el.classList.add("border-[#0F2A1F]/20", "dark:border-white/15", "focus:border-alborada-gold");
+        el.removeEventListener("input", clearError);
+      });
+    }
+  });
+
+  if (tieneError) {
+    mostrarModal("info", "Faltan datos", "Por favor, completa todos los campos marcados en rojo.");
+    return;
+  }
+
   const clienteEmpresa = document.getElementById("clienteEmpresa").value.trim();
   const fechaEvento = document.getElementById("fechaEvento").value;
   const tipoPaquete = document.getElementById("tipoPaquete").value;
   const numeroInvitados = document.getElementById("numeroInvitados").value;
   const salonSeleccionado = document.getElementById("salonSeleccionado").value;
-
-  if (!clienteEmpresa || !fechaEvento || !tipoPaquete || !numeroInvitados || !salonSeleccionado) {
-    mostrarModal("info", "Faltan datos", "Completa todos los campos de la reservación.");
-    return;
-  }
 
   setButtonLoading("btnReservar", true, "Guardando...");
 
@@ -363,31 +383,43 @@ function cargarReservaciones() {
 
       reservaciones.forEach(d => {
         const item = document.createElement("article");
-        item.className = "flex flex-col gap-4 rounded-2xl border border-[#0F2A1F]/10 dark:border-white/10 bg-white/60 dark:bg-white/5 p-4 shadow-lg backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:bg-[#0F2A1F]/5 dark:hover:bg-white/10 hover:shadow-xl sm:flex-row sm:items-center sm:justify-between md:p-5";
+        item.className = "group flex flex-col gap-4 rounded-2xl border border-[#0F2A1F]/10 bg-alborada-cream/80 p-4 shadow-md backdrop-blur-md transition-all duration-[400ms] ease-out hover:-translate-y-1.5 hover:border-alborada-gold/60 hover:shadow-xl hover:shadow-alborada-gold/10 dark:border-white/10 dark:bg-[#102742]/50 sm:flex-row sm:items-center sm:justify-between md:p-5";
         
         item.innerHTML = `
           <div class="flex flex-col gap-2">
-            <h4 class="text-lg font-bold text-[#0F2A1F] dark:text-white">${d.clienteEmpresa}</h4>
-            <div class="flex flex-wrap items-center gap-3 text-sm text-[#4A4636] dark:text-gray-400">
+            <!-- Nombres de clientes resalten más -->
+            <h4 class="font-display text-2xl font-bold tracking-tight text-alborada-dark transition-colors duration-[400ms] group-hover:text-alborada-gold dark:text-alborada-cream">
+              ${d.clienteEmpresa}
+            </h4>
+            <div class="flex flex-wrap items-center gap-3 text-sm text-[#4A4636] dark:text-gray-300">
               <span class="inline-flex items-center gap-1.5 font-semibold text-alborada-gold">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                  <path fill-rule="evenodd" d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z" clip-rule="evenodd" />
                 </svg>
                 ${d.salonSeleccionado}
               </span>
               <span class="hidden opacity-40 sm:inline">•</span>
               <span class="inline-flex items-center gap-1.5">
-                📦 Paquete ${d.tipoPaquete}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-70" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M11.983 1.907a.75.75 0 00-1.292-.656l-8.5 9.5A.75.75 0 002.75 12h6.572l-1.305 6.093a.75.75 0 001.292.656l8.5-9.5A.75.75 0 0017.25 8h-6.572l1.305-6.093z" />
+                </svg>
+                Paquete ${d.tipoPaquete}
               </span>
               <span class="hidden opacity-40 sm:inline">•</span>
               <span class="inline-flex items-center gap-1.5">
-                👥 ${d.numeroInvitados} invitados
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-70" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+                </svg>
+                ${d.numeroInvitados} invitados
               </span>
             </div>
           </div>
-          <div class="shrink-0 mt-2 sm:mt-0">
-            <span class="inline-flex items-center gap-1.5 rounded-lg bg-[#0F2A1F]/10 dark:bg-white/10 px-4 py-2 text-sm font-bold text-[#0F2A1F] dark:text-white transition-colors duration-[400ms]">
-              📅 ${d.fechaEvento}
+          <div class="mt-3 shrink-0 sm:mt-0">
+            <span class="inline-flex items-center gap-1.5 rounded-xl bg-alborada-gold/10 px-4 py-2 text-sm font-bold text-alborada-dark transition-colors duration-[400ms] group-hover:bg-alborada-gold group-hover:text-alborada-dark dark:text-alborada-cream dark:group-hover:text-alborada-dark">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.75 2.75 0 0118 6.75v8.5A2.75 2.75 0 0115.25 18H4.75A2.75 2.75 0 012 15.25v-8.5A2.75 2.75 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75z" clip-rule="evenodd" />
+              </svg>
+              ${d.fechaEvento}
             </span>
           </div>
         `;
