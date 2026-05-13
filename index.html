@@ -569,15 +569,23 @@
               </select>
             </div>
 
-            <!-- Invitados -->
+            <!-- Tipo de Evento -->
             <div class="relative">
               <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
-                  <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+                  <path d="M5.25 12a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H6a.75.75 0 01-.75-.75V12zM6 13.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V14a.75.75 0 00-.75-.75H6zM7.25 12a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H8a.75.75 0 01-.75-.75V12zM8 13.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V14a.75.75 0 00-.75-.75H8zM9.25 10a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H10a.75.75 0 01-.75-.75V10zM10 11.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V12a.75.75 0 00-.75-.75H10zM9.25 14a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H10a.75.75 0 01-.75-.75V14zM12 9.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V10a.75.75 0 00-.75-.75H12zM11.25 12a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H12a.75.75 0 01-.75-.75V12zM12 13.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V14a.75.75 0 00-.75-.75H12zM13.25 10a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H14a.75.75 0 01-.75-.75V10zM6.75 4.5A.75.75 0 006 5.25v.75H4.75A2.75 2.75 0 002 8.75v7.5A2.75 2.75 0 004.75 19h10.5A2.75 2.75 0 0018 16.25v-7.5A2.75 2.75 0 0015.25 6H14v-.75a.75.75 0 00-1.5 0v.75h-4.5v-.75a.75.75 0 00-.75-.75z" />
                 </svg>
               </div>
-              <input type="number" id="numeroInvitados" min="1" placeholder="Número de Invitados"
-                class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+              <select id="tipoEvento"
+                class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+                <option value="">Tipo de Evento</option>
+                <option value="Boda">Boda</option>
+                <option value="XV Años">XV Años</option>
+                <option value="Bautizo">Bautizo</option>
+                <option value="Graduación">Graduación</option>
+                <option value="Corporativo">Corporativo</option>
+                <option value="Otro">Otro</option>
+              </select>
             </div>
 
             <!-- Salón -->
@@ -594,6 +602,51 @@
                 <option value="Balam">Balam</option>
                 <option value="Diamante">Diamante</option>
               </select>
+            </div>
+
+            <!-- Invitados -->
+            <div class="relative">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
+                  <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+                </svg>
+              </div>
+              <input type="number" id="numeroInvitados" min="1" placeholder="Número de Invitados"
+                class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+              <!-- Advertencia en tiempo real de capacidad excedida -->
+              <p id="capacidadWarning"
+                class="hidden mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-red-500 dark:text-red-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                </svg>
+                <span id="capacidadWarningText"></span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Tarjeta de Resumen Dinámico de Cotización -->
+          <!-- Se muestra en tiempo real al seleccionar salón y paquete -->
+          <div id="resumenCotizacion"
+            class="hidden mt-6 overflow-hidden rounded-2xl border border-alborada-gold/40 bg-alborada-gold/5 p-5 shadow-inner backdrop-blur-md transition-all duration-500 dark:bg-alborada-gold/10">
+            <p
+              class="mb-4 text-xs font-semibold uppercase tracking-widest text-alborada-gold">
+              ✦ Resumen de Cotización
+            </p>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="rounded-xl bg-white/50 p-3 dark:bg-white/5">
+                <p class="text-xs font-medium uppercase tracking-wide text-[#4A4636] dark:text-gray-400">Total Estimado</p>
+                <p id="resumenTotal"
+                  class="mt-1 font-display text-2xl font-bold text-alborada-dark transition-all duration-300 dark:text-white">
+                  $0
+                </p>
+              </div>
+              <div class="rounded-xl bg-white/50 p-3 dark:bg-white/5">
+                <p class="text-xs font-medium uppercase tracking-wide text-[#4A4636] dark:text-gray-400">Capacidad Máxima</p>
+                <p id="resumenCapacidad"
+                  class="mt-1 font-display text-2xl font-bold text-alborada-dark transition-all duration-300 dark:text-white">
+                  — personas
+                </p>
+              </div>
             </div>
           </div>
 

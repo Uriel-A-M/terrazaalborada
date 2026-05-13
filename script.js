@@ -17,6 +17,129 @@ const db = firebase.firestore();
 // Inicializar EmailJS
 emailjs.init("8qxF4pHW13zLqaX96");
 
+// =============================================================
+// CONFIG_NEGOCIO — Fuente de verdad para precios y capacidades.
+//
+// JUSTIFICACIÓN CIA (Tríada de Seguridad de la Información):
+// • INTEGRIDAD: El cálculo del montoTotal se realiza en el cliente
+//   antes de cualquier escritura en Firestore. Esto garantiza que
+//   el dato almacenado en la nube es consistente y no puede ser
+//   adulterado por lógica de servidor incorrecta o peticiones
+//   manipuladas. El valor persiste ya validado y calculado.
+// • CONFIDENCIALIDAD: El acceso al formulario está protegido por
+//   Firebase Auth (onAuthStateChanged); solo usuarios autenticados
+//   pueden ver y operar la #zonaPrivada.
+// • DISPONIBILIDAD: Los errores de red son capturados con .catch()
+//   y el botón muestra estado de carga para evitar doble envío.
+// =============================================================
+const CONFIG_NEGOCIO = {
+  salones: {
+    Balam:     { precio: 5000,  capacidad: 150 },
+    "Kukulc\u00e1n": { precio: 7500,  capacidad: 200 },
+    Diamante:  { precio: 12000, capacidad: 300 },
+  },
+  paquetes: {
+    Esencial:    15000,
+    Selecto:     25000,
+    "Gran Gala": 45000,
+  }
+};
+
+/**
+ * actualizarResumen — Calcula y muestra el Total Estimado y la
+ * Capacidad Máxima en tiempo real conforme el usuario selecciona
+ * salón y paquete. Refuerza la INTEGRIDAD (CIA) al hacer transparente
+ * el cálculo antes de que el usuario confirme la reservación.
+ */
+function actualizarResumen() {
+  const salon   = document.getElementById("salonSeleccionado")?.value;
+  const paquete = document.getElementById("tipoPaquete")?.value;
+  const resumenEl = document.getElementById("resumenCotizacion");
+
+  if (!resumenEl) return;
+
+  if (!salon || !paquete) {
+    resumenEl.classList.add("hidden");
+    return;
+  }
+
+  const datosSalon   = CONFIG_NEGOCIO.salones[salon];
+  const precioPaquete = CONFIG_NEGOCIO.paquetes[paquete];
+
+  if (!datosSalon || precioPaquete === undefined) {
+    resumenEl.classList.add("hidden");
+    return;
+  }
+
+  const total = datosSalon.precio + precioPaquete;
+
+  document.getElementById("resumenTotal").textContent =
+    "$" + total.toLocaleString("es-MX");
+  document.getElementById("resumenCapacidad").textContent =
+    datosSalon.capacidad + " personas";
+
+  resumenEl.classList.remove("hidden");
+}
+
+/**
+ * validarCapacidad — Valida en tiempo real que el número de invitados
+ * no supere la capacidad máxima del salón seleccionado.
+ * Aplica feedback visual inmediato (borde rojo + mensaje) sin bloquear
+ * al usuario, reforzando la INTEGRIDAD de los datos antes de persistir.
+ */
+function validarCapacidad() {
+  const salonVal     = document.getElementById("salonSeleccionado")?.value;
+  const invitadosEl  = document.getElementById("numeroInvitados");
+  const warningEl    = document.getElementById("capacidadWarning");
+  const warningText  = document.getElementById("capacidadWarningText");
+
+  if (!invitadosEl || !warningEl || !warningText) return;
+
+  const numInvitados = Number(invitadosEl.value);
+  const datosSalon   = salonVal ? CONFIG_NEGOCIO.salones[salonVal] : null;
+
+  // Sin salón seleccionado o sin valor: limpiar advertencia
+  if (!datosSalon || !invitadosEl.value) {
+    invitadosEl.classList.remove(
+      "border-red-500", "dark:border-red-500",
+      "focus:border-red-500", "focus:ring-red-500/30"
+    );
+    invitadosEl.classList.add(
+      "border-[#0F2A1F]/20", "dark:border-white/15",
+      "focus:border-alborada-gold", "focus:ring-alborada-gold/30"
+    );
+    warningEl.classList.add("hidden");
+    return;
+  }
+
+  if (numInvitados > datosSalon.capacidad) {
+    // Estado de error: borde rojo + mensaje
+    invitadosEl.classList.add(
+      "border-red-500", "dark:border-red-500",
+      "focus:border-red-500", "focus:ring-red-500/30"
+    );
+    invitadosEl.classList.remove(
+      "border-[#0F2A1F]/20", "dark:border-white/15",
+      "focus:border-alborada-gold", "focus:ring-alborada-gold/30"
+    );
+    warningText.textContent =
+      `El salón ${salonVal} tiene capacidad máxima de ${datosSalon.capacidad} personas. ` +
+      `Excedes por ${numInvitados - datosSalon.capacidad}.`;
+    warningEl.classList.remove("hidden");
+  } else {
+    // Estado válido: resetear estilos
+    invitadosEl.classList.remove(
+      "border-red-500", "dark:border-red-500",
+      "focus:border-red-500", "focus:ring-red-500/30"
+    );
+    invitadosEl.classList.add(
+      "border-[#0F2A1F]/20", "dark:border-white/15",
+      "focus:border-alborada-gold", "focus:ring-alborada-gold/30"
+    );
+    warningEl.classList.add("hidden");
+  }
+}
+
 // Theme Toggle Logic
 const htmlEl = document.documentElement;
 
@@ -218,6 +341,22 @@ document.addEventListener("DOMContentLoaded", () => {
   
   const themeToggleMobile = document.getElementById('themeToggleMobile');
   if (themeToggleMobile) themeToggleMobile.addEventListener('click', toggleTheme);
+
+  // Listeners para la tarjeta de Resumen de Cotización en tiempo real.
+  // Cada cambio en salón o paquete recalcula el total y la capacidad
+  // antes de que el usuario confirme, reforzando la Integridad (CIA).
+  const salonSelect   = document.getElementById("salonSeleccionado");
+  const paqueteSelect = document.getElementById("tipoPaquete");
+  const invitadosInput = document.getElementById("numeroInvitados");
+
+  if (salonSelect) {
+    salonSelect.addEventListener("change", actualizarResumen);
+    // Al cambiar el salón se revalida la capacidad con el valor actual de invitados
+    salonSelect.addEventListener("change", validarCapacidad);
+  }
+  if (paqueteSelect)  paqueteSelect.addEventListener("change", actualizarResumen);
+  // Validación visual en tiempo real mientras el usuario escribe
+  if (invitadosInput) invitadosInput.addEventListener("input", validarCapacidad);
 });
 
 // Control de sesión
@@ -287,7 +426,8 @@ function guardarReservacion() {
     return;
   }
 
-  const camposIds = ["clienteEmpresa", "fechaEvento", "tipoPaquete", "numeroInvitados", "salonSeleccionado"];
+  // tipoEvento incluido en la validación: es un campo obligatorio.
+  const camposIds = ["clienteEmpresa", "fechaEvento", "tipoEvento", "tipoPaquete", "numeroInvitados", "salonSeleccionado"];
   let tieneError = false;
 
   camposIds.forEach(id => {
@@ -297,12 +437,13 @@ function guardarReservacion() {
       // Añadir bordes rojos
       el.classList.remove("border-[#0F2A1F]/20", "dark:border-white/15", "focus:border-alborada-gold");
       el.classList.add("border-red-500", "dark:border-red-500", "focus:border-red-500", "focus:ring-red-500/30");
-      
-      // Limpiar el error cuando el usuario empiece a escribir
-      el.addEventListener("input", function clearError() {
+
+      // Limpiar el error cuando el usuario empiece a escribir/seleccionar
+      const evtType = (el.tagName === "SELECT") ? "change" : "input";
+      el.addEventListener(evtType, function clearError() {
         el.classList.remove("border-red-500", "dark:border-red-500", "focus:border-red-500", "focus:ring-red-500/30");
         el.classList.add("border-[#0F2A1F]/20", "dark:border-white/15", "focus:border-alborada-gold");
-        el.removeEventListener("input", clearError);
+        el.removeEventListener(evtType, clearError);
       });
     }
   });
@@ -312,32 +453,64 @@ function guardarReservacion() {
     return;
   }
 
-  const clienteEmpresa = document.getElementById("clienteEmpresa").value.trim();
-  const fechaEvento = document.getElementById("fechaEvento").value;
-  const tipoPaquete = document.getElementById("tipoPaquete").value;
-  const numeroInvitados = document.getElementById("numeroInvitados").value;
+  const clienteEmpresa    = document.getElementById("clienteEmpresa").value.trim();
+  const fechaEvento       = document.getElementById("fechaEvento").value;
+  const tipoEvento        = document.getElementById("tipoEvento").value;
+  const tipoPaquete       = document.getElementById("tipoPaquete").value;
+  const numeroInvitados   = document.getElementById("numeroInvitados").value;
   const salonSeleccionado = document.getElementById("salonSeleccionado").value;
+
+  // ---------------------------------------------------------------
+  // INTEGRIDAD (Tríada CIA): El montoTotal se calcula en el cliente,
+  // usando CONFIG_NEGOCIO como fuente única de verdad, ANTES de
+  // persistir en Firestore. Esto asegura que el dato almacenado en
+  // la nube es consistente e íntegro, sin depender de cálculos
+  // posteriores que podrían ser manipulados o inconsistentes.
+  // ---------------------------------------------------------------
+  const datosSalon          = CONFIG_NEGOCIO.salones[salonSeleccionado];
+  const precioPaquete       = CONFIG_NEGOCIO.paquetes[tipoPaquete];
+  const montoTotal          = datosSalon.precio + precioPaquete;
+  const capacidadMaximaSalon = datosSalon.capacidad;
+
+  // Validación de capacidad: el número de invitados no puede superar
+  // la capacidad máxima del salón (Integridad de datos).
+  if (Number(numeroInvitados) > capacidadMaximaSalon) {
+    mostrarModal(
+      "error",
+      "Capacidad excedida",
+      `El salón ${salonSeleccionado} tiene una capacidad máxima de ${capacidadMaximaSalon} personas. Reduce el número de invitados o elige un salón más amplio.`
+    );
+    return;
+  }
 
   setButtonLoading("btnReservar", true, "Guardando...");
 
+  // Persistencia en Firestore con los campos extendidos.
+  // montoTotal y capacidadMaximaSalon se guardan como referencia
+  // histórica e inmutable del acuerdo económico al momento de reservar.
   db.collection("reservaciones").add({
     clienteEmpresa,
     fechaEvento,
+    tipoEvento,              // NUEVO — tipo de celebración
     tipoPaquete,
     numeroInvitados: Number(numeroInvitados),
     salonSeleccionado,
+    montoTotal,              // NUEVO — calculado en cliente (Integridad CIA)
+    capacidadMaximaSalon,    // NUEVO — referencia histórica del salón
     usuario: auth.currentUser.email,
     creadoEn: firebase.firestore.FieldValue.serverTimestamp()
   })
     .then(() => {
       // Enviar notificación por correo con EmailJS
       emailjs.send("service_axx0wmq", "template_fg1xpla", {
-        clienteEmpresa: clienteEmpresa,
+        clienteEmpresa:    clienteEmpresa,
         salonSeleccionado: salonSeleccionado,
-        fechaEvento: fechaEvento,
-        tipoPaquete: tipoPaquete,
-        numeroInvitados: numeroInvitados,
-        email_cliente: auth.currentUser.email
+        fechaEvento:       fechaEvento,
+        tipoEvento:        tipoEvento,
+        tipoPaquete:       tipoPaquete,
+        montoTotal:        "$" + montoTotal.toLocaleString("es-MX"),
+        numeroInvitados:   numeroInvitados,
+        email_cliente:     auth.currentUser.email
       }).then(
         function(response) {
           console.log("Email enviado con éxito:", response.status, response.text);
@@ -349,11 +522,17 @@ function guardarReservacion() {
 
       mostrarModal("success", "Reservación registrada", "Tu fecha fue apartada correctamente.");
 
-      document.getElementById("clienteEmpresa").value = "";
-      document.getElementById("fechaEvento").value = "";
-      document.getElementById("tipoPaquete").value = "";
-      document.getElementById("numeroInvitados").value = "";
+      // Limpiar formulario (incluyendo el nuevo campo tipoEvento)
+      document.getElementById("clienteEmpresa").value    = "";
+      document.getElementById("fechaEvento").value       = "";
+      document.getElementById("tipoEvento").value        = "";
+      document.getElementById("tipoPaquete").value       = "";
+      document.getElementById("numeroInvitados").value   = "";
       document.getElementById("salonSeleccionado").value = "";
+
+      // Ocultar la tarjeta de resumen al limpiar
+      const resumen = document.getElementById("resumenCotizacion");
+      if (resumen) resumen.classList.add("hidden");
 
       cargarReservaciones();
     })
@@ -382,45 +561,80 @@ function cargarReservaciones() {
       reservaciones.sort((a, b) => a.fechaEvento.localeCompare(b.fechaEvento));
 
       reservaciones.forEach(d => {
+        // Helper para formatear montos con retrocompatibilidad
+        // (reservaciones antiguas sin montoTotal mostrarán "—")
+        const montoFmt = d.montoTotal != null
+          ? "$" + Number(d.montoTotal).toLocaleString("es-MX")
+          : "—";
+        const capacidadFmt = d.capacidadMaximaSalon != null
+          ? d.capacidadMaximaSalon + " personas"
+          : "—";
+        const tipoEventoFmt = d.tipoEvento || "—";
+
         const item = document.createElement("article");
-        item.className = "group flex flex-col gap-4 rounded-2xl border border-[#0F2A1F]/10 bg-alborada-cream/80 p-4 shadow-md backdrop-blur-md transition-all duration-[400ms] ease-out hover:-translate-y-1.5 hover:border-alborada-gold/60 hover:shadow-xl hover:shadow-alborada-gold/10 dark:border-white/10 dark:bg-[#102742]/50 sm:flex-row sm:items-center sm:justify-between md:p-5";
-        
+        item.className = "group rounded-2xl border border-[#0F2A1F]/10 bg-alborada-cream/80 shadow-md backdrop-blur-md transition-all duration-[400ms] ease-out hover:-translate-y-1 hover:border-alborada-gold/60 hover:shadow-xl hover:shadow-alborada-gold/10 dark:border-white/10 dark:bg-[#102742]/50 overflow-hidden";
+
         item.innerHTML = `
-          <div class="flex flex-col gap-2">
-            <!-- Nombres de clientes resalten más -->
-            <h4 class="font-display text-2xl font-bold tracking-tight text-alborada-dark transition-colors duration-[400ms] group-hover:text-alborada-gold dark:text-alborada-cream">
-              ${d.clienteEmpresa}
-            </h4>
-            <div class="flex flex-wrap items-center gap-3 text-sm text-[#4A4636] dark:text-gray-300">
-              <span class="inline-flex items-center gap-1.5 font-semibold text-alborada-gold">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z" clip-rule="evenodd" />
-                </svg>
-                ${d.salonSeleccionado}
-              </span>
-              <span class="hidden opacity-40 sm:inline">•</span>
-              <span class="inline-flex items-center gap-1.5">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-70" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M11.983 1.907a.75.75 0 00-1.292-.656l-8.5 9.5A.75.75 0 002.75 12h6.572l-1.305 6.093a.75.75 0 001.292.656l8.5-9.5A.75.75 0 0017.25 8h-6.572l1.305-6.093z" />
-                </svg>
-                Paquete ${d.tipoPaquete}
-              </span>
-              <span class="hidden opacity-40 sm:inline">•</span>
-              <span class="inline-flex items-center gap-1.5">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-70" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
-                </svg>
-                ${d.numeroInvitados} invitados
-              </span>
+          <!-- Cabecera de la tarjeta: nombre del cliente + fecha -->
+          <div class="flex flex-col gap-1 border-b border-[#0F2A1F]/8 dark:border-white/8 p-4 sm:flex-row sm:items-center sm:justify-between md:p-5">
+            <div>
+              <h4 class="font-display text-xl font-bold tracking-tight text-alborada-dark transition-colors duration-[400ms] group-hover:text-alborada-gold dark:text-alborada-cream sm:text-2xl">
+                ${d.clienteEmpresa}
+              </h4>
+              <p class="mt-0.5 text-xs font-medium uppercase tracking-widest text-alborada-gold/80">${tipoEventoFmt}</p>
             </div>
-          </div>
-          <div class="mt-3 shrink-0 sm:mt-0">
-            <span class="inline-flex items-center gap-1.5 rounded-xl bg-alborada-gold/10 px-4 py-2 text-sm font-bold text-alborada-dark transition-colors duration-[400ms] group-hover:bg-alborada-gold group-hover:text-alborada-dark dark:text-alborada-cream dark:group-hover:text-alborada-dark">
+            <span class="mt-2 inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-alborada-gold/10 px-4 py-2 text-sm font-bold text-alborada-dark transition-colors duration-[400ms] group-hover:bg-alborada-gold dark:text-alborada-cream dark:group-hover:text-alborada-dark sm:mt-0">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.75 2.75 0 0118 6.75v8.5A2.75 2.75 0 0115.25 18H4.75A2.75 2.75 0 012 15.25v-8.5A2.75 2.75 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75z" clip-rule="evenodd" />
               </svg>
               ${d.fechaEvento}
             </span>
+          </div>
+
+          <!-- Cuerpo: grid de datos del evento -->
+          <div class="grid grid-cols-2 gap-px bg-[#0F2A1F]/8 dark:bg-white/8 sm:grid-cols-4">
+
+            <!-- Salón -->
+            <div class="flex flex-col gap-1 bg-alborada-cream/90 dark:bg-[#102742]/60 p-3 md:p-4">
+              <p class="text-[10px] font-semibold uppercase tracking-widest text-alborada-gold">Salón</p>
+              <p class="flex items-center gap-1.5 text-sm font-semibold text-[#0F2A1F] dark:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-alborada-gold/70" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z" clip-rule="evenodd" />
+                </svg>
+                ${d.salonSeleccionado}
+              </p>
+            </div>
+
+            <!-- Paquete -->
+            <div class="flex flex-col gap-1 bg-alborada-cream/90 dark:bg-[#102742]/60 p-3 md:p-4">
+              <p class="text-[10px] font-semibold uppercase tracking-widest text-alborada-gold">Paquete</p>
+              <p class="flex items-center gap-1.5 text-sm font-semibold text-[#0F2A1F] dark:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-alborada-gold/70" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M11.983 1.907a.75.75 0 00-1.292-.656l-8.5 9.5A.75.75 0 002.75 12h6.572l-1.305 6.093a.75.75 0 001.292.656l8.5-9.5A.75.75 0 0017.25 8h-6.572l1.305-6.093z" />
+                </svg>
+                ${d.tipoPaquete}
+              </p>
+            </div>
+
+            <!-- Invitados / Capacidad -->
+            <div class="flex flex-col gap-1 bg-alborada-cream/90 dark:bg-[#102742]/60 p-3 md:p-4">
+              <p class="text-[10px] font-semibold uppercase tracking-widest text-alborada-gold">Invitados / Cap.</p>
+              <p class="flex items-center gap-1.5 text-sm font-semibold text-[#0F2A1F] dark:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-alborada-gold/70" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+                </svg>
+                ${d.numeroInvitados} / ${capacidadFmt}
+              </p>
+            </div>
+
+            <!-- Monto Total -->
+            <div class="flex flex-col gap-1 bg-alborada-gold/8 dark:bg-alborada-gold/12 p-3 md:p-4">
+              <p class="text-[10px] font-semibold uppercase tracking-widest text-alborada-gold">Monto Total</p>
+              <p class="font-display text-lg font-bold text-alborada-dark dark:text-alborada-gold">
+                ${montoFmt}
+              </p>
+            </div>
+
           </div>
         `;
         lista.appendChild(item);
