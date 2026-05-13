@@ -50,6 +50,7 @@ auth.onAuthStateChanged(async (user) => {
 function inicializarDashboard() {
   inicializarCalendario();
   setupListeners();
+  mostrarSkeletons();   // Estado de carga antes del primer onSnapshot
   unsubscribeSnapshot = db.collection('reservaciones').onSnapshot(snapshot => {
     reservacionesCache = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
     const filtradas = aplicarFiltros(reservacionesCache);
@@ -142,7 +143,57 @@ function inicializarCalendario() {
   calendarInstance = new FullCalendar.Calendar(el, {
     initialView: 'dayGridMonth', locale: 'es',
     headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,listWeek' },
-    height: 'auto', events: []
+    height: 'auto',
+    events: [],
+    eventClick(info) {
+      const r = info.event.extendedProps;
+      const monto = r.montoTotal != null
+        ? '$' + Number(r.montoTotal).toLocaleString('es-MX')
+        : '—';
+      const inv = r.numeroInvitados ?? '—';
+      const cap = r.capacidadMaximaSalon ?? '—';
+      const estadoColor = { Pendiente:'#C9A227', Confirmado:'#34d399', Finalizado:'#9ca3af', Cancelado:'#f87171' }[r.estado] || '#C9A227';
+      Swal.fire({
+        background: '#0e2236',
+        color: '#fff',
+        width: '480px',
+        showCloseButton: true,
+        showConfirmButton: false,
+        html: `
+          <div style="text-align:left;padding:.5rem .25rem">
+            <p style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:#fff;margin-bottom:.25rem">${r.clienteEmpresa || 'Sin nombre'}</p>
+            <p style="font-size:.8rem;color:rgba(255,255,255,.45);margin-bottom:1.25rem">${r.usuario || ''}</p>
+            <span style="display:inline-block;padding:.2rem .75rem;border-radius:9999px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;background:${estadoColor}22;color:${estadoColor};border:1px solid ${estadoColor}55;margin-bottom:1.25rem">${r.estado || 'Pendiente'}</span>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.85rem 1.5rem">
+              <div>
+                <p style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#C9A227">Salón</p>
+                <p style="font-size:.9rem;font-weight:600;color:#fff">${r.salonSeleccionado || '—'}</p>
+              </div>
+              <div>
+                <p style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#C9A227">Fecha del Evento</p>
+                <p style="font-size:.9rem;font-weight:600;color:#fff">${r.fechaEvento || '—'}</p>
+              </div>
+              <div>
+                <p style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#C9A227">Tipo de Evento</p>
+                <p style="font-size:.9rem;font-weight:600;color:#fff">${r.tipoEvento || '—'}</p>
+              </div>
+              <div>
+                <p style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#C9A227">Paquete</p>
+                <p style="font-size:.9rem;font-weight:600;color:#fff">${r.tipoPaquete || '—'}</p>
+              </div>
+              <div>
+                <p style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#C9A227">Invitados</p>
+                <p style="font-size:.9rem;font-weight:600;color:#fff">${inv} <span style="color:rgba(255,255,255,.4)">/ ${cap}</span></p>
+              </div>
+              <div>
+                <p style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#C9A227">Monto Total</p>
+                <p style="font-size:.9rem;font-weight:700;color:#C9A227">${monto}</p>
+              </div>
+            </div>
+          </div>
+        `
+      });
+    }
   });
   calendarInstance.render();
 }
@@ -152,7 +203,8 @@ function actualizarCalendario(arr) {
   calendarInstance.addEventSource(arr.map(r => ({
     title: `${r.clienteEmpresa || 'Sin nombre'} · ${r.salonSeleccionado || ''}`,
     start: r.fechaEvento,
-    color: ESTADO_COLOR[r.estado] || ESTADO_COLOR.Pendiente
+    color: ESTADO_COLOR[r.estado] || ESTADO_COLOR.Pendiente,
+    extendedProps: { ...r }   // Todos los datos para el eventClick
   })));
 }
 
@@ -173,19 +225,62 @@ function aplicarFiltros(arr) {
 function refrescar() {
   const f = aplicarFiltros(reservacionesCache);
   actualizarKPIsBI(f);
-  actualizarGraficas(f);
+  // Solo redibuja las gráficas si la sección analítica es visible.
+  // Chart.js lanza una excepción con canvas de display:none (dimensiones 0)
+  // que cortaría la ejecución antes de llegar a renderizarLista.
+  const analyticsVisible = !document.getElementById('sec-analytics')?.classList.contains('hidden');
+  if (analyticsVisible) {
+    try { actualizarGraficas(f); } catch (e) { console.warn('Charts skip:', e); }
+  }
   actualizarCalendario(f);
   renderizarLista(f);
 }
 
-// ── Módulo 7: Renderizar lista ────────────────────────────────
+// ── Módulo 7: Skeleton loader ────────────────────────────────
+function mostrarSkeletons(n = 4) {
+  const lista = document.getElementById('listaAdmin');
+  if (!lista) return;
+  lista.innerHTML = Array.from({ length: n }).map((_, i) => `
+    <div class="skeleton-card" style="animation-delay:${i * 80}ms">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem">
+        <div style="flex:1">
+          <div class="skel-line" style="height:18px;width:55%;margin-bottom:.6rem"></div>
+          <div class="skel-line" style="height:12px;width:35%;margin-bottom:1rem"></div>
+          <div style="display:flex;gap:1.5rem;flex-wrap:wrap">
+            ${Array.from({length:5}).map(() =>
+              `<div>
+                <div class="skel-line" style="height:9px;width:48px;margin-bottom:.35rem"></div>
+                <div class="skel-line" style="height:13px;width:72px"></div>
+              </div>`
+            ).join('')}
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.5rem;flex-shrink:0">
+          <div class="skel-line" style="height:32px;width:110px;border-radius:.5rem"></div>
+          <div class="skel-line" style="height:10px;width:70px"></div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── Módulo 8: Renderizar lista ────────────────────────────────
 function renderizarLista(arr) {
   const lista = document.getElementById('listaAdmin');
   if (!lista) return;
   if (!arr.length) {
-    lista.innerHTML = `<div style="text-align:center;padding:3rem;border:1px dashed rgba(255,255,255,.1);border-radius:1rem">
-      <i class="fa-regular fa-calendar-xmark" style="font-size:2.5rem;color:rgba(255,255,255,.2);margin-bottom:1rem"></i>
-      <p style="color:rgba(255,255,255,.5);font-weight:600">Sin resultados para los filtros aplicados</p></div>`;
+    lista.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">
+          <i class="fa-solid fa-magnifying-glass" style="font-size:1.6rem;color:#34d399"></i>
+        </div>
+        <p style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:#fff">No se encontraron reservaciones</p>
+        <p style="font-size:.875rem;color:rgba(255,255,255,.45)">Prueba cambiando las fechas o el término de búsqueda.</p>
+        <button class="empty-btn" onclick="limpiarFiltros()">
+          <i class="fa-solid fa-rotate-left"></i> Limpiar filtros
+        </button>
+      </div>
+    `;
     return;
   }
   const sorted = [...arr].sort((a,b) => (b.fechaEvento||'').localeCompare(a.fechaEvento||''));
@@ -223,10 +318,10 @@ function renderizarLista(arr) {
         <!-- Selector de estado -->
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.5rem;flex-shrink:0">
           <select class="estado-select" onchange="cambiarEstado('${r.id}', this.value)">
-            <option value="Pendiente"  ${estado==='Pendiente'  ?'selected':''}>⏳ Pendiente</option>
-            <option value="Confirmado" ${estado==='Confirmado' ?'selected':''}>✅ Confirmado</option>
-            <option value="Finalizado" ${estado==='Finalizado' ?'selected':''}>📋 Finalizado</option>
-            <option value="Cancelado"  ${estado==='Cancelado'  ?'selected':''}>❌ Cancelado</option>
+            <option value="Pendiente"  ${estado==='Pendiente'  ?'selected':''}>Pendiente</option>
+            <option value="Confirmado" ${estado==='Confirmado' ?'selected':''}>Confirmado</option>
+            <option value="Finalizado" ${estado==='Finalizado' ?'selected':''}>Finalizado</option>
+            <option value="Cancelado"  ${estado==='Cancelado'  ?'selected':''}>Cancelado</option>
           </select>
           <span style="font-size:.7rem;color:rgba(255,255,255,.3)">Creado: ${creadoEn}</span>
         </div>
@@ -281,6 +376,16 @@ function showSection(id) {
   }
 }
 
+// limpiarFiltros — función global: usada por la barra de filtros
+// Y por el botón del empty state (onclick inline en HTML generado).
+function limpiarFiltros() {
+  ['searchInput','filtroEstado','filtroFechaDesde','filtroFechaHasta'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  refrescar();
+}
+
 // ── Event Listeners ───────────────────────────────────────────
 function setupListeners() {
   // Logout
@@ -294,13 +399,7 @@ function setupListeners() {
     document.getElementById(id)?.addEventListener('input', refrescar);
     document.getElementById(id)?.addEventListener('change', refrescar);
   });
-  document.getElementById('btnLimpiarFiltros')?.addEventListener('click', () => {
-    ['searchInput','filtroEstado','filtroFechaDesde','filtroFechaHasta'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.value = '';
-    });
-    refrescar();
-  });
+  document.getElementById('btnLimpiarFiltros')?.addEventListener('click', limpiarFiltros);
 
   // Modal Calendario
   document.getElementById('btnAbrirCalendario')?.addEventListener('click', () => {

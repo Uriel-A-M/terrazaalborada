@@ -77,11 +77,23 @@
     .fc td,.fc th{border-color:rgba(255,255,255,.08)}
     .fc .fc-day-today{background:rgba(201,162,39,.08)!important}
     .fc .fc-daygrid-day:hover{background:rgba(201,162,39,.05)}
-    .fc-event{font-size:.75rem;font-weight:600;border:none!important}
+    .fc-event{font-size:.75rem;font-weight:600;border:none!important;cursor:pointer!important}
 
     /* Shimmer */
     .shimmer{background:linear-gradient(90deg,transparent,rgba(201,162,39,.15),transparent);background-size:200%;animation:shimmer 1.5s infinite}
     @keyframes shimmer{0%{background-position:200%}100%{background-position:-200%}}
+
+    /* Skeleton cards */
+    .skeleton-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:.875rem;padding:1rem 1.25rem;border-left:3px solid rgba(255,255,255,.07)}
+    .skel-line{border-radius:.4rem;background:rgba(255,255,255,.08);position:relative;overflow:hidden}
+    .skel-line::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.07) 50%,transparent 100%);background-size:200% 100%;animation:skelShimmer 1.6s ease-in-out infinite}
+    @keyframes skelShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    /* Empty state */
+    .empty-state{border:1px dashed rgba(255,255,255,.12);border-radius:1rem;padding:3.5rem 2rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.75rem}
+    .empty-state-icon{width:64px;height:64px;border-radius:50%;background:rgba(31,90,61,.15);border:1px solid rgba(31,90,61,.3);display:flex;align-items:center;justify-content:center;margin-bottom:.5rem}
+    .empty-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem 1.25rem;border-radius:.6rem;border:1px solid rgba(52,211,153,.4);color:#34d399;font-size:.8rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:transparent;cursor:pointer;margin-top:.5rem;transition:all .25s}
+    .empty-btn:hover{background:rgba(52,211,153,.1);border-color:#34d399}
 
     /* Scrollbar */
     ::-webkit-scrollbar{width:5px}
