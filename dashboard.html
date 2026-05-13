@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Admin | Terraza Alborada</title>
+  <meta name="description" content="Panel administrativo de Business Intelligence y gestión de reservaciones de Terraza Alborada.">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            alborada: {
+              gold: "#C9A227",
+              green: "#1F5A3D",
+              cream: "#F8F5EA",
+              dark: "#173A2A"
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- FullCalendar v6 -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
+  <!-- Chart.js v4 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/png" href="images/Logo.png">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body class="min-h-screen bg-[#FDFCF7] dark:bg-[#0f2036] text-[#0F2A1F] dark:text-white antialiased">
+
+  <!-- ============================================================
+       AUTH OVERLAY — Se muestra mientras se verifica la sesión.
+       CIA — CONFIDENCIALIDAD: Impide ver el dashboard antes de
+       confirmar que el usuario autenticado tiene rol "admin".
+       ============================================================ -->
+  <div id="authOverlay" class="auth-overlay">
+    <div class="flex flex-col items-center gap-4">
+      <div class="auth-spinner"></div>
+      <p class="text-sm font-semibold text-[#4A4636] dark:text-gray-300">Verificando permisos…</p>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       APP CONTAINER (oculto hasta confirmar admin)
+       ============================================================ -->
+  <div id="app" class="hidden">
+
+    <!-- Botón menú móvil -->
+    <button id="mobileMenuBtn" class="mobile-menu-toggle" aria-label="Abrir menú">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+
+    <!-- Overlay móvil -->
+    <div id="sidebarOverlay" class="fixed inset-0 z-[90] hidden bg-black/50 backdrop-blur-sm md:hidden"></div>
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside id="sidebar" class="sidebar">
+      <div>
+        <p class="sidebar-logo">✦ Terraza Alborada</p>
+        <p class="mt-1 text-xs font-semibold uppercase tracking-widest text-alborada-gold/70">Panel Admin</p>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#sec-kpis" class="sidebar-link active">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+          </svg>
+          KPIs & Analítica
+        </a>
+        <a href="#sec-calendario" class="sidebar-link">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.75 2.75 0 0118 6.75v8.5A2.75 2.75 0 0115.25 18H4.75A2.75 2.75 0 012 15.25v-8.5A2.75 2.75 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75z" clip-rule="evenodd"/>
+          </svg>
+          Calendario
+        </a>
+        <a href="#sec-reservaciones" class="sidebar-link">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+          </svg>
+          Reservaciones
+        </a>
+        <a href="index.html" class="sidebar-link">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z" clip-rule="evenodd"/>
+          </svg>
+          Ir al sitio
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p id="adminEmail" class="mb-3 truncate text-xs text-gray-400"></p>
+        <button id="btnLogout" class="btn-logout">Cerrar sesión</button>
+      </div>
+    </aside>
+
+    <!-- ===================== MAIN CONTENT ===================== -->
+    <main class="main-content">
+
+      <!-- Header -->
+      <header class="page-header">
+        <div>
+          <h1 class="page-title text-3xl md:text-4xl">Panel Administrativo</h1>
+          <p class="mt-1 text-sm text-[#4A4636] dark:text-gray-400">Terraza Alborada · Business Intelligence</p>
+        </div>
+        <span class="admin-badge">Administrador</span>
+      </header>
+
+      <!-- ===================== KPIs ===================== -->
+      <section id="sec-kpis" class="mb-8">
+        <h2 class="section-title">Indicadores Clave</h2>
+        <div class="kpi-grid">
+          <!-- KPI 1: Ingresos Totales -->
+          <div class="kpi-card">
+            <p class="kpi-label">💰 Ingresos Totales</p>
+            <p id="kpiIngresos" class="kpi-value"><span class="kpi-shimmer inline-block">&nbsp;</span></p>
+            <p id="kpiIngresosCount" class="kpi-sub"></p>
+          </div>
+          <!-- KPI 2: Tipo de Evento más popular -->
+          <div class="kpi-card">
+            <p class="kpi-label">🎉 Evento más Popular</p>
+            <p id="kpiEvento" class="kpi-value"><span class="kpi-shimmer inline-block">&nbsp;</span></p>
+            <p id="kpiEventoCount" class="kpi-sub"></p>
+          </div>
+          <!-- KPI 3: Salón Top -->
+          <div class="kpi-card">
+            <p class="kpi-label">🏛️ Salón con más Reservas</p>
+            <p id="kpiSalon" class="kpi-value"><span class="kpi-shimmer inline-block">&nbsp;</span></p>
+            <p id="kpiSalonCount" class="kpi-sub"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== GRÁFICAS ===================== -->
+      <section id="sec-graficas" class="mb-8">
+        <h2 class="section-title">Analítica Visual</h2>
+        <div class="charts-grid">
+          <div class="chart-card">
+            <p class="chart-label">Distribución por Tipo de Evento</p>
+            <canvas id="chartTipoEvento"></canvas>
+          </div>
+          <div class="chart-card">
+            <p class="chart-label">Ingresos por Salón</p>
+            <canvas id="chartIngresosSalon"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== FILTROS ===================== -->
+      <section id="sec-filtros" class="mb-2">
+        <div class="filters-bar">
+          <span class="text-xs font-bold uppercase tracking-widest text-alborada-gold">Filtros</span>
+          <select id="filtroSalon" class="filter-control">
+            <option value="">Todos los salones</option>
+            <option value="Balam">Balam</option>
+            <option value="Kukulcán">Kukulcán</option>
+            <option value="Diamante">Diamante</option>
+          </select>
+          <select id="filtroTipoEvento" class="filter-control">
+            <option value="">Todos los eventos</option>
+            <option value="Boda">Boda</option>
+            <option value="XV Años">XV Años</option>
+            <option value="Bautizo">Bautizo</option>
+            <option value="Graduación">Graduación</option>
+            <option value="Corporativo">Corporativo</option>
+            <option value="Otro">Otro</option>
+          </select>
+          <select id="filtroEstado" class="filter-control">
+            <option value="">Todos los estados</option>
+            <option value="Pendiente">Pendiente</option>
+            <option value="Confirmado">Confirmado</option>
+            <option value="Finalizado">Finalizado</option>
+            <option value="Cancelado">Cancelado</option>
+          </select>
+          <input type="date" id="filtroFechaDesde" class="filter-control" title="Desde">
+          <input type="date" id="filtroFechaHasta" class="filter-control" title="Hasta">
+          <button id="btnLimpiarFiltros" class="btn-clear-filters">Limpiar</button>
+        </div>
+      </section>
+
+      <!-- ===================== CALENDARIO ===================== -->
+      <section id="sec-calendario" class="mb-8">
+        <h2 class="section-title">Calendario de Eventos</h2>
+        <div class="calendar-wrapper">
+          <div id="calendarioFC"></div>
+        </div>
+      </section>
+
+      <!-- ===================== LISTA DE RESERVACIONES ===================== -->
+      <section id="sec-reservaciones" class="mb-8">
+        <h2 class="section-title">Gestión de Reservaciones</h2>
+        <div id="listaAdmin" class="grid gap-3"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Firebase v8 (misma versión que index.html) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="dashboard.js"></script>
+
+</body>
+
+</html>

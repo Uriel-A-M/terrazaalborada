@@ -360,21 +360,44 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Control de sesión
-auth.onAuthStateChanged(user => {
+// CIA — CONFIDENCIALIDAD: Se verifica el rol del usuario antes de
+// mostrar cualquier sección protegida. Los admins son redirigidos
+// al dashboard; los usuarios normales permanecen en el index.
+auth.onAuthStateChanged(async (user) => {
   if (user) {
-    document.getElementById("zonaPrivada").classList.remove("hidden");
-    document.getElementById("estado").innerText = "Sesión iniciada: " + user.email;
-    cargarReservaciones();
+    try {
+      // Consultar el perfil en Firestore para conocer el rol
+      const perfilDoc = await db.collection("users").doc(user.uid).get();
+      const rol = perfilDoc.exists ? perfilDoc.data().role : "user";
+
+      if (rol === "admin") {
+        // Admin → redirigir al panel de administración
+        window.location.href = "dashboard.html";
+        return;
+      }
+
+      // Usuario normal → mostrar la zona privada de reservaciones
+      document.getElementById("zonaPrivada").classList.remove("hidden");
+      document.getElementById("estado").innerText = "Sesión iniciada: " + user.email;
+      cargarReservaciones();
+
+    } catch (error) {
+      // Error de red o de permisos: mantener al usuario en el index
+      console.error("Error al verificar rol:", error);
+      document.getElementById("zonaPrivada").classList.remove("hidden");
+      document.getElementById("estado").innerText = "Sesión iniciada: " + user.email;
+      cargarReservaciones();
+    }
+
   } else {
     document.getElementById("zonaPrivada").classList.add("hidden");
     document.getElementById("estado").innerText = "No has iniciado sesión";
 
     const lista = document.getElementById("listaReservaciones");
-    if (lista) {
-      lista.innerHTML = "";
-    }
+    if (lista) lista.innerHTML = "";
   }
 });
+
 
 // Registro
 function registrar() {
@@ -389,6 +412,16 @@ function registrar() {
   setButtonLoading("btnRegister", true, "Registrando...");
 
   auth.createUserWithEmailAndPassword(email, password)
+    .then(cred => {
+      // CIA — INTEGRIDAD: Se crea el perfil del usuario en Firestore
+      // con rol "user" forzado. Solo un administrador puede elevarlo
+      // a "admin" desde Firebase Console o el Dashboard.
+      return db.collection("users").doc(cred.user.uid).set({
+        email: cred.user.email,
+        role: "user",
+        creadoEn: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    })
     .then(() => mostrarModal("success", "Registro exitoso", "Tu cuenta fue creada correctamente. Ya puedes iniciar sesión."))
     .catch(e => mostrarModal("error", "No se pudo registrar", e.message))
     .finally(() => setButtonLoading("btnRegister", false, "Registrarse"));
@@ -491,12 +524,14 @@ function guardarReservacion() {
   db.collection("reservaciones").add({
     clienteEmpresa,
     fechaEvento,
-    tipoEvento,              // NUEVO — tipo de celebración
+    tipoEvento,              // tipo de celebración
     tipoPaquete,
     numeroInvitados: Number(numeroInvitados),
     salonSeleccionado,
-    montoTotal,              // NUEVO — calculado en cliente (Integridad CIA)
-    capacidadMaximaSalon,    // NUEVO — referencia histórica del salón
+    montoTotal,              // calculado en cliente (Integridad CIA)
+    capacidadMaximaSalon,    // referencia histórica del salón
+    uid:    auth.currentUser.uid,    // requerido por Security Rules
+    estado: "Pendiente",             // ciclo de vida de la reservación
     usuario: auth.currentUser.email,
     creadoEn: firebase.firestore.FieldValue.serverTimestamp()
   })
