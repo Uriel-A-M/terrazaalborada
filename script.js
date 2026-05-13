@@ -12,7 +12,13 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
-const db = firebase.firestore();
+const db   = firebase.firestore();
+
+// Set de combinaciones bloqueadas: "YYYY-MM-DD|NombreSalón"
+// Se mantiene actualizado por onSnapshot al iniciar sesión.
+// CIA — DISPONIBILIDAD: onSnapshot garantiza sincronización
+// en tiempo real sin consultas adicionales por interacción.
+let reservasOcupadas = new Set();
 
 // Inicializar EmailJS
 emailjs.init("8qxF4pHW13zLqaX96");
@@ -351,12 +357,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (salonSelect) {
     salonSelect.addEventListener("change", actualizarResumen);
-    // Al cambiar el salón se revalida la capacidad con el valor actual de invitados
     salonSelect.addEventListener("change", validarCapacidad);
+    salonSelect.addEventListener("change", verificarDisponibilidad);
   }
   if (paqueteSelect)  paqueteSelect.addEventListener("change", actualizarResumen);
-  // Validación visual en tiempo real mientras el usuario escribe
   if (invitadosInput) invitadosInput.addEventListener("input", validarCapacidad);
+
+  // Verificar disponibilidad al cambiar la fecha
+  const fechaInputDisp = document.getElementById("fechaEvento");
+  if (fechaInputDisp) fechaInputDisp.addEventListener("change", verificarDisponibilidad);
 });
 
 // Control de sesión
@@ -380,6 +389,7 @@ auth.onAuthStateChanged(async (user) => {
       document.getElementById("zonaPrivada").classList.remove("hidden");
       document.getElementById("estado").innerText = "Sesión iniciada: " + user.email;
       cargarReservaciones();
+      escucharDisponibilidad(); // Activar listener de slots ocupados
 
     } catch (error) {
       // Error de red o de permisos: mantener al usuario en el index
@@ -398,6 +408,99 @@ auth.onAuthStateChanged(async (user) => {
   }
 });
 
+// =============================================================
+// DISPONIBILIDAD: escuchar y verificar slots ocupados
+// =============================================================
+
+/**
+ * escucharDisponibilidad — Suscripción onSnapshot que mantiene
+ * el Set 'reservasOcupadas' siempre actualizado con las combinaciones
+ * fecha+salón que ya están reservadas (estado Pendiente o Confirmado).
+ * Si el admin cancela una reserva, el slot se libera en tiempo real.
+ */
+function escucharDisponibilidad() {
+  db.collection("reservaciones")
+    .where("estado", "in", ["Pendiente", "Confirmado"])
+    .onSnapshot(snapshot => {
+      reservasOcupadas.clear();
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        if (d.fechaEvento && d.salonSeleccionado) {
+          reservasOcupadas.add(`${d.fechaEvento}|${d.salonSeleccionado}`);
+        }
+      });
+      // Re-evaluar si el usuario ya tiene campos seleccionados
+      verificarDisponibilidad();
+    }, err => console.error("Error en listener de disponibilidad:", err));
+}
+
+/**
+ * verificarDisponibilidad — Comprueba si la combinación fecha+salón
+ * seleccionada está en el Set de slots ocupados.
+ * - Si está ocupada: feedback rojo en ambos campos + botón deshabilitado.
+ * - Si está libre:   resetea los estilos y habilita el botón.
+ */
+function verificarDisponibilidad() {
+  const fechaEl  = document.getElementById("fechaEvento");
+  const salonEl  = document.getElementById("salonSeleccionado");
+  const warnEl   = document.getElementById("disponibilidadWarning");
+  const warnText = document.getElementById("disponibilidadWarningText");
+  const btnRes   = document.getElementById("btnReservar");
+
+  if (!fechaEl || !salonEl || !warnEl || !warnText) return;
+
+  const fecha = fechaEl.value;
+  const salon = salonEl.value;
+
+  // Clases de estado normal y error
+  const clsNormal = ["border-[#0F2A1F]/20", "dark:border-white/15", "focus:border-alborada-gold", "focus:ring-alborada-gold/30"];
+  const clsError  = ["border-red-500", "dark:border-red-500", "focus:border-red-500", "focus:ring-red-500/30"];
+
+  // Sin ambos valores: limpiar cualquier advertencia previa
+  if (!fecha || !salon) {
+    warnEl.classList.add("hidden");
+    [fechaEl, salonEl].forEach(el => {
+      el.classList.remove(...clsError);
+      el.classList.add(...clsNormal);
+    });
+    if (btnRes) {
+      btnRes.disabled = false;
+      btnRes.classList.remove("opacity-50", "cursor-not-allowed");
+    }
+    return;
+  }
+
+  const clave = `${fecha}|${salon}`;
+
+  if (reservasOcupadas.has(clave)) {
+    // ❌ Slot ocupado — mostrar advertencia y bloquear botón
+    const fechaLegible = new Date(fecha + "T12:00:00").toLocaleDateString("es-MX", {
+      weekday: "long", year: "numeric", month: "long", day: "numeric"
+    });
+    warnText.textContent =
+      `El salón ${salon} ya está reservado el ${fechaLegible}. Elige otra fecha o salón.`;
+    warnEl.classList.remove("hidden");
+    [fechaEl, salonEl].forEach(el => {
+      el.classList.add(...clsError);
+      el.classList.remove(...clsNormal);
+    });
+    if (btnRes) {
+      btnRes.disabled = true;
+      btnRes.classList.add("opacity-50", "cursor-not-allowed");
+    }
+  } else {
+    // ✅ Slot libre — limpiar advertencia y habilitar botón
+    warnEl.classList.add("hidden");
+    [fechaEl, salonEl].forEach(el => {
+      el.classList.remove(...clsError);
+      el.classList.add(...clsNormal);
+    });
+    if (btnRes) {
+      btnRes.disabled = false;
+      btnRes.classList.remove("opacity-50", "cursor-not-allowed");
+    }
+  }
+}
 
 // Registro
 function registrar() {
@@ -504,6 +607,18 @@ function guardarReservacion() {
   const precioPaquete       = CONFIG_NEGOCIO.paquetes[tipoPaquete];
   const montoTotal          = datosSalon.precio + precioPaquete;
   const capacidadMaximaSalon = datosSalon.capacidad;
+
+  // CIA — INTEGRIDAD: Doble verificación de disponibilidad antes de persistir.
+  // El onSnapshot pudo haberse actualizado mientras el formulario estaba abierto.
+  const claveDisp = `${fechaEvento}|${salonSeleccionado}`;
+  if (reservasOcupadas.has(claveDisp)) {
+    mostrarModal(
+      "error",
+      "Fecha no disponible",
+      `El salón ${salonSeleccionado} fue reservado recientemente para esa fecha. Por favor elige otra combinación.`
+    );
+    return;
+  }
 
   // Validación de capacidad: el número de invitados no puede superar
   // la capacidad máxima del salón (Integridad de datos).
