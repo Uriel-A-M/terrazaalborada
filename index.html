@@ -532,25 +532,29 @@
 
           <div class="mt-6 grid gap-3 md:grid-cols-2">
             <!-- Cliente -->
-            <div class="relative md:col-span-2">
-              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
-                  <path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 00-13.074.003z" />
-                </svg>
+            <div class="md:col-span-2">
+              <div class="relative">
+                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
+                    <path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 00-13.074.003z" />
+                  </svg>
+                </div>
+                <input type="text" id="clienteEmpresa" placeholder="Nombre del Cliente o Empresa"
+                  class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
               </div>
-              <input type="text" id="clienteEmpresa" placeholder="Nombre del Cliente o Empresa"
-                class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
             </div>
 
             <!-- Fecha -->
-            <div class="relative">
-              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
-                  <path fill-rule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.75 2.75 0 0118 6.75v8.5A2.75 2.75 0 0115.25 18H4.75A2.75 2.75 0 012 15.25v-8.5A2.75 2.75 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75z" clip-rule="evenodd" />
-                </svg>
+            <div>
+              <div class="relative">
+                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
+                    <path fill-rule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.75 2.75 0 0118 6.75v8.5A2.75 2.75 0 0115.25 18H4.75A2.75 2.75 0 012 15.25v-8.5A2.75 2.75 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <input type="date" id="fechaEvento"
+                  class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
               </div>
-              <input type="date" id="fechaEvento"
-                class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
               <!-- Advertencia en tiempo real de disponibilidad: fecha + salón ya reservados -->
               <p id="disponibilidadWarning"
                 class="hidden mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-red-500 dark:text-red-400">
@@ -562,65 +566,73 @@
             </div>
 
             <!-- Paquete -->
-            <div class="relative">
-              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
-                  <path d="M11.983 1.907a.75.75 0 00-1.292-.656l-8.5 9.5A.75.75 0 002.75 12h6.572l-1.305 6.093a.75.75 0 001.292.656l8.5-9.5A.75.75 0 0017.25 8h-6.572l1.305-6.093z" />
-                </svg>
+            <div>
+              <div class="relative">
+                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
+                    <path d="M11.983 1.907a.75.75 0 00-1.292-.656l-8.5 9.5A.75.75 0 002.75 12h6.572l-1.305 6.093a.75.75 0 001.292.656l8.5-9.5A.75.75 0 0017.25 8h-6.572l1.305-6.093z" />
+                  </svg>
+                </div>
+                <select id="tipoPaquete"
+                  class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+                  <option value="">Tipo de Paquete</option>
+                  <option value="Esencial">Esencial</option>
+                  <option value="Selecto">Selecto</option>
+                  <option value="Gran Gala">Gran Gala</option>
+                </select>
               </div>
-              <select id="tipoPaquete"
-                class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
-                <option value="">Tipo de Paquete</option>
-                <option value="Esencial">Esencial</option>
-                <option value="Selecto">Selecto</option>
-                <option value="Gran Gala">Gran Gala</option>
-              </select>
             </div>
 
             <!-- Tipo de Evento -->
-            <div class="relative">
-              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
-                  <path d="M5.25 12a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H6a.75.75 0 01-.75-.75V12zM6 13.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V14a.75.75 0 00-.75-.75H6zM7.25 12a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H8a.75.75 0 01-.75-.75V12zM8 13.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V14a.75.75 0 00-.75-.75H8zM9.25 10a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H10a.75.75 0 01-.75-.75V10zM10 11.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V12a.75.75 0 00-.75-.75H10zM9.25 14a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H10a.75.75 0 01-.75-.75V14zM12 9.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V10a.75.75 0 00-.75-.75H12zM11.25 12a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H12a.75.75 0 01-.75-.75V12zM12 13.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V14a.75.75 0 00-.75-.75H12zM13.25 10a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H14a.75.75 0 01-.75-.75V10zM6.75 4.5A.75.75 0 006 5.25v.75H4.75A2.75 2.75 0 002 8.75v7.5A2.75 2.75 0 004.75 19h10.5A2.75 2.75 0 0018 16.25v-7.5A2.75 2.75 0 0015.25 6H14v-.75a.75.75 0 00-1.5 0v.75h-4.5v-.75a.75.75 0 00-.75-.75z" />
-                </svg>
+            <div>
+              <div class="relative">
+                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
+                    <path d="M5.25 12a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H6a.75.75 0 01-.75-.75V12zM6 13.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V14a.75.75 0 00-.75-.75H6zM7.25 12a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H8a.75.75 0 01-.75-.75V12zM8 13.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V14a.75.75 0 00-.75-.75H8zM9.25 10a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H10a.75.75 0 01-.75-.75V10zM10 11.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V12a.75.75 0 00-.75-.75H10zM9.25 14a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H10a.75.75 0 01-.75-.75V14zM12 9.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V10a.75.75 0 00-.75-.75H12zM11.25 12a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H12a.75.75 0 01-.75-.75V12zM12 13.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V14a.75.75 0 00-.75-.75H12zM13.25 10a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H14a.75.75 0 01-.75-.75V10zM6.75 4.5A.75.75 0 006 5.25v.75H4.75A2.75 2.75 0 002 8.75v7.5A2.75 2.75 0 004.75 19h10.5A2.75 2.75 0 0018 16.25v-7.5A2.75 2.75 0 0015.25 6H14v-.75a.75.75 0 00-1.5 0v.75h-4.5v-.75a.75.75 0 00-.75-.75z" />
+                  </svg>
+                </div>
+                <select id="tipoEvento"
+                  class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+                  <option value="">Tipo de Evento</option>
+                  <option value="Boda">Boda</option>
+                  <option value="XV Años">XV Años</option>
+                  <option value="Bautizo">Bautizo</option>
+                  <option value="Graduación">Graduación</option>
+                  <option value="Corporativo">Corporativo</option>
+                  <option value="Otro">Otro</option>
+                </select>
               </div>
-              <select id="tipoEvento"
-                class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
-                <option value="">Tipo de Evento</option>
-                <option value="Boda">Boda</option>
-                <option value="XV Años">XV Años</option>
-                <option value="Bautizo">Bautizo</option>
-                <option value="Graduación">Graduación</option>
-                <option value="Corporativo">Corporativo</option>
-                <option value="Otro">Otro</option>
-              </select>
             </div>
 
             <!-- Salón -->
-            <div class="relative">
-              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
-                  <path fill-rule="evenodd" d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z" clip-rule="evenodd" />
-                </svg>
+            <div>
+              <div class="relative">
+                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
+                    <path fill-rule="evenodd" d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <select id="salonSeleccionado"
+                  class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
+                  <option value="">Salón Seleccionado</option>
+                  <option value="Kukulcán">Kukulcán</option>
+                  <option value="Balam">Balam</option>
+                  <option value="Diamante">Diamante</option>
+                </select>
               </div>
-              <select id="salonSeleccionado"
-                class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
-                <option value="">Salón Seleccionado</option>
-                <option value="Kukulcán">Kukulcán</option>
-                <option value="Balam">Balam</option>
-                <option value="Diamante">Diamante</option>
-              </select>
             </div>
 
             <!-- Invitados -->
-            <div class="relative">
-              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
-                  <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
-                </svg>
+            <div>
+              <div class="relative">
+                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-[#4A4636]/70 dark:text-gray-400">
+                    <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+                  </svg>
+                </div>
+                <input type="number" id="numeroInvitados" min="1" placeholder="Número de Invitados"
+                  class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
               </div>
-              <input type="number" id="numeroInvitados" min="1" placeholder="Número de Invitados"
-                class="rounded-xl border border-[#0F2A1F]/20 dark:border-white/15 bg-white/60 dark:bg-[#102742]/45 py-3 pl-11 pr-4 w-full text-[#0F2A1F] dark:text-white transition-colors duration-[400ms] outline-none transition placeholder:text-[#4A4636] dark:text-gray-400 transition-colors duration-[400ms] focus:border-alborada-gold focus:ring-2 focus:ring-alborada-gold/30">
               <!-- Advertencia en tiempo real de capacidad excedida -->
               <p id="capacidadWarning"
                 class="hidden mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-red-500 dark:text-red-400">
@@ -640,7 +652,7 @@
               class="mb-4 text-xs font-semibold uppercase tracking-widest text-alborada-gold">
               ✦ Resumen de Cotización
             </p>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="rounded-xl bg-white/50 p-3 dark:bg-white/5">
                 <p class="text-xs font-medium uppercase tracking-wide text-[#4A4636] dark:text-gray-400">Total Estimado</p>
                 <p id="resumenTotal"
@@ -661,7 +673,9 @@
           <button id="btnReservar" onclick="guardarReservacion()"
             class="mt-8 w-full rounded-xl border-2 border-alborada-gold bg-alborada-gold px-8 py-3.5 text-center text-sm font-bold uppercase tracking-wide text-alborada-dark shadow-md transition-all duration-300 hover:-translate-y-1 hover:bg-transparent hover:text-alborada-gold hover:shadow-[0_8px_20px_rgba(212,175,55,0.3)] dark:hover:shadow-[0_8px_20px_rgba(212,175,55,0.2)]">Reservar
             Fecha</button>
+        </div>
 
+        <div class="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-[#071426]/35 backdrop-blur-md sm:p-8">
           <!-- ── Sección: Mis Reservaciones ─────────────────────────── -->
           <div id="clientes" class="res-section">
 
@@ -691,7 +705,6 @@
       </div>
     </section>
   </main>
-
   <footer
     class="mt-8 border-t border-[#0F2A1F]/10 dark:border-white/10 bg-[#FDFCF7]/90 dark:bg-[#091525]/75 px-5 py-6 text-center text-[#0F2A1F] dark:text-white transition-colors duration-[400ms]">
     <p>© 2026 Salones Terraza Alborada</p>
