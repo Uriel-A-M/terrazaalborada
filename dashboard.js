@@ -15,9 +15,10 @@ const db   = firebase.firestore();
 
 // ── Estado global ──────────────────────────────────────────────
 let reservacionesCache = [];
-let calendarInstance   = null;
-let chartDonaInstance  = null;
+let calendarInstance    = null;
+let chartDonaInstance   = null;
 let chartBarrasInstance = null;
+let chartPaquetesInstance = null;
 let unsubscribeSnapshot = null;
 
 const ESTADO_COLOR = {
@@ -103,6 +104,28 @@ function actualizarKPIsBI(arr) {
   const elSaC = document.getElementById('kpiBiSalonCount');
   if (elSa) elSa.textContent = topSalon ? topSalon[0] : '—';
   if (elSaC) elSaC.textContent = topSalon ? topSalon[1] + ' reservaciones' : '';
+
+  // Paquete Estrella — más solicitado + ingresos que genera
+  const freqPaq = {};
+  const ingPaq  = {};
+  arr.forEach(r => {
+    if (r.tipoPaquete) {
+      freqPaq[r.tipoPaquete] = (freqPaq[r.tipoPaquete] || 0) + 1;
+      ingPaq[r.tipoPaquete]  = (ingPaq[r.tipoPaquete]  || 0) + (r.montoTotal || 0);
+    }
+  });
+  const topPaq  = Object.entries(freqPaq).sort((a, b) => b[1] - a[1])[0];
+  const elPaq   = document.getElementById('kpiBiPaquete');
+  const elPaqC  = document.getElementById('kpiBiPaqueteCount');
+  const elPaqI  = document.getElementById('kpiBiPaqueteIngresos');
+  if (elPaq)  elPaq.textContent  = topPaq ? topPaq[0] : '—';
+  if (elPaqC) elPaqC.textContent = topPaq ? topPaq[1] + ' reservaciones' : '';
+  if (elPaqI) {
+    const ing = topPaq ? ingPaq[topPaq[0]] : 0;
+    elPaqI.textContent = ing
+      ? '$' + Number(ing).toLocaleString('es-MX') + ' generados'
+      : '';
+  }
 }
 
 // ── Módulo 4: Gráficas Chart.js ───────────────────────────────
@@ -134,7 +157,102 @@ function actualizarGraficas(arr) {
       }}
     });
   }
-}
+
+  // ── Barras horizontales duales — Distribución de Paquetes ──────────────
+  // Eje X primario (abajo): número de reservas — dorado
+  // Eje X secundario (arriba): ingresos generados — naranja
+  const freqPaqG = {};
+  const ingPaqG  = {};
+  arr.forEach(r => {
+    if (r.tipoPaquete) {
+      freqPaqG[r.tipoPaquete] = (freqPaqG[r.tipoPaquete] || 0) + 1;
+      ingPaqG[r.tipoPaquete]  = (ingPaqG[r.tipoPaquete]  || 0) + (r.montoTotal || 0);
+    }
+  });
+  if (chartPaquetesInstance) chartPaquetesInstance.destroy();
+  const ctxP = document.getElementById('chartPaquetes')?.getContext('2d');
+  const paqLabels = Object.keys(freqPaqG);
+  if (ctxP && paqLabels.length) {
+    chartPaquetesInstance = new Chart(ctxP, {
+      type: 'bar',
+      data: {
+        labels: paqLabels,
+        datasets: [
+          {
+            label: '# Reservas',
+            data: paqLabels.map(p => freqPaqG[p] || 0),
+            backgroundColor: 'rgba(201,162,39,.8)',
+            borderColor: 'rgba(201,162,39,1)',
+            borderWidth: 1,
+            borderRadius: 6,
+            borderSkipped: false,
+            xAxisID: 'xCount',
+          },
+          {
+            label: 'Ingresos (MXN)',
+            data: paqLabels.map(p => ingPaqG[p] || 0),
+            backgroundColor: 'rgba(249,115,22,.75)',
+            borderColor: 'rgba(249,115,22,1)',
+            borderWidth: 1,
+            borderRadius: 6,
+            borderSkipped: false,
+            xAxisID: 'xIng',
+          },
+        ]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        interaction: { mode: 'index', axis: 'y' },
+        plugins: {
+          legend: { display: false }, // leyenda manual en HTML
+          tooltip: {
+            backgroundColor: 'rgba(11,25,41,.95)',
+            borderColor: 'rgba(255,255,255,.1)',
+            borderWidth: 1,
+            titleColor: '#C9A227',
+            bodyColor: 'rgba(255,255,255,.8)',
+            padding: 10,
+            callbacks: {
+              label: ctx => {
+                if (ctx.datasetIndex === 0) return `  Reservas: ${ctx.raw}`;
+                return `  Ingresos: $${Number(ctx.raw).toLocaleString('es-MX')}`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            ticks: { color: 'rgba(255,255,255,.85)', font: { weight: 700, size: 13 } },
+            grid: { display: false },
+          },
+          xCount: {
+            axis: 'x',
+            position: 'bottom',
+            ticks: { color: 'rgba(201,162,39,.8)', font: { weight: 600 }, maxTicksLimit: 6 },
+            grid:  { color: 'rgba(255,255,255,.05)' },
+            title: { display: true, text: 'Número de Reservas', color: '#C9A227', font: { size: 10, weight: 700 } }
+          },
+          xIng: {
+            axis: 'x',
+            position: 'top',
+            ticks: {
+              color: 'rgba(249,115,22,.85)',
+              font: { weight: 600 },
+              maxTicksLimit: 6,
+              callback: v => {
+                if (v === 0) return '$0';
+                return v >= 1000 ? '$' + (v / 1000).toFixed(0) + 'k' : '$' + v;
+              }
+            },
+            grid: { display: false },
+            title: { display: true, text: 'Ingresos (MXN)', color: '#f97316', font: { size: 10, weight: 700 } }
+          }
+        }
+      }
+    });
+  }
+} // fin actualizarGraficas
 
 // ── Módulo 5: FullCalendar ────────────────────────────────────
 function inicializarCalendario() {
@@ -372,7 +490,11 @@ function showSection(id) {
   document.getElementById(navId)?.classList.add('active');
   // Forzar resize de charts al mostrar analytics
   if (id === 'sec-analytics') {
-    setTimeout(() => { chartDonaInstance?.resize(); chartBarrasInstance?.resize(); }, 100);
+    setTimeout(() => {
+      chartDonaInstance?.resize();
+      chartBarrasInstance?.resize();
+      chartPaquetesInstance?.resize();
+    }, 100);
   }
 }
 
