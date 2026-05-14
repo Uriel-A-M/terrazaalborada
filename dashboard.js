@@ -201,7 +201,7 @@ function actualizarCalendario(arr) {
   if (!calendarInstance) return;
   calendarInstance.removeAllEvents();
   calendarInstance.addEventSource(arr.map(r => ({
-    title: `${r.clienteEmpresa || 'Sin nombre'} · ${r.salonSeleccionado || ''}`,
+    title: `${r.clienteEmpresa || 'Sin nombre'} · ${r.salonSeleccionado || ''}`.toUpperCase(),
     start: r.fechaEvento,
     color: ESTADO_COLOR[r.estado] || ESTADO_COLOR.Pendiente,
     extendedProps: { ...r }   // Todos los datos para el eventClick
