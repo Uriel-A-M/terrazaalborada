@@ -386,6 +386,112 @@ function limpiarFiltros() {
   refrescar();
 }
 
+// ══════════════════════════════════════════════════════════════════
+// MÓDULO EXPORTACIÓN — CIA: solo admin autenticado puede exportar
+// ══════════════════════════════════════════════════════════════════
+
+/**
+ * formatFecha — convierte 'YYYY-MM-DD' → 'DD/MM/YYYY'.
+ */
+function formatFecha(iso) {
+  if (!iso) return '—';
+  const [y, m, d] = iso.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+/**
+ * prepararFilas — Construye el array de objetos con los datos ya
+ * formateados a partir del array filtrado actual.
+ * Aplica los mismos filtros que la vista, garantizando que el
+ * exportado coincida exactamente con lo que el admin ve en pantalla.
+ */
+function prepararFilas() {
+  // CIA — CONFIDENCIALIDAD: verificar sesión admin antes de preparar datos.
+  if (!auth.currentUser) {
+    Swal.fire({ title: 'Acceso denegado', text: 'Debes estar autenticado para exportar.', icon: 'error', background: '#102742', color: '#fff' });
+    return null;
+  }
+
+  const datos = aplicarFiltros(reservacionesCache);
+
+  if (!datos.length) {
+    Swal.fire({ title: 'Sin datos', text: 'No hay reservaciones que exportar con los filtros actuales.', icon: 'info', background: '#102742', color: '#fff', iconColor: '#C9A227' });
+    return null;
+  }
+
+  return datos.map(r => ({
+    'Cliente':           r.clienteEmpresa   || '—',
+    'Correo':            r.usuario          || '—',
+    'Salón':             r.salonSeleccionado || '—',
+    'Fecha del Evento':  formatFecha(r.fechaEvento),
+    'Tipo de Evento':    r.tipoEvento       || '—',
+    'Paquete':           r.tipoPaquete      || '—',
+    'Invitados':         r.numeroInvitados  ?? '—',
+    'Capacidad Máx.':    r.capacidadMaximaSalon ?? '—',
+    'Monto Total (MXN)': r.montoTotal != null
+      ? Number(r.montoTotal).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })
+      : '—',
+    'Estado':            r.estado           || '—',
+  }));
+}
+
+/**
+ * exportarExcel — Genera un archivo .xlsx con SheetJS.
+ * Nombre automático: Reporte_Alborada_YYYY-MM-DD.xlsx
+ */
+function exportarExcel() {
+  const filas = prepararFilas();
+  if (!filas) return;
+
+  const ws = XLSX.utils.json_to_sheet(filas);
+
+  // Ancho de columnas proporcional al contenido
+  ws['!cols'] = [
+    { wch: 28 }, { wch: 30 }, { wch: 14 }, { wch: 18 },
+    { wch: 16 }, { wch: 14 }, { wch: 12 }, { wch: 16 },
+    { wch: 22 }, { wch: 14 },
+  ];
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Reservaciones');
+
+  const fecha = new Date().toISOString().split('T')[0];
+  XLSX.writeFile(wb, `Reporte_Alborada_${fecha}.xlsx`);
+
+  cerrarExportMenu();
+}
+
+/**
+ * exportarCSV — Genera un archivo .csv con SheetJS (tipo 'csv').
+ * Nombre automático: Reporte_Alborada_YYYY-MM-DD.csv
+ */
+function exportarCSV() {
+  const filas = prepararFilas();
+  if (!filas) return;
+
+  const ws  = XLSX.utils.json_to_sheet(filas);
+  const csv = XLSX.utils.sheet_to_csv(ws);
+
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' }); // BOM para Excel en Windows
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const fecha = new Date().toISOString().split('T')[0];
+  a.href     = url;
+  a.download = `Reporte_Alborada_${fecha}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  cerrarExportMenu();
+}
+
+function cerrarExportMenu() {
+  const wrap = document.getElementById('exportWrap');
+  if (wrap) {
+    wrap.classList.remove('open');
+    wrap.querySelector('#btnExportar')?.setAttribute('aria-expanded', 'false');
+  }
+}
+
 // ── Event Listeners ───────────────────────────────────────────
 function setupListeners() {
   // Logout
@@ -400,6 +506,24 @@ function setupListeners() {
     document.getElementById(id)?.addEventListener('change', refrescar);
   });
   document.getElementById('btnLimpiarFiltros')?.addEventListener('click', limpiarFiltros);
+
+  // Exportar: toggle dropdown
+  const btnExportar = document.getElementById('btnExportar');
+  const exportWrap  = document.getElementById('exportWrap');
+  btnExportar?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = exportWrap.classList.toggle('open');
+    btnExportar.setAttribute('aria-expanded', isOpen);
+  });
+  // Cerrar dropdown al hacer click fuera
+  document.addEventListener('click', (e) => {
+    if (exportWrap && !exportWrap.contains(e.target)) {
+      cerrarExportMenu();
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') cerrarExportMenu();
+  });
 
   // Modal Calendario
   document.getElementById('btnAbrirCalendario')?.addEventListener('click', () => {
