@@ -20,6 +20,10 @@ const db   = firebase.firestore();
 // en tiempo real sin consultas adicionales por interacción.
 let reservasOcupadas = new Set();
 
+// Unsubscribe del listener de reservaciones del cliente
+// (se cancela al cerrar sesión para evitar lecturas huérfanas)
+let reservacionesUnsubscribe = null;
+
 // Inicializar EmailJS
 emailjs.init("8qxF4pHW13zLqaX96");
 
@@ -400,6 +404,12 @@ auth.onAuthStateChanged(async (user) => {
     }
 
   } else {
+    // Cancelar el listener de reservaciones al cerrar sesión
+    if (reservacionesUnsubscribe) {
+      reservacionesUnsubscribe();
+      reservacionesUnsubscribe = null;
+    }
+
     document.getElementById("zonaPrivada").classList.add("hidden");
     document.getElementById("estado").innerText = "No has iniciado sesión";
 
@@ -692,14 +702,80 @@ function guardarReservacion() {
     .finally(() => setButtonLoading("btnReservar", false, "Reservar Fecha"));
 }
 
-// Mostrar reservaciones del usuario logueado
+// ─────────────────────────────────────────────────────────────────
+//  CONFIGURACIÓN DE ESTADOS — mensajes, íconos y paleta por estado
+// ─────────────────────────────────────────────────────────────────
+const ESTADO_CONFIG = {
+  "Pendiente": {
+    // Heroicon: clock (outline)
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+           </svg>`,
+    label: "Pendiente de confirmación",
+    mensaje: "Tu solicitud está en revisión. Te notificaremos pronto.",
+    badgeClass: "res-badge--pending",
+    bannerClass: "res-banner--pending",
+  },
+  "Confirmado": {
+    // Heroicon: check-circle (outline)
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+           </svg>`,
+    label: "Confirmado",
+    mensaje: "¡Disfruta tu fiesta! Todo está listo para tu gran celebración.",
+    badgeClass: "res-badge--confirmed",
+    bannerClass: "res-banner--confirmed",
+  },
+  "En Estancia": {
+    // Heroicon: sparkles (outline)
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+             <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z" />
+           </svg>`,
+    label: "En Estancia",
+    mensaje: "¡El momento es ahora! Que cada instante sea inolvidable.",
+    badgeClass: "res-badge--active",
+    bannerClass: "res-banner--active",
+  },
+  "Finalizado": {
+    // Heroicon: star (outline)
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+             <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+           </svg>`,
+    label: "Finalizado",
+    mensaje: "Gracias por elegirnos. Fue un honor ser parte de tu historia.",
+    badgeClass: "res-badge--done",
+    bannerClass: "res-banner--done",
+  },
+  "Cancelado": {
+    // Heroicon: x-circle (outline)
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+             <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+           </svg>`,
+    label: "Cancelado",
+    mensaje: "Lamentamos tu decisión. Siempre habrá una próxima celebración.",
+    badgeClass: "res-badge--cancelled",
+    bannerClass: "res-banner--cancelled",
+  },
+};
+
+/**
+ * cargarReservaciones — Suscripción en tiempo real con onSnapshot.
+ * Cada vez que el admin cambia el estado de una reservación en Firestore,
+ * el cliente ve el cambio al instante sin necesidad de recargar.
+ * El listener se cancela al cerrar sesión (reservacionesUnsubscribe).
+ */
 function cargarReservaciones() {
   if (!auth.currentUser) return;
 
-  db.collection("reservaciones")
+  // Cancelar cualquier listener previo antes de crear uno nuevo
+  if (reservacionesUnsubscribe) {
+    reservacionesUnsubscribe();
+    reservacionesUnsubscribe = null;
+  }
+
+  reservacionesUnsubscribe = db.collection("reservaciones")
     .where("usuario", "==", auth.currentUser.email)
-    .get()
-    .then(snapshot => {
+    .onSnapshot(snapshot => {
       const lista = document.getElementById("listaReservaciones");
       if (!lista) return;
 
@@ -711,8 +787,6 @@ function cargarReservaciones() {
       reservaciones.sort((a, b) => a.fechaEvento.localeCompare(b.fechaEvento));
 
       reservaciones.forEach(d => {
-        // Helper para formatear montos con retrocompatibilidad
-        // (reservaciones antiguas sin montoTotal mostrarán "—")
         const montoFmt = d.montoTotal != null
           ? "$" + Number(d.montoTotal).toLocaleString("es-MX")
           : "—";
@@ -721,70 +795,78 @@ function cargarReservaciones() {
           : "—";
         const tipoEventoFmt = d.tipoEvento || "—";
 
+        // Fecha legible en español
+        const fechaLegible = d.fechaEvento
+          ? new Date(d.fechaEvento + "T12:00:00").toLocaleDateString("es-MX", {
+              weekday: "long", day: "numeric", month: "long", year: "numeric"
+            })
+          : d.fechaEvento;
+
+        // Configuración del estado actual
+        const estadoKey = d.estado || "Pendiente";
+        const estadoCfg = ESTADO_CONFIG[estadoKey] || ESTADO_CONFIG["Pendiente"];
+
         const item = document.createElement("article");
-        item.className = "group rounded-2xl border border-[#0F2A1F]/10 bg-alborada-cream/80 shadow-md backdrop-blur-md transition-all duration-[400ms] ease-out hover:-translate-y-1 hover:border-alborada-gold/60 hover:shadow-xl hover:shadow-alborada-gold/10 dark:border-white/10 dark:bg-[#102742]/50 overflow-hidden";
+        item.className = "res-card";
 
         item.innerHTML = `
-          <!-- Cabecera de la tarjeta: nombre del cliente + fecha -->
-          <div class="flex flex-col gap-1 border-b border-[#0F2A1F]/8 dark:border-white/8 p-4 sm:flex-row sm:items-center sm:justify-between md:p-5">
-            <div>
-              <h4 class="font-display text-xl font-bold tracking-tight text-alborada-dark transition-colors duration-[400ms] group-hover:text-alborada-gold dark:text-alborada-cream sm:text-2xl">
-                ${d.clienteEmpresa}
-              </h4>
-              <p class="mt-0.5 text-xs font-medium uppercase tracking-widest text-alborada-gold/80">${tipoEventoFmt}</p>
+          <!-- Banner de estado con Heroicon + mensaje contextual -->
+          <div class="res-banner ${estadoCfg.bannerClass}">
+            <span class="res-banner__icon">${estadoCfg.icon}</span>
+            <div class="res-banner__body">
+              <span class="res-banner__label">${estadoCfg.label}</span>
+              <p class="res-banner__msg">${estadoCfg.mensaje}</p>
             </div>
-            <span class="mt-2 inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-alborada-gold/10 px-4 py-2 text-sm font-bold text-alborada-dark transition-colors duration-[400ms] group-hover:bg-alborada-gold dark:text-alborada-cream dark:group-hover:text-alborada-dark sm:mt-0">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <span class="res-badge ${estadoCfg.badgeClass}">${estadoKey}</span>
+          </div>
+
+          <!-- Cabecera: cliente + fecha -->
+          <div class="res-header">
+            <div class="res-header__info">
+              <h4 class="res-header__name">${d.clienteEmpresa}</h4>
+              <p class="res-header__type">${tipoEventoFmt}</p>
+            </div>
+            <span class="res-header__date">
+              <svg xmlns="http://www.w3.org/2000/svg" class="res-header__date-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.75 2.75 0 0118 6.75v8.5A2.75 2.75 0 0115.25 18H4.75A2.75 2.75 0 012 15.25v-8.5A2.75 2.75 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75z" clip-rule="evenodd" />
               </svg>
-              ${d.fechaEvento}
+              ${fechaLegible}
             </span>
           </div>
 
-          <!-- Cuerpo: grid de datos del evento -->
-          <div class="grid grid-cols-2 gap-px bg-[#0F2A1F]/8 dark:bg-white/8 sm:grid-cols-4">
-
-            <!-- Salón -->
-            <div class="flex flex-col gap-1 bg-alborada-cream/90 dark:bg-[#102742]/60 p-3 md:p-4">
-              <p class="text-[10px] font-semibold uppercase tracking-widest text-alborada-gold">Salón</p>
-              <p class="flex items-center gap-1.5 text-sm font-semibold text-[#0F2A1F] dark:text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-alborada-gold/70" viewBox="0 0 20 20" fill="currentColor">
+          <!-- Grid de detalles -->
+          <div class="res-grid">
+            <div class="res-cell">
+              <p class="res-cell__label">Salón</p>
+              <p class="res-cell__value">
+                <svg xmlns="http://www.w3.org/2000/svg" class="res-cell__icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fill-rule="evenodd" d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z" clip-rule="evenodd" />
                 </svg>
                 ${d.salonSeleccionado}
               </p>
             </div>
-
-            <!-- Paquete -->
-            <div class="flex flex-col gap-1 bg-alborada-cream/90 dark:bg-[#102742]/60 p-3 md:p-4">
-              <p class="text-[10px] font-semibold uppercase tracking-widest text-alborada-gold">Paquete</p>
-              <p class="flex items-center gap-1.5 text-sm font-semibold text-[#0F2A1F] dark:text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-alborada-gold/70" viewBox="0 0 20 20" fill="currentColor">
+            <div class="res-cell">
+              <p class="res-cell__label">Paquete</p>
+              <p class="res-cell__value">
+                <svg xmlns="http://www.w3.org/2000/svg" class="res-cell__icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path d="M11.983 1.907a.75.75 0 00-1.292-.656l-8.5 9.5A.75.75 0 002.75 12h6.572l-1.305 6.093a.75.75 0 001.292.656l8.5-9.5A.75.75 0 0017.25 8h-6.572l1.305-6.093z" />
                 </svg>
                 ${d.tipoPaquete}
               </p>
             </div>
-
-            <!-- Invitados / Capacidad -->
-            <div class="flex flex-col gap-1 bg-alborada-cream/90 dark:bg-[#102742]/60 p-3 md:p-4">
-              <p class="text-[10px] font-semibold uppercase tracking-widest text-alborada-gold">Invitados / Cap.</p>
-              <p class="flex items-center gap-1.5 text-sm font-semibold text-[#0F2A1F] dark:text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-alborada-gold/70" viewBox="0 0 20 20" fill="currentColor">
+            <div class="res-cell">
+              <p class="res-cell__label">Invitados / Cap.</p>
+              <p class="res-cell__value">
+                <svg xmlns="http://www.w3.org/2000/svg" class="res-cell__icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
                 </svg>
                 ${d.numeroInvitados} / ${capacidadFmt}
               </p>
             </div>
-
-            <!-- Monto Total -->
-            <div class="flex flex-col gap-1 bg-alborada-gold/8 dark:bg-alborada-gold/12 p-3 md:p-4">
-              <p class="text-[10px] font-semibold uppercase tracking-widest text-alborada-gold">Monto Total</p>
-              <p class="font-display text-lg font-bold text-alborada-dark dark:text-alborada-gold">
-                ${montoFmt}
-              </p>
+            <div class="res-cell res-cell--highlight">
+              <p class="res-cell__label">Total estimado</p>
+              <p class="res-cell__value res-cell__value--amount">${montoFmt}</p>
             </div>
-
           </div>
         `;
         lista.appendChild(item);
@@ -792,17 +874,16 @@ function cargarReservaciones() {
 
       if (!reservaciones.length) {
         lista.innerHTML = `
-          <div class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#0F2A1F]/20 dark:border-white/20 bg-white/30 dark:bg-white/5 py-12 text-center backdrop-blur-sm transition-colors duration-[400ms]">
-            <svg xmlns="http://www.w3.org/2000/svg" class="mb-4 h-16 w-16 text-[#0F2A1F]/30 dark:text-white/20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          <div class="res-empty">
+            <svg xmlns="http://www.w3.org/2000/svg" class="res-empty__icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
             </svg>
-            <p class="font-display text-xl font-medium text-[#0F2A1F] dark:text-white">Aún no hay reservaciones</p>
-            <p class="mt-2 text-sm text-[#4A4636] dark:text-gray-400">Las fechas que reserves aparecerán aquí.</p>
+            <p class="res-empty__title">Aún no hay reservaciones</p>
+            <p class="res-empty__sub">Las fechas que apartes se mostrarán aquí con todos sus detalles.</p>
           </div>
         `;
       }
-    })
-    .catch(e => {
-      mostrarModal("error", "Error al cargar", "No fue posible cargar tus reservaciones: " + e.message);
+    }, err => {
+      mostrarModal("error", "Error al cargar", "No fue posible cargar tus reservaciones: " + err.message);
     });
 }

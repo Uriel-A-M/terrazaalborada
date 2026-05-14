@@ -528,3 +528,492 @@ html.dark .modal-message {
     animation: none;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   SISTEMA DE TARJETAS DE RESERVACIÓN — res-*
+   Arquitectura BEM ligera para las tarjetas de estado del cliente.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Sección contenedora ─────────────────────────────────────────── */
+.res-section {
+  margin-top: 2.5rem;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(15, 42, 31, 0.12);
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 12px 32px rgba(15, 42, 31, 0.07);
+  backdrop-filter: blur(14px);
+  overflow: hidden;
+  transition: background 0.4s ease, border-color 0.4s ease;
+}
+
+html.dark .res-section {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(16, 39, 66, 0.45);
+  box-shadow: 0 16px 40px rgba(7, 20, 38, 0.4);
+}
+
+/* ── Encabezado de sección ────────────────────────────────────────── */
+.res-section__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 1.4rem 1.5rem 1.2rem;
+}
+
+.res-section__title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.res-section__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.22), rgba(201, 162, 39, 0.08));
+  border: 1px solid rgba(201, 162, 39, 0.35);
+  color: var(--alborada-gold);
+}
+
+.res-section__icon svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.res-section__title {
+  margin: 0;
+  font-family: "Playfair Display", serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--alborada-ink);
+  line-height: 1.2;
+  transition: color 0.4s ease;
+}
+
+html.dark .res-section__title {
+  color: #f8f5ea;
+}
+
+.res-section__subtitle {
+  margin: 0.2rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: rgba(74, 70, 54, 0.75);
+  letter-spacing: 0.02em;
+  transition: color 0.4s ease;
+}
+
+html.dark .res-section__subtitle {
+  color: rgba(200, 196, 182, 0.7);
+}
+
+.res-section__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: 1px solid rgba(201, 162, 39, 0.5);
+  background: rgba(201, 162, 39, 0.12);
+  color: var(--alborada-gold);
+  white-space: nowrap;
+}
+
+/* ── Separador ────────────────────────────────────────────────────── */
+.res-section__divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.4) 30%, rgba(201, 162, 39, 0.4) 70%, transparent);
+  margin: 0 1.5rem;
+}
+
+/* ── Lista de tarjetas ────────────────────────────────────────────── */
+.res-list {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem 1.25rem 1.5rem;
+}
+
+/* ── Tarjeta individual ───────────────────────────────────────────── */
+.res-card {
+  border-radius: 1rem;
+  border: 1px solid rgba(15, 42, 31, 0.1);
+  background: rgba(248, 245, 234, 0.9);
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(15, 42, 31, 0.06);
+  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+}
+
+.res-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(15, 42, 31, 0.1), 0 0 0 1px rgba(201, 162, 39, 0.3);
+  border-color: rgba(201, 162, 39, 0.45);
+}
+
+html.dark .res-card {
+  background: rgba(16, 39, 66, 0.6);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 6px 20px rgba(7, 20, 38, 0.35);
+}
+
+html.dark .res-card:hover {
+  box-shadow: 0 14px 32px rgba(7, 20, 38, 0.45), 0 0 0 1px rgba(201, 162, 39, 0.35);
+}
+
+/* ── Banner de estado ─────────────────────────────────────────────── */
+.res-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1.1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+html.dark .res-banner {
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+.res-banner__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+}
+
+.res-banner__icon svg {
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+.res-banner__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.res-banner__label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.res-banner__msg {
+  margin: 0.15rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  font-weight: 500;
+  opacity: 0.88;
+}
+
+/* ── Badge de estado (pastilla derecha) ───────────────────────────── */
+.res-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.63rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Variantes de estado ──────────────────────────────────────────── */
+
+/* PENDIENTE — Ámbar cálido */
+.res-banner--pending {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.14), rgba(251, 191, 36, 0.06));
+  color: #92580a;
+}
+html.dark .res-banner--pending {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.18), rgba(251, 191, 36, 0.06));
+  color: #f0b429;
+}
+.res-badge--pending {
+  background: rgba(251, 191, 36, 0.18);
+  color: #92580a;
+  border: 1px solid rgba(251, 191, 36, 0.5);
+}
+html.dark .res-badge--pending {
+  background: rgba(251, 191, 36, 0.22);
+  color: #f0c84a;
+  border-color: rgba(251, 191, 36, 0.45);
+}
+
+/* CONFIRMADO — Verde esmeralda celebratorio */
+.res-banner--confirmed {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.14), rgba(16, 185, 129, 0.05));
+  color: #065f46;
+}
+html.dark .res-banner--confirmed {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(16, 185, 129, 0.06));
+  color: #34d399;
+}
+.res-badge--confirmed {
+  background: rgba(16, 185, 129, 0.15);
+  color: #065f46;
+  border: 1px solid rgba(16, 185, 129, 0.45);
+}
+html.dark .res-badge--confirmed {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+/* EN ESTANCIA — Índigo vibrante */
+.res-banner--active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.14), rgba(99, 102, 241, 0.05));
+  color: #3730a3;
+}
+html.dark .res-banner--active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.07));
+  color: #a5b4fc;
+}
+.res-badge--active {
+  background: rgba(99, 102, 241, 0.14);
+  color: #3730a3;
+  border: 1px solid rgba(99, 102, 241, 0.4);
+}
+html.dark .res-badge--active {
+  background: rgba(99, 102, 241, 0.22);
+  color: #a5b4fc;
+  border-color: rgba(99, 102, 241, 0.45);
+}
+
+/* FINALIZADO — Dorado nostálgico */
+.res-banner--done {
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.16), rgba(201, 162, 39, 0.05));
+  color: #7c5008;
+}
+html.dark .res-banner--done {
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.2), rgba(201, 162, 39, 0.06));
+  color: #c9a227;
+}
+.res-badge--done {
+  background: rgba(201, 162, 39, 0.18);
+  color: #7c5008;
+  border: 1px solid rgba(201, 162, 39, 0.5);
+}
+html.dark .res-badge--done {
+  background: rgba(201, 162, 39, 0.22);
+  color: #d4af37;
+  border-color: rgba(201, 162, 39, 0.45);
+}
+
+/* CANCELADO — Rojo empático */
+.res-banner--cancelled {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(239, 68, 68, 0.04));
+  color: #991b1b;
+}
+html.dark .res-banner--cancelled {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.16), rgba(239, 68, 68, 0.05));
+  color: #fca5a5;
+}
+.res-badge--cancelled {
+  background: rgba(239, 68, 68, 0.13);
+  color: #991b1b;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+html.dark .res-badge--cancelled {
+  background: rgba(239, 68, 68, 0.18);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+/* ── Cabecera de la tarjeta ───────────────────────────────────────── */
+.res-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid rgba(15, 42, 31, 0.07);
+}
+
+html.dark .res-header {
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+.res-header__name {
+  margin: 0;
+  font-family: "Playfair Display", serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--alborada-ink);
+  transition: color 0.3s ease;
+}
+
+html.dark .res-header__name { color: #f8f5ea; }
+
+.res-header__type {
+  margin: 0.15rem 0 0;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(201, 162, 39, 0.85);
+}
+
+.res-header__date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 0.6rem;
+  background: rgba(201, 162, 39, 0.1);
+  border: 1px solid rgba(201, 162, 39, 0.3);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--alborada-ink);
+  transition: background 0.3s ease, color 0.3s ease;
+  text-transform: capitalize;
+}
+
+html.dark .res-header__date {
+  background: rgba(201, 162, 39, 0.14);
+  color: #f8f5ea;
+}
+
+.res-header__date-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  color: var(--alborada-gold);
+  flex-shrink: 0;
+}
+
+/* ── Grid de detalles ─────────────────────────────────────────────── */
+.res-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: rgba(15, 42, 31, 0.07);
+}
+
+html.dark .res-grid {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+@media (min-width: 640px) {
+  .res-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+.res-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.75rem 1rem;
+  background: rgba(248, 245, 234, 0.92);
+  transition: background 0.4s ease;
+}
+
+html.dark .res-cell {
+  background: rgba(16, 39, 66, 0.62);
+}
+
+.res-cell--highlight {
+  background: rgba(201, 162, 39, 0.08);
+}
+
+html.dark .res-cell--highlight {
+  background: rgba(201, 162, 39, 0.1);
+}
+
+.res-cell__label {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--alborada-gold);
+}
+
+.res-cell__value {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: var(--alborada-ink);
+  transition: color 0.4s ease;
+}
+
+html.dark .res-cell__value { color: #f8f5ea; }
+
+.res-cell__value--amount {
+  font-family: "Playfair Display", serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--alborada-ink);
+}
+
+html.dark .res-cell__value--amount { color: var(--alborada-gold); }
+
+.res-cell__icon {
+  width: 0.85rem;
+  height: 0.85rem;
+  color: rgba(201, 162, 39, 0.7);
+  flex-shrink: 0;
+}
+
+/* ── Estado vacío ─────────────────────────────────────────────────── */
+.res-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 1.5px dashed rgba(15, 42, 31, 0.18);
+  background: rgba(255, 255, 255, 0.35);
+  transition: all 0.4s ease;
+}
+
+html.dark .res-empty {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.res-empty__icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: 1rem;
+  color: rgba(15, 42, 31, 0.25);
+  transition: color 0.4s ease;
+}
+
+html.dark .res-empty__icon { color: rgba(255, 255, 255, 0.18); }
+
+.res-empty__title {
+  margin: 0;
+  font-family: "Playfair Display", serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--alborada-ink);
+  transition: color 0.4s ease;
+}
+
+html.dark .res-empty__title { color: #f8f5ea; }
+
+.res-empty__sub {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  color: rgba(74, 70, 54, 0.7);
+  transition: color 0.4s ease;
+}
+
+html.dark .res-empty__sub { color: rgba(200, 196, 182, 0.65); }
