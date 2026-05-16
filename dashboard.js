@@ -405,7 +405,7 @@ function renderizarLista(arr) {
         <div class="empty-state-icon">
           <i class="fa-solid fa-magnifying-glass" style="font-size:1.6rem;color:#34d399"></i>
         </div>
-        <p style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:#fff">No se encontraron reservaciones</p>
+        <p style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:${getThemeColors().textMain}">No se encontraron reservaciones</p>
         <p style="font-size:.875rem;color:${getThemeColors().textMuted}">Prueba cambiando las fechas o el término de búsqueda.</p>
         <button class="empty-btn" onclick="limpiarFiltros()">
           <i class="fa-solid fa-rotate-left"></i> Limpiar filtros
@@ -430,7 +430,7 @@ function renderizarLista(arr) {
         <!-- Info principal -->
         <div style="flex:1;min-width:200px">
           <div style="display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-bottom:.2rem">
-            <span style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:#fff">${r.clienteEmpresa || 'Sin nombre'}</span>
+            <span style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:${getThemeColors().textMain}">${r.clienteEmpresa || 'Sin nombre'}</span>
             <span class="badge badge-${estado}">${estado}</span>
           </div>
           <p style="font-size:.8rem;color:${getThemeColors().textMuted};margin-bottom:.75rem">
@@ -454,7 +454,7 @@ function renderizarLista(arr) {
             <option value="Finalizado" ${estado==='Finalizado' ?'selected':''}>Finalizado</option>
             <option value="Cancelado"  ${estado==='Cancelado'  ?'selected':''}>Cancelado</option>
           </select>
-          <span style="font-size:.7rem;color:rgba(255,255,255,.3)">Creado: ${creadoEn}</span>
+          <span style="font-size:.7rem;color:${getThemeColors().textMuted}">Creado: ${creadoEn}</span>
         </div>
       </div>
     </article>`;
