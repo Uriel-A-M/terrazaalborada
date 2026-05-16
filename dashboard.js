@@ -128,6 +128,19 @@ function actualizarKPIsBI(arr) {
   }
 }
 
+
+function getThemeColors() {
+  const isDark = document.documentElement.classList.contains('dark');
+  return {
+    textMain: isDark ? 'rgba(255,255,255,.85)' : '#0F2A1F',
+    textMuted: isDark ? 'rgba(255,255,255,.5)' : 'rgba(15,42,31,.6)',
+    gridLine: isDark ? 'rgba(255,255,255,.05)' : 'rgba(15,42,31,.08)',
+    bgModal: isDark ? '#102742' : '#FDFCF7',
+    textModal: isDark ? '#fff' : '#0F2A1F',
+    tooltipBg: isDark ? 'rgba(11,25,41,.95)' : 'rgba(253,252,247,.95)'
+  };
+}
+
 // ── Módulo 4: Gráficas Chart.js ───────────────────────────────
 function actualizarGraficas(arr) {
   // Dona — tipo evento
@@ -139,7 +152,7 @@ function actualizarGraficas(arr) {
     chartDonaInstance = new Chart(ctxD, {
       type: 'doughnut',
       data: { labels: Object.keys(freqEvento), datasets: [{ data: Object.values(freqEvento), backgroundColor: PALETTE, borderWidth: 0, hoverOffset: 8 }] },
-      options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: 'rgba(255,255,255,.7)', font: { family: "'Source Sans 3'", weight: 600 }, padding: 16, usePointStyle: true } } }, cutout: '60%' }
+      options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: getThemeColors().textMuted, font: { family: "'Source Sans 3'", weight: 600 }, padding: 16, usePointStyle: true } } }, cutout: '60%' }
     });
   }
   // Barras — ingresos por salón
@@ -152,8 +165,8 @@ function actualizarGraficas(arr) {
       type: 'bar',
       data: { labels: Object.keys(ingSalon), datasets: [{ label: 'Ingresos', data: Object.values(ingSalon), backgroundColor: ['#C9A227','#1F5A3D','#3b82f6'], borderRadius: 8, barThickness: 48 }] },
       options: { responsive: true, plugins: { legend: { display: false } }, scales: {
-        x: { ticks: { color: 'rgba(255,255,255,.5)', font: { weight: 600 } }, grid: { display: false } },
-        y: { ticks: { color: 'rgba(255,255,255,.35)', callback: v => '$'+v.toLocaleString('es-MX') }, grid: { color: 'rgba(255,255,255,.06)' } }
+        x: { ticks: { color: getThemeColors().textMuted, font: { weight: 600 } }, grid: { display: false } },
+        y: { ticks: { color: getThemeColors().textMuted, callback: v => '$'+v.toLocaleString('es-MX') }, grid: { color: getThemeColors().gridLine } }
       }}
     });
   }
@@ -207,11 +220,11 @@ function actualizarGraficas(arr) {
         plugins: {
           legend: { display: false }, // leyenda manual en HTML
           tooltip: {
-            backgroundColor: 'rgba(11,25,41,.95)',
+            backgroundColor: getThemeColors().tooltipBg,
             borderColor: 'rgba(255,255,255,.1)',
             borderWidth: 1,
             titleColor: '#C9A227',
-            bodyColor: 'rgba(255,255,255,.8)',
+            bodyColor: getThemeColors().textMain,
             padding: 10,
             callbacks: {
               label: ctx => {
@@ -223,14 +236,14 @@ function actualizarGraficas(arr) {
         },
         scales: {
           y: {
-            ticks: { color: 'rgba(255,255,255,.85)', font: { weight: 700, size: 13 } },
+            ticks: { color: getThemeColors().textMain, font: { weight: 700, size: 13 } },
             grid: { display: false },
           },
           xCount: {
             axis: 'x',
             position: 'bottom',
             ticks: { color: 'rgba(201,162,39,.8)', font: { weight: 600 }, maxTicksLimit: 6 },
-            grid:  { color: 'rgba(255,255,255,.05)' },
+            grid:  { color: getThemeColors().gridLine },
             title: { display: true, text: 'Número de Reservas', color: '#C9A227', font: { size: 10, weight: 700 } }
           },
           xIng: {
@@ -272,36 +285,36 @@ function inicializarCalendario() {
       const cap = r.capacidadMaximaSalon ?? '—';
       const estadoColor = { Pendiente:'#C9A227', Confirmado:'#34d399', Finalizado:'#9ca3af', Cancelado:'#f87171' }[r.estado] || '#C9A227';
       Swal.fire({
-        background: '#0e2236',
-        color: '#fff',
+        background: getThemeColors().bgModal,
+        color: getThemeColors().textModal,
         width: '480px',
         showCloseButton: true,
         showConfirmButton: false,
         html: `
           <div style="text-align:left;padding:.5rem .25rem">
-            <p style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:#fff;margin-bottom:.25rem">${r.clienteEmpresa || 'Sin nombre'}</p>
-            <p style="font-size:.8rem;color:rgba(255,255,255,.45);margin-bottom:1.25rem">${r.usuario || ''}</p>
+            <p style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:${getThemeColors().textModal};margin-bottom:.25rem">${r.clienteEmpresa || 'Sin nombre'}</p>
+            <p style="font-size:.8rem;color:${getThemeColors().textMuted};margin-bottom:1.25rem">${r.usuario || ''}</p>
             <span style="display:inline-block;padding:.2rem .75rem;border-radius:9999px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;background:${estadoColor}22;color:${estadoColor};border:1px solid ${estadoColor}55;margin-bottom:1.25rem">${r.estado || 'Pendiente'}</span>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:.85rem 1.5rem">
               <div>
                 <p style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#C9A227">Salón</p>
-                <p style="font-size:.9rem;font-weight:600;color:#fff">${r.salonSeleccionado || '—'}</p>
+                <p style="font-size:.9rem;font-weight:600;color:${getThemeColors().textModal}">${r.salonSeleccionado || '—'}</p>
               </div>
               <div>
                 <p style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#C9A227">Fecha del Evento</p>
-                <p style="font-size:.9rem;font-weight:600;color:#fff">${r.fechaEvento || '—'}</p>
+                <p style="font-size:.9rem;font-weight:600;color:${getThemeColors().textModal}">${r.fechaEvento || '—'}</p>
               </div>
               <div>
                 <p style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#C9A227">Tipo de Evento</p>
-                <p style="font-size:.9rem;font-weight:600;color:#fff">${r.tipoEvento || '—'}</p>
+                <p style="font-size:.9rem;font-weight:600;color:${getThemeColors().textModal}">${r.tipoEvento || '—'}</p>
               </div>
               <div>
                 <p style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#C9A227">Paquete</p>
-                <p style="font-size:.9rem;font-weight:600;color:#fff">${r.tipoPaquete || '—'}</p>
+                <p style="font-size:.9rem;font-weight:600;color:${getThemeColors().textModal}">${r.tipoPaquete || '—'}</p>
               </div>
               <div>
                 <p style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#C9A227">Invitados</p>
-                <p style="font-size:.9rem;font-weight:600;color:#fff">${inv} <span style="color:rgba(255,255,255,.4)">/ ${cap}</span></p>
+                <p style="font-size:.9rem;font-weight:600;color:${getThemeColors().textModal}">${inv} <span style="color:${getThemeColors().textMuted}">/ ${cap}</span></p>
               </div>
               <div>
                 <p style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#C9A227">Monto Total</p>
@@ -393,7 +406,7 @@ function renderizarLista(arr) {
           <i class="fa-solid fa-magnifying-glass" style="font-size:1.6rem;color:#34d399"></i>
         </div>
         <p style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:#fff">No se encontraron reservaciones</p>
-        <p style="font-size:.875rem;color:rgba(255,255,255,.45)">Prueba cambiando las fechas o el término de búsqueda.</p>
+        <p style="font-size:.875rem;color:${getThemeColors().textMuted}">Prueba cambiando las fechas o el término de búsqueda.</p>
         <button class="empty-btn" onclick="limpiarFiltros()">
           <i class="fa-solid fa-rotate-left"></i> Limpiar filtros
         </button>
@@ -420,7 +433,7 @@ function renderizarLista(arr) {
             <span style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:#fff">${r.clienteEmpresa || 'Sin nombre'}</span>
             <span class="badge badge-${estado}">${estado}</span>
           </div>
-          <p style="font-size:.8rem;color:rgba(255,255,255,.45);margin-bottom:.75rem">
+          <p style="font-size:.8rem;color:${getThemeColors().textMuted};margin-bottom:.75rem">
             <i class="fa-regular fa-envelope" style="margin-right:.35rem"></i>${email}
           </p>
           <!-- Chips de detalles -->
@@ -459,8 +472,8 @@ async function cambiarEstado(id, nuevoEstado) {
     cancelButtonText: 'Cancelar',
     confirmButtonColor: '#C9A227',
     cancelButtonColor: 'rgba(255,255,255,.1)',
-    background: '#102742',
-    color: '#fff',
+    background: getThemeColors().bgModal,
+    color: getThemeColors().textModal,
     iconColor: '#C9A227'
   });
   if (!result.isConfirmed) {
@@ -475,7 +488,7 @@ async function cambiarEstado(id, nuevoEstado) {
     });
     // onSnapshot actualizará automáticamente
   } catch (e) {
-    Swal.fire({ title: 'Error', text: e.message, icon: 'error', background: '#102742', color: '#fff' });
+    Swal.fire({ title: 'Error', text: e.message, icon: 'error', background: getThemeColors().bgModal, color: getThemeColors().textModal });
     refrescar();
   }
 }
@@ -530,7 +543,7 @@ function formatFecha(iso) {
 function prepararFilas() {
   // CIA — CONFIDENCIALIDAD: verificar sesión admin antes de preparar datos.
   if (!auth.currentUser) {
-    Swal.fire({ title: 'Acceso denegado', text: 'Debes estar autenticado para exportar.', icon: 'error', background: '#102742', color: '#fff' });
+    Swal.fire({ title: 'Acceso denegado', text: 'Debes estar autenticado para exportar.', icon: 'error', background: getThemeColors().bgModal, color: getThemeColors().textModal });
     return null;
   }
 
@@ -660,6 +673,31 @@ function setupListeners() {
     if (e.key === 'Escape') document.getElementById('calModal')?.classList.remove('open');
   });
 
+  
+  // Theme Toggle
+  const btnToggleTheme = document.getElementById('btnToggleTheme');
+  const themeToggleText = document.getElementById('themeToggleText');
+  
+  function updateThemeIcon() {
+    const isDark = document.documentElement.classList.contains('dark');
+    if (btnToggleTheme) {
+      btnToggleTheme.innerHTML = isDark 
+        ? '<i class="fa-solid fa-sun"></i> <span id="themeToggleText">Modo Claro</span>'
+        : '<i class="fa-solid fa-moon"></i> <span id="themeToggleText">Modo Oscuro</span>';
+    }
+  }
+  
+  // Set initial text
+  updateThemeIcon();
+
+  btnToggleTheme?.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    const isDark = document.documentElement.classList.contains('dark');
+    localStorage.setItem('dashboardTheme', isDark ? 'dark' : 'light');
+    updateThemeIcon();
+    refrescar(); // repintar gráficas y calendario con los colores nuevos
+  });
+
   // Sidebar móvil
   const mobileBtn = document.getElementById('mobileBtn');
   const sidebar   = document.getElementById('sidebar');
@@ -667,9 +705,11 @@ function setupListeners() {
   mobileBtn?.addEventListener('click', () => {
     sidebar?.classList.toggle('open');
     overlay?.classList.toggle('hidden');
+    mobileBtn?.classList.add('hidden');
   });
   overlay?.addEventListener('click', () => {
     sidebar?.classList.remove('open');
     overlay?.classList.add('hidden');
+    mobileBtn?.classList.remove('hidden');
   });
 }

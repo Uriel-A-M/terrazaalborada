@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es" class="dark transition-colors duration-[400ms] ease-in-out">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +15,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Source Sans 3',sans-serif;background:#0B1929;color:#fff;min-height:100vh;overflow-x:hidden}
+    body{font-family:'Source Sans 3',sans-serif;background:#FDFCF7;color:#0F2A1F;min-height:100vh;overflow-x:hidden;transition:background-color .4s ease,color .4s ease}
+html.dark body{background:#0B1929;color:#fff}
     .font-display{font-family:'Playfair Display',serif}
 
     /* Aurora blobs */
@@ -26,32 +27,43 @@
     @keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,40px)}}
 
     /* Sidebar */
-    .sidebar{position:fixed;top:0;left:0;bottom:0;width:16rem;background:rgba(11,25,41,0.92);backdrop-filter:blur(24px);border-right:1px solid rgba(255,255,255,0.07);display:flex;flex-direction:column;padding:1.5rem 1rem;z-index:50;transition:transform .35s ease}
+    .sidebar{position:fixed;top:0;left:0;bottom:0;width:16rem;background:rgba(253,252,247,0.92);backdrop-filter:blur(24px);border-right:1px solid rgba(15,42,31,0.1);display:flex;flex-direction:column;padding:1.5rem 1rem;z-index:50;transition:transform .35s ease,background-color .4s ease}
+html.dark .sidebar{background:rgba(11,25,41,0.92);border-right:1px solid rgba(255,255,255,0.07)}
     .sidebar.closed{transform:translateX(-100%)}
-    .nav-link{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:.75rem;color:rgba(255,255,255,.6);font-size:.875rem;font-weight:600;cursor:pointer;transition:all .25s;text-decoration:none;border:none;background:none;width:100%;text-align:left}
+    .nav-link{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:.75rem;color:rgba(15,42,31,.6);font-size:.875rem;font-weight:600;cursor:pointer;transition:all .25s;text-decoration:none;border:none;background:none;width:100%;text-align:left}
+html.dark .nav-link{color:rgba(255,255,255,.6)}
     .nav-link:hover,.nav-link.active{background:rgba(201,162,39,.15);color:#C9A227}
     .nav-link i{width:18px;text-align:center}
 
     /* KPI cards */
-    .kpi-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:1rem;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;transition:all .3s}
+    .kpi-card{background:rgba(255,255,255,.7);border:1px solid rgba(15,42,31,.1);border-radius:1rem;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;transition:all .3s,background-color .4s ease;box-shadow:0 2px 10px rgba(0,0,0,0.02)}
+html.dark .kpi-card{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.08)}
     .kpi-card:hover{border-color:rgba(201,162,39,.4);transform:translateY(-2px)}
     .kpi-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0}
 
     /* Filter bar */
-    .filter-bar{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:.875rem;padding:.875rem 1.25rem;display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
-    .filter-input{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:.5rem;padding:.45rem .85rem;color:#fff;font-size:.85rem;outline:none;transition:border-color .25s}
-    .filter-input::placeholder{color:rgba(255,255,255,.35)}
+    .filter-bar{background:rgba(255,255,255,.6);border:1px solid rgba(15,42,31,.1);border-radius:.875rem;padding:.875rem 1.25rem;display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;transition:background-color .4s ease}
+html.dark .filter-bar{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)}
+    .filter-input{background:rgba(255,255,255,.8);border:1px solid rgba(15,42,31,.15);border-radius:.5rem;padding:.45rem .85rem;color:#0F2A1F;font-size:.85rem;outline:none;transition:all .25s}
+html.dark .filter-input{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.1);color:#fff}
+    .filter-input::placeholder{color:rgba(15,42,31,.4)}
+html.dark .filter-input::placeholder{color:rgba(255,255,255,.35)}
     .filter-input:focus{border-color:#C9A227}
+    .filter-input option{background:#fff;color:#0F2A1F}
+html.dark .filter-input option{background:#0B1929;color:#fff}
 
     /* Reservation cards */
-    .reserva-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:.875rem;padding:1rem 1.25rem;border-left:3px solid #C9A227;transition:all .3s}
-    .reserva-card:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15)}
+    .reserva-card{background:rgba(255,255,255,.6);border:1px solid rgba(15,42,31,.1);border-radius:.875rem;padding:1rem 1.25rem;border-left:3px solid #C9A227;transition:all .3s}
+html.dark .reserva-card{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.07);border-left-color:#C9A227}
+    .reserva-card:hover{background:rgba(255,255,255,.9);border-color:rgba(15,42,31,.2)}
+html.dark .reserva-card:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15)}
     .reserva-card.estado-Confirmado{border-left-color:#34d399}
     .reserva-card.estado-Cancelado{border-left-color:#f87171}
     .reserva-card.estado-Finalizado{border-left-color:#9ca3af}
     .detail-chip{display:flex;flex-direction:column;gap:2px;min-width:0}
     .chip-label{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#C9A227;white-space:nowrap}
-    .chip-value{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.9);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .chip-value{font-size:.82rem;font-weight:600;color:#0F2A1F;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html.dark .chip-value{color:rgba(255,255,255,.9)}
 
     /* Badge estado */
     .badge{display:inline-block;padding:.15rem .6rem;border-radius:9999px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
@@ -61,23 +73,29 @@
     .badge-Cancelado{background:rgba(248,113,113,.15);color:#f87171;border:1px solid rgba(248,113,113,.3)}
 
     /* Estado select */
-    .estado-select{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:.5rem;color:#fff;font-size:.8rem;font-weight:600;padding:.35rem .6rem;outline:none;cursor:pointer;transition:border-color .25s}
+    .estado-select{background:rgba(255,255,255,.8);border:1px solid rgba(15,42,31,.15);border-radius:.5rem;color:#0F2A1F;font-size:.8rem;font-weight:600;padding:.35rem .6rem;outline:none;cursor:pointer;transition:all .25s}
+html.dark .estado-select{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12);color:#fff}
     .estado-select:focus{border-color:#C9A227}
-    .estado-select option{background:#0B1929;color:#fff}
+    .estado-select option{background:#fff;color:#0F2A1F}
+html.dark .estado-select option{background:#0B1929;color:#fff}
 
     /* Calendar Modal */
-    .cal-modal{position:fixed;inset:0;z-index:200;background:rgba(5,15,30,.96);backdrop-filter:blur(12px);display:none;flex-direction:column}
+    .cal-modal{position:fixed;inset:0;z-index:200;background:rgba(253,252,247,.96);backdrop-filter:blur(12px);display:none;flex-direction:column;transition:background-color .4s ease}
+html.dark .cal-modal{background:rgba(5,15,30,.96)}
     .cal-modal.open{display:flex}
     .cal-modal-inner{flex:1;overflow:auto;padding:1.5rem}
 
     /* FullCalendar dark overrides */
-    .fc{color:#fff}
+    .fc{color:#0F2A1F;transition:color .4s ease}
+html.dark .fc{color:#fff}
     .fc .fc-button-primary{background:#C9A227;border-color:#C9A227;color:#0B1929;font-weight:700}
     .fc .fc-button-primary:hover{filter:brightness(1.1)}
     .fc .fc-button-primary:not(:disabled).fc-button-active{background:#1F5A3D;border-color:#1F5A3D;color:#fff}
     .fc th{color:#C9A227;font-size:.8rem;font-weight:700}
-    .fc td,.fc th{border-color:rgba(255,255,255,.08)}
-    .fc .fc-day-today{background:rgba(201,162,39,.08)!important}
+    .fc td,.fc th{border-color:rgba(15,42,31,.08)}
+html.dark .fc td,html.dark .fc th{border-color:rgba(255,255,255,.08)}
+    .fc .fc-day-today{background:rgba(201,162,39,.12)!important}
+html.dark .fc .fc-day-today{background:rgba(201,162,39,.08)!important}
     .fc .fc-daygrid-day:hover{background:rgba(201,162,39,.05)}
     .fc-event{font-size:.75rem;font-weight:600;border:none!important;cursor:pointer!important;transition:transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease, z-index 0s}
     .fc-event:hover{transform:scale(1.06);box-shadow:0 6px 20px rgba(0,0,0,.45);z-index:10;position:relative}
@@ -93,13 +111,17 @@
     @keyframes shimmer{0%{background-position:200%}100%{background-position:-200%}}
 
     /* Skeleton cards */
-    .skeleton-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:.875rem;padding:1rem 1.25rem;border-left:3px solid rgba(255,255,255,.07)}
-    .skel-line{border-radius:.4rem;background:rgba(255,255,255,.08);position:relative;overflow:hidden}
-    .skel-line::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.07) 50%,transparent 100%);background-size:200% 100%;animation:skelShimmer 1.6s ease-in-out infinite}
+    .skeleton-card{background:rgba(255,255,255,.5);border:1px solid rgba(15,42,31,.07);border-radius:.875rem;padding:1rem 1.25rem;border-left:3px solid rgba(15,42,31,.07)}
+html.dark .skeleton-card{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.07);border-left-color:rgba(255,255,255,.07)}
+    .skel-line{border-radius:.4rem;background:rgba(15,42,31,.08);position:relative;overflow:hidden}
+html.dark .skel-line{background:rgba(255,255,255,.08)}
+    .skel-line::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(15,42,31,.05) 50%,transparent 100%);background-size:200% 100%;animation:skelShimmer 1.6s ease-in-out infinite}
+html.dark .skel-line::after{background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.07) 50%,transparent 100%)}
     @keyframes skelShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
     /* Empty state */
-    .empty-state{border:1px dashed rgba(255,255,255,.12);border-radius:1rem;padding:3.5rem 2rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.75rem}
+    .empty-state{border:1px dashed rgba(15,42,31,.15);border-radius:1rem;padding:3.5rem 2rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.75rem}
+html.dark .empty-state{border-color:rgba(255,255,255,.12)}
     .empty-state-icon{width:64px;height:64px;border-radius:50%;background:rgba(31,90,61,.15);border:1px solid rgba(31,90,61,.3);display:flex;align-items:center;justify-content:center;margin-bottom:.5rem}
     .empty-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem 1.25rem;border-radius:.6rem;border:1px solid rgba(52,211,153,.4);color:#34d399;font-size:.8rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:transparent;cursor:pointer;margin-top:.5rem;transition:all .25s}
     .empty-btn:hover{background:rgba(52,211,153,.1);border-color:#34d399}
@@ -115,9 +137,11 @@
     .export-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
     .export-btn__chevron{font-size:.6rem;transition:transform .2s ease}
     .export-wrap.open .export-btn__chevron{transform:rotate(180deg)}
-    .export-menu{position:absolute;right:0;top:calc(100% + .4rem);min-width:160px;border-radius:.75rem;border:1px solid rgba(255,255,255,.12);background:rgba(11,25,41,.97);backdrop-filter:blur(20px);box-shadow:0 16px 40px rgba(0,0,0,.5);padding:.35rem;display:none;z-index:80;animation:exportFade .15s ease both}
+    .export-menu{position:absolute;right:0;top:calc(100% + .4rem);min-width:160px;border-radius:.75rem;border:1px solid rgba(15,42,31,.12);background:rgba(253,252,247,.97);backdrop-filter:blur(20px);box-shadow:0 16px 40px rgba(0,0,0,.15);padding:.35rem;display:none;z-index:80;animation:exportFade .15s ease both}
+html.dark .export-menu{border-color:rgba(255,255,255,.12);background:rgba(11,25,41,.97);box-shadow:0 16px 40px rgba(0,0,0,.5)}
     .export-wrap.open .export-menu{display:block}
-    .export-menu__item{display:flex;align-items:center;gap:.65rem;width:100%;padding:.6rem .85rem;border-radius:.5rem;font-size:.8rem;font-weight:600;color:rgba(255,255,255,.8);background:none;border:none;cursor:pointer;text-align:left;transition:background .15s,color .15s}
+    .export-menu__item{display:flex;align-items:center;gap:.65rem;width:100%;padding:.6rem .85rem;border-radius:.5rem;font-size:.8rem;font-weight:600;color:rgba(15,42,31,.8);background:none;border:none;cursor:pointer;text-align:left;transition:background .15s,color .15s}
+html.dark .export-menu__item{color:rgba(255,255,255,.8)}
     .export-menu__item:hover{background:rgba(201,162,39,.15);color:#C9A227}
     .export-menu__icon{width:1rem;height:1rem;flex-shrink:0}
     @keyframes exportFade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
@@ -129,6 +153,14 @@
       .main-content{margin-left:0!important}
     }
   </style>
+
+  <script>
+    if (localStorage.getItem('dashboardTheme') === 'light') {
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+    }
+  </script>
 </head>
 <body>
 
@@ -138,10 +170,10 @@
   <div class="aurora aurora-3"></div>
 
   <!-- Auth Overlay -->
-  <div id="authOverlay" class="fixed inset-0 z-[300] flex items-center justify-center" style="background:rgba(11,25,41,0.97)">
+  <div id="authOverlay" class="fixed inset-0 z-[300] flex items-center justify-center transition-colors duration-[400ms]" style="background:var(--auth-bg, rgba(11,25,41,0.97))">
     <div class="flex flex-col items-center gap-4">
       <div class="w-10 h-10 rounded-full border-2 border-gold border-t-transparent animate-spin"></div>
-      <p class="text-sm font-semibold text-white/50">Verificando permisos…</p>
+      <p class="text-sm font-semibold text-[#0F2A1F]/60 dark:text-[#0F2A1F] dark:text-white/50">Verificando permisos…</p>
     </div>
   </div>
 
@@ -149,7 +181,7 @@
   <div id="app" class="hidden relative z-10">
 
     <!-- Mobile toggle -->
-    <button id="mobileBtn" class="fixed top-4 left-4 z-[60] md:hidden w-10 h-10 rounded-xl flex items-center justify-center text-white" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)">
+    <button id="mobileBtn" class="fixed top-4 left-4 z-[60] md:hidden w-10 h-10 rounded-xl flex items-center justify-center text-[#0F2A1F] dark:text-white" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)">
       <i class="fa-solid fa-bars"></i>
     </button>
     <div id="sidebarOverlay" class="fixed inset-0 z-40 bg-black/60 hidden md:hidden"></div>
@@ -157,7 +189,7 @@
     <!-- SIDEBAR -->
     <aside id="sidebar" class="sidebar">
       <div class="mb-8">
-        <p class="font-display text-xl font-bold text-white">✦ Terraza Alborada</p>
+        <p class="font-display text-xl font-bold text-[#0F2A1F] dark:text-white">✦ Terraza Alborada</p>
         <p class="text-[10px] font-bold uppercase tracking-[.2em] text-gold/70 mt-1">Panel Administrativo</p>
       </div>
       <nav class="flex flex-col gap-1 flex-1">
@@ -171,8 +203,9 @@
           <i class="fa-solid fa-house"></i> Ir al sitio
         </a>
       </nav>
-      <div class="pt-4 border-t border-white/10">
-        <p id="adminEmail" class="text-xs text-white/40 truncate mb-3"></p>
+      <div class="pt-4 border-t border-[#0F2A1F]/10 dark:border-white/10">
+        <p id="adminEmail" class="text-xs text-[#0F2A1F]/50 dark:text-[#0F2A1F] dark:text-white/40 truncate mb-3"></p>
+        <button id="btnToggleTheme" class="nav-link w-full text-[#0F2A1F] dark:text-[#0F2A1F]/70 dark:text-[#0F2A1F] dark:text-white/60 mb-2 transition-all"><i class="fa-solid fa-moon dark:fa-sun"></i> <span id="themeToggleText">Modo Oscuro</span></button>
         <button id="btnLogout" class="nav-link w-full text-red-400 hover:text-red-400 hover:bg-red-500/10">
           <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
         </button>
@@ -188,13 +221,13 @@
         <!-- Header -->
         <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
           <div>
-            <h1 class="font-display text-3xl font-bold text-white">Reservaciones</h1>
-            <p class="text-sm text-white/50 mt-1">Gestiona las solicitudes de tus clientes.</p>
+            <h1 class="font-display text-3xl font-bold text-[#0F2A1F] dark:text-white">Reservaciones</h1>
+            <p class="text-sm text-[#0F2A1F]/60 dark:text-[#0F2A1F] dark:text-white/50 mt-1">Gestiona las solicitudes de tus clientes.</p>
           </div>
           <!-- Botón Ver Calendario -->
           <button id="btnAbrirCalendario"
             class="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 hover:scale-105 hover:brightness-110"
-            style="background:#1F5A3D;color:#fff;box-shadow:0 4px 20px rgba(31,90,61,.4)">
+            style="background:#1F5A3D;color:#fff;box-shadow:0 4px 20px var(--btn-shadow, rgba(31,90,61,.4))">
             <i class="fa-solid fa-calendar-days"></i>
             VER CALENDARIO DE OCUPACIÓN
           </button>
@@ -205,17 +238,17 @@
           <!-- Total -->
           <div class="kpi-card">
             <div>
-              <p class="text-[10px] font-bold uppercase tracking-[.18em] text-white/40 mb-1">Total Solicitudes</p>
-              <p id="kpiTotal" class="font-display text-4xl font-bold text-white">—</p>
+              <p class="text-[10px] font-bold uppercase tracking-[.18em] text-[#0F2A1F]/50 dark:text-[#0F2A1F] dark:text-white/40 mb-1">Total Solicitudes</p>
+              <p id="kpiTotal" class="font-display text-4xl font-bold text-[#0F2A1F] dark:text-white">—</p>
             </div>
-            <div class="kpi-icon" style="background:rgba(255,255,255,.07)">
-              <i class="fa-solid fa-list-ul text-white/60"></i>
+            <div class="kpi-icon bg-[#0F2A1F]/5 dark:bg-white/5">
+              <i class="fa-solid fa-list-ul text-[#0F2A1F]/70 dark:text-[#0F2A1F] dark:text-white/60"></i>
             </div>
           </div>
           <!-- Pendientes -->
           <div class="kpi-card">
             <div>
-              <p class="text-[10px] font-bold uppercase tracking-[.18em] text-white/40 mb-1">Pendientes</p>
+              <p class="text-[10px] font-bold uppercase tracking-[.18em] text-[#0F2A1F]/50 dark:text-[#0F2A1F] dark:text-white/40 mb-1">Pendientes</p>
               <p id="kpiPendientes" class="font-display text-4xl font-bold text-gold">—</p>
             </div>
             <div class="kpi-icon" style="background:rgba(201,162,39,.15)">
@@ -225,7 +258,7 @@
           <!-- Confirmadas -->
           <div class="kpi-card">
             <div>
-              <p class="text-[10px] font-bold uppercase tracking-[.18em] text-white/40 mb-1">Confirmadas</p>
+              <p class="text-[10px] font-bold uppercase tracking-[.18em] text-[#0F2A1F]/50 dark:text-[#0F2A1F] dark:text-white/40 mb-1">Confirmadas</p>
               <p id="kpiConfirmadas" class="font-display text-4xl font-bold" style="color:#34d399">—</p>
             </div>
             <div class="kpi-icon" style="background:rgba(52,211,153,.12)">
@@ -237,7 +270,7 @@
         <!-- Filtros -->
         <div class="filter-bar mb-5">
           <div class="flex items-center gap-2 flex-1 min-w-[180px]">
-            <i class="fa-solid fa-magnifying-glass text-white/30 text-sm"></i>
+            <i class="fa-solid fa-magnifying-glass text-[#0F2A1F] dark:text-white/30 text-sm"></i>
             <input id="searchInput" type="text" placeholder="Nombre o correo…" class="filter-input bg-transparent border-none flex-1 p-0">
           </div>
           <select id="filtroEstado" class="filter-input">
@@ -249,7 +282,7 @@
           </select>
           <input id="filtroFechaDesde" type="date" class="filter-input" title="Desde">
           <input id="filtroFechaHasta" type="date" class="filter-input" title="Hasta">
-          <button id="btnLimpiarFiltros" class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold text-white/60 border border-white/10 hover:border-gold hover:text-gold transition-all">
+          <button id="btnLimpiarFiltros" class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold text-[#0F2A1F]/70 dark:text-[#0F2A1F] dark:text-white/60 border border-[#0F2A1F]/10 dark:border-white/10 hover:border-gold hover:text-gold transition-all">
             <i class="fa-solid fa-broom"></i> Limpiar
           </button>
 
@@ -278,26 +311,26 @@
         </div>
 
         <!-- Lista -->
-        <h2 class="font-display text-xl font-bold text-white mb-3">Listado de Reservaciones</h2>
+        <h2 class="font-display text-xl font-bold text-[#0F2A1F] dark:text-white mb-3">Listado de Reservaciones</h2>
         <div id="listaAdmin" class="flex flex-col gap-3"></div>
       </div>
 
       <!-- ===== SECCIÓN ANALÍTICA ===== -->
       <div id="sec-analytics" class="hidden">
         <div class="mb-6">
-          <h1 class="font-display text-3xl font-bold text-white">Analítica BI</h1>
-          <p class="text-sm text-white/50 mt-1">Distribución de eventos, paquetes e ingresos por salón.</p>
+          <h1 class="font-display text-3xl font-bold text-[#0F2A1F] dark:text-white">Analítica BI</h1>
+          <p class="text-sm text-[#0F2A1F]/60 dark:text-[#0F2A1F] dark:text-white/50 mt-1">Distribución de eventos, paquetes e ingresos por salón.</p>
         </div>
 
         <!-- KPIs de BI -->
-        <h2 class="font-display text-xl font-bold text-white mb-3">Indicadores Clave</h2>
+        <h2 class="font-display text-xl font-bold text-[#0F2A1F] dark:text-white mb-3">Indicadores Clave</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <!-- Ingresos Totales -->
           <div class="kpi-card">
             <div>
               <p class="text-[10px] font-bold uppercase tracking-[.18em] text-gold mb-1">Ingresos Totales</p>
-              <p id="kpiBiIngresos" class="font-display text-3xl font-bold text-white">—</p>
-              <p id="kpiBiIngresosCount" class="text-xs text-white/40 mt-0.5"></p>
+              <p id="kpiBiIngresos" class="font-display text-3xl font-bold text-[#0F2A1F] dark:text-white">—</p>
+              <p id="kpiBiIngresosCount" class="text-xs text-[#0F2A1F]/50 dark:text-[#0F2A1F] dark:text-white/40 mt-0.5"></p>
             </div>
             <div class="kpi-icon" style="background:rgba(201,162,39,.12)">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#C9A227" style="width:1.35rem;height:1.35rem">
@@ -309,8 +342,8 @@
           <div class="kpi-card">
             <div>
               <p class="text-[10px] font-bold uppercase tracking-[.18em] text-gold mb-1">Evento más Popular</p>
-              <p id="kpiBiEvento" class="font-display text-3xl font-bold text-white">—</p>
-              <p id="kpiBiEventoCount" class="text-xs text-white/40 mt-0.5"></p>
+              <p id="kpiBiEvento" class="font-display text-3xl font-bold text-[#0F2A1F] dark:text-white">—</p>
+              <p id="kpiBiEventoCount" class="text-xs text-[#0F2A1F]/50 dark:text-[#0F2A1F] dark:text-white/40 mt-0.5"></p>
             </div>
             <div class="kpi-icon" style="background:rgba(52,211,153,.1)">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#34d399" style="width:1.35rem;height:1.35rem">
@@ -322,8 +355,8 @@
           <div class="kpi-card">
             <div>
               <p class="text-[10px] font-bold uppercase tracking-[.18em] text-gold mb-1">Salón con más Reservas</p>
-              <p id="kpiBiSalon" class="font-display text-3xl font-bold text-white">—</p>
-              <p id="kpiBiSalonCount" class="text-xs text-white/40 mt-0.5"></p>
+              <p id="kpiBiSalon" class="font-display text-3xl font-bold text-[#0F2A1F] dark:text-white">—</p>
+              <p id="kpiBiSalonCount" class="text-xs text-[#0F2A1F]/50 dark:text-[#0F2A1F] dark:text-white/40 mt-0.5"></p>
             </div>
             <div class="kpi-icon" style="background:rgba(99,102,241,.12)">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#818cf8" style="width:1.35rem;height:1.35rem">
@@ -335,8 +368,8 @@
           <div class="kpi-card">
             <div>
               <p class="text-[10px] font-bold uppercase tracking-[.18em] text-gold mb-1">Paquete Estrella</p>
-              <p id="kpiBiPaquete" class="font-display text-2xl font-bold text-white">—</p>
-              <p id="kpiBiPaqueteCount" class="text-xs text-white/40 mt-0.5"></p>
+              <p id="kpiBiPaquete" class="font-display text-2xl font-bold text-[#0F2A1F] dark:text-white">—</p>
+              <p id="kpiBiPaqueteCount" class="text-xs text-[#0F2A1F]/50 dark:text-[#0F2A1F] dark:text-white/40 mt-0.5"></p>
               <p id="kpiBiPaqueteIngresos" class="text-xs mt-1" style="color:#f97316;font-weight:700"></p>
             </div>
             <div class="kpi-icon" style="background:rgba(249,115,22,.12)">
@@ -348,20 +381,20 @@
           </div>
         </div>
 
-        <h2 class="font-display text-xl font-bold text-white mb-3">Analítica Visual</h2>
+        <h2 class="font-display text-xl font-bold text-[#0F2A1F] dark:text-white mb-3">Analítica Visual</h2>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:1rem;padding:1.25rem">
+          <div class="bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 rounded-2xl p-5 transition-colors duration-[400ms]">
             <p class="text-[10px] font-bold uppercase tracking-widest text-gold mb-4">Distribución por Tipo de Evento</p>
             <canvas id="chartTipoEvento" style="max-height:280px"></canvas>
           </div>
-          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:1rem;padding:1.25rem">
+          <div class="bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 rounded-2xl p-5 transition-colors duration-[400ms]">
             <p class="text-[10px] font-bold uppercase tracking-widest text-gold mb-4">Ingresos por Salón</p>
             <canvas id="chartIngresosSalon" style="max-height:280px"></canvas>
           </div>
         </div>
 
         <!-- Gráfica de Distribución de Paquetes — full width -->
-        <div class="mt-5" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:1rem;padding:1.25rem">
+        <div class="mt-5" class="bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 rounded-2xl p-5 transition-colors duration-[400ms]">
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem">
             <div>
               <p class="text-[10px] font-bold uppercase tracking-widest text-gold">Distribución de Paquetes</p>
@@ -385,12 +418,12 @@
 
   <!-- MODAL CALENDARIO -->
   <div id="calModal" class="cal-modal">
-    <div style="background:rgba(11,25,41,.98);border-bottom:1px solid rgba(255,255,255,.08);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+    <div class="bg-[#FDFCF7]/98 dark:bg-[#0B1929]/98 border-b border-[#0F2A1F]/10 dark:border-white/10 px-6 py-4 flex items-center justify-between shrink-0 transition-colors duration-[400ms]">
       <div>
-        <p class="font-display text-xl font-bold text-white">Calendario de Ocupación</p>
-        <p class="text-xs text-white/40 mt-0.5"><span class="inline-block w-2.5 h-2.5 rounded-sm mr-1" style="background:#C9A227"></span>Pendiente &nbsp; <span class="inline-block w-2.5 h-2.5 rounded-sm mr-1" style="background:#1F5A3D"></span>Confirmado &nbsp; <span class="inline-block w-2.5 h-2.5 rounded-sm mr-1" style="background:#6b7280"></span>Finalizado &nbsp; <span class="inline-block w-2.5 h-2.5 rounded-sm mr-1" style="background:#ef4444"></span>Cancelado</p>
+        <p class="font-display text-xl font-bold text-[#0F2A1F] dark:text-white">Calendario de Ocupación</p>
+        <p class="text-xs text-[#0F2A1F]/50 dark:text-[#0F2A1F] dark:text-white/40 mt-0.5"><span class="inline-block w-2.5 h-2.5 rounded-sm mr-1" style="background:#C9A227"></span>Pendiente &nbsp; <span class="inline-block w-2.5 h-2.5 rounded-sm mr-1" style="background:#1F5A3D"></span>Confirmado &nbsp; <span class="inline-block w-2.5 h-2.5 rounded-sm mr-1" style="background:#6b7280"></span>Finalizado &nbsp; <span class="inline-block w-2.5 h-2.5 rounded-sm mr-1" style="background:#ef4444"></span>Cancelado</p>
       </div>
-      <button id="btnCerrarCalendario" class="w-9 h-9 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all">
+      <button id="btnCerrarCalendario" class="w-9 h-9 rounded-lg flex items-center justify-center text-[#0F2A1F]/70 dark:text-[#0F2A1F] dark:text-white/60 hover:text-[#0F2A1F] dark:text-white hover:bg-white/10 transition-all">
         <i class="fa-solid fa-xmark text-lg"></i>
       </button>
     </div>
