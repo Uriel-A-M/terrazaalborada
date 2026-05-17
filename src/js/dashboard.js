@@ -2,12 +2,13 @@
 // CIA: Confidencialidad (auth guard) · Integridad (update) · Disponibilidad (onSnapshot)
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCBePYk9UbTtAvzHOtgzeaU6D1xLJK15yE",
-  authDomain: "terrazaalborada-dd06c.firebaseapp.com",
-  projectId: "terrazaalborada-dd06c",
-  storageBucket: "terrazaalborada-dd06c.firebasestorage.app",
-  messagingSenderId: "419306719780",
-  appId: "1:419306719780:web:10a936d4c1b7cd8fe626b1"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
@@ -713,3 +714,14 @@ function setupListeners() {
     mobileBtn?.classList.remove('hidden');
   });
 }
+
+// =============================================================
+// EXPORTAR FUNCIONES GLOBALES PARA HTML (onclick)
+// =============================================================
+window.cambiarEstado = cambiarEstado;
+window.limpiarFiltros = limpiarFiltros;
+window.exportarExcel = exportarExcel;
+window.exportarCSV = exportarCSV;
+window.showSection = showSection;
+window.refrescar = refrescar;
+window.cerrarExportMenu = cerrarExportMenu;

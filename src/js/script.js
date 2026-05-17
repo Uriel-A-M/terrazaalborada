@@ -1,12 +1,12 @@
 // PEGAR AQUI LA CONFIGURACION DE FIREBASE
 const firebaseConfig = {
-  apiKey: "AIzaSyCBePYk9UbTtAvzHOtgzeaU6D1xLJK15yE",
-  authDomain: "terrazaalborada-dd06c.firebaseapp.com",
-  projectId: "terrazaalborada-dd06c",
-  storageBucket: "terrazaalborada-dd06c.firebasestorage.app",
-  messagingSenderId: "419306719780",
-  appId: "1:419306719780:web:10a936d4c1b7cd8fe626b1",
-  measurementId: "G-7MZD40TJCH"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -25,7 +25,7 @@ let reservasOcupadas = new Set();
 let reservacionesUnsubscribe = null;
 
 // Inicializar EmailJS
-emailjs.init("8qxF4pHW13zLqaX96");
+emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
 
 // =============================================================
 // CONFIG_NEGOCIO — Fuente de verdad para precios y capacidades.
@@ -662,7 +662,10 @@ function guardarReservacion() {
   })
     .then(() => {
       // Enviar notificación por correo con EmailJS
-      emailjs.send("service_axx0wmq", "template_fg1xpla", {
+      emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        {
         clienteEmpresa:    clienteEmpresa,
         salonSeleccionado: salonSeleccionado,
         fechaEvento:       fechaEvento,
@@ -757,6 +760,16 @@ const ESTADO_CONFIG = {
     bannerClass: "res-banner--cancelled",
   },
 };
+
+// =============================================================
+// EXPORTAR FUNCIONES GLOBALES PARA HTML (onclick)
+// =============================================================
+window.login = login;
+window.registrar = registrar;
+window.logout = logout;
+window.guardarReservacion = guardarReservacion;
+window.cerrarMenuMovil = cerrarMenuMovil;
+window.cambiarEstado = typeof cambiarEstado !== 'undefined' ? cambiarEstado : undefined; // just in case
 
 /**
  * cargarReservaciones — Suscripción en tiempo real con onSnapshot.
