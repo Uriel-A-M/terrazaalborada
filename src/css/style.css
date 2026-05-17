@@ -1017,3 +1017,8 @@ html.dark .res-empty__title { color: #f8f5ea; }
 }
 
 html.dark .res-empty__sub { color: rgba(200, 196, 182, 0.65); }
+
+/* ── Hero Background ──────────────────────────────────────────────── */
+section.relative.isolate {
+  background-image: url('/images/Diamante.png') !important;
+}
