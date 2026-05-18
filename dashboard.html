@@ -1020,14 +1020,18 @@
         <h2 class="font-display text-xl font-bold text-[#0F2A1F] dark:text-white mb-3">Analítica Visual</h2>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
           <div
-            class="bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 rounded-2xl p-5 transition-colors duration-[400ms]">
+            class="bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 rounded-2xl p-5 transition-colors duration-[400ms] flex flex-col">
             <p class="text-[10px] font-bold uppercase tracking-widest text-gold mb-4">Histórico Mensual de Ingresos</p>
-            <canvas id="chartLineIngresos" style="max-height:280px"></canvas>
+            <div class="relative w-full h-[250px] md:h-[280px]">
+              <canvas id="chartLineIngresos"></canvas>
+            </div>
           </div>
           <div
-            class="bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 rounded-2xl p-5 transition-colors duration-[400ms]">
+            class="bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 rounded-2xl p-5 transition-colors duration-[400ms] flex flex-col">
             <p class="text-[10px] font-bold uppercase tracking-widest text-gold mb-4">Ingresos por Salón</p>
-            <canvas id="chartIngresosSalon" style="max-height:280px"></canvas>
+            <div class="relative w-full h-[250px] md:h-[280px]">
+              <canvas id="chartIngresosSalon"></canvas>
+            </div>
           </div>
         </div>
       </div>
@@ -1041,23 +1045,29 @@
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
           <div
-            class="bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 rounded-2xl p-5 transition-colors duration-[400ms]">
+            class="bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 rounded-2xl p-5 transition-colors duration-[400ms] flex flex-col">
             <p class="text-[10px] font-bold uppercase tracking-widest text-gold mb-4">Densidad de Invitados por Salón
             </p>
-            <canvas id="chartRadarDensidad" style="max-height:300px; margin:0 auto;"></canvas>
+            <div class="relative w-full h-[300px] lg:h-[530px]">
+              <canvas id="chartRadarDensidad"></canvas>
+            </div>
           </div>
           <div class="grid grid-rows-2 gap-5">
             <div
-              class="bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 rounded-2xl p-5 transition-colors duration-[400ms]">
+              class="bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 rounded-2xl p-5 transition-colors duration-[400ms] flex flex-col">
               <p class="text-[10px] font-bold uppercase tracking-widest text-gold mb-4">Distribución por Día de la
                 Semana</p>
-              <canvas id="chartPieDias" style="max-height:180px; margin:0 auto;"></canvas>
+              <div class="relative w-full h-[220px]">
+                <canvas id="chartPieDias"></canvas>
+              </div>
             </div>
             <div
-              class="bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 rounded-2xl p-5 transition-colors duration-[400ms]">
+              class="bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 rounded-2xl p-5 transition-colors duration-[400ms] flex flex-col">
               <p class="text-[10px] font-bold uppercase tracking-widest text-gold mb-4">Flujo de Estados de Solicitudes
               </p>
-              <canvas id="chartDonaEstados" style="max-height:180px; margin:0 auto;"></canvas>
+              <div class="relative w-full h-[220px]">
+                <canvas id="chartDonaEstados"></canvas>
+              </div>
             </div>
           </div>
         </div>
@@ -1071,22 +1081,28 @@
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
           <div
-            class="bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 rounded-2xl p-5 transition-colors duration-[400ms] lg:col-span-1">
+            class="bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 rounded-2xl p-5 transition-colors duration-[400ms] lg:col-span-1 flex flex-col">
             <p class="text-[10px] font-bold uppercase tracking-widest text-gold mb-4">Tipos de Celebración</p>
-            <canvas id="chartTipoEvento" style="max-height:280px"></canvas>
+            <div class="relative w-full h-[250px] md:h-[280px]">
+              <canvas id="chartTipoEvento"></canvas>
+            </div>
           </div>
           <div
-            class="bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 rounded-2xl p-5 transition-colors duration-[400ms] lg:col-span-2">
+            class="bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 rounded-2xl p-5 transition-colors duration-[400ms] lg:col-span-2 flex flex-col">
             <p class="text-[10px] font-bold uppercase tracking-widest text-gold mb-4">Ticket Promedio por Tipo de Evento
             </p>
-            <canvas id="chartBarTicketPromedio" style="max-height:280px"></canvas>
+            <div class="relative w-full h-[250px] md:h-[280px]">
+              <canvas id="chartBarTicketPromedio"></canvas>
+            </div>
           </div>
         </div>
         <div
-          class="bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 rounded-2xl p-5 transition-colors duration-[400ms]">
+          class="bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 rounded-2xl p-5 transition-colors duration-[400ms] flex flex-col">
           <p class="text-[10px] font-bold uppercase tracking-widest text-gold mb-4">Correlación: Invitados vs Inversión
           </p>
-          <canvas id="chartScatterCorrelacion" style="max-height:280px"></canvas>
+          <div class="relative w-full h-[250px] md:h-[280px]">
+            <canvas id="chartScatterCorrelacion"></canvas>
+          </div>
         </div>
       </div>
 

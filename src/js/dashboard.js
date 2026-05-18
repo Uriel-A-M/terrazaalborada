@@ -186,6 +186,7 @@ function actualizarGraficas(arr) {
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: { legend: { display: false } },
         scales: {
           x: { ticks: { color: theme.textMuted }, grid: { display: false } },
@@ -204,7 +205,7 @@ function actualizarGraficas(arr) {
     chartIngresosSalonInstance = new Chart(ctxB, {
       type: 'bar',
       data: { labels: Object.keys(ingSalon), datasets: [{ label: 'Ingresos', data: Object.values(ingSalon), backgroundColor: ['#C9A227','#1F5A3D','#3b82f6'], borderRadius: 8, barThickness: 48 }] },
-      options: { responsive: true, plugins: { legend: { display: false } }, scales: {
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: {
         x: { ticks: { color: theme.textMuted, font: { weight: 600 } }, grid: { display: false } },
         y: { ticks: { color: theme.textMuted, callback: v => '$'+v.toLocaleString('es-MX') }, grid: { color: theme.gridLine } }
       }}
@@ -318,7 +319,7 @@ function actualizarGraficas(arr) {
     chartTipoEventoInstance = new Chart(ctxD, {
       type: 'doughnut',
       data: { labels: Object.keys(freqEvento), datasets: [{ data: Object.values(freqEvento), backgroundColor: PALETTE, borderWidth: 0, hoverOffset: 8 }] },
-      options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: theme.textMuted, font: { family: "'Source Sans 3'", weight: 600 }, padding: 16, usePointStyle: true } } }, cutout: '60%' }
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: theme.textMuted, font: { family: "'Source Sans 3'", weight: 600 }, padding: 16, usePointStyle: true } } }, cutout: '60%' }
     });
   }
 
@@ -350,6 +351,7 @@ function actualizarGraficas(arr) {
       options: {
         indexAxis: 'y',
         responsive: true,
+        maintainAspectRatio: false,
         plugins: { legend: { display: false } },
         scales: {
           x: { ticks: { color: theme.textMuted, callback: v => '$'+v.toLocaleString('es-MX') }, grid: { color: theme.gridLine } },
@@ -383,6 +385,7 @@ function actualizarGraficas(arr) {
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: { 
           legend: { display: false },
           tooltip: {
