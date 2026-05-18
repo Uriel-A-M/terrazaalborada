@@ -17,9 +17,14 @@ const db   = firebase.firestore();
 // ── Estado global ──────────────────────────────────────────────
 let reservacionesCache = [];
 let calendarInstance    = null;
-let chartDonaInstance   = null;
-let chartBarrasInstance = null;
-let chartPaquetesInstance = null;
+let chartLineIngresosInstance = null;
+let chartIngresosSalonInstance = null;
+let chartRadarDensidadInstance = null;
+let chartPieDiasInstance = null;
+let chartDonaEstadosInstance = null;
+let chartTipoEventoInstance = null;
+let chartBarTicketPromedioInstance = null;
+let chartScatterCorrelacionInstance = null;
 let unsubscribeSnapshot = null;
 
 const ESTADO_COLOR = {
@@ -144,128 +149,260 @@ function getThemeColors() {
 
 // ── Módulo 4: Gráficas Chart.js ───────────────────────────────
 function actualizarGraficas(arr) {
-  // Dona — tipo evento
-  const freqEvento = {};
-  arr.forEach(r => { if (r.tipoEvento) freqEvento[r.tipoEvento] = (freqEvento[r.tipoEvento]||0)+1; });
-  if (chartDonaInstance) chartDonaInstance.destroy();
-  const ctxD = document.getElementById('chartTipoEvento')?.getContext('2d');
-  if (ctxD && Object.keys(freqEvento).length) {
-    chartDonaInstance = new Chart(ctxD, {
-      type: 'doughnut',
-      data: { labels: Object.keys(freqEvento), datasets: [{ data: Object.values(freqEvento), backgroundColor: PALETTE, borderWidth: 0, hoverOffset: 8 }] },
-      options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: getThemeColors().textMuted, font: { family: "'Source Sans 3'", weight: 600 }, padding: 16, usePointStyle: true } } }, cutout: '60%' }
+  const theme = getThemeColors();
+
+  const isVentasVis = !document.getElementById('panel-ventas')?.classList.contains('hidden');
+  const isLogisticaVis = !document.getElementById('panel-logistica')?.classList.contains('hidden');
+  const isClientesVis = !document.getElementById('panel-clientes')?.classList.contains('hidden');
+
+  if (isVentasVis) {
+    // 1. Line: Histórico Mensual de Ingresos (panel-ventas)
+    const lineData = {};
+    arr.forEach(r => {
+      if (r.fechaEvento && r.montoTotal) {
+        const date = new Date(r.fechaEvento + "T00:00:00");
+        const month = date.toLocaleString('es-MX', { month: 'short', year: 'numeric' });
+        lineData[month] = (lineData[month] || 0) + r.montoTotal;
+      }
     });
-  }
-  // Barras — ingresos por salón
-  const ingSalon = {};
-  arr.forEach(r => { if (r.salonSeleccionado) ingSalon[r.salonSeleccionado] = (ingSalon[r.salonSeleccionado]||0) + (r.montoTotal||0); });
-  if (chartBarrasInstance) chartBarrasInstance.destroy();
-  const ctxB = document.getElementById('chartIngresosSalon')?.getContext('2d');
-  if (ctxB && Object.keys(ingSalon).length) {
-    chartBarrasInstance = new Chart(ctxB, {
-      type: 'bar',
-      data: { labels: Object.keys(ingSalon), datasets: [{ label: 'Ingresos', data: Object.values(ingSalon), backgroundColor: ['#C9A227','#1F5A3D','#3b82f6'], borderRadius: 8, barThickness: 48 }] },
-      options: { responsive: true, plugins: { legend: { display: false } }, scales: {
-        x: { ticks: { color: getThemeColors().textMuted, font: { weight: 600 } }, grid: { display: false } },
-        y: { ticks: { color: getThemeColors().textMuted, callback: v => '$'+v.toLocaleString('es-MX') }, grid: { color: getThemeColors().gridLine } }
-      }}
+  if (chartLineIngresosInstance) chartLineIngresosInstance.destroy();
+  const ctxLine = document.getElementById('chartLineIngresos')?.getContext('2d');
+  if (ctxLine && Object.keys(lineData).length) {
+    chartLineIngresosInstance = new Chart(ctxLine, {
+      type: 'line',
+      data: {
+        labels: Object.keys(lineData),
+        datasets: [{
+          label: 'Ingresos',
+          data: Object.values(lineData),
+          borderColor: '#C9A227',
+          backgroundColor: 'rgba(201,162,39,0.2)',
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: '#1F5A3D',
+          pointBorderColor: '#fff',
+          pointRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: theme.textMuted }, grid: { display: false } },
+          y: { ticks: { color: theme.textMuted, callback: v => '$'+v.toLocaleString('es-MX') }, grid: { color: theme.gridLine } }
+        }
+      }
     });
   }
 
-  // ── Barras horizontales duales — Distribución de Paquetes ──────────────
-  // Eje X primario (abajo): número de reservas — dorado
-  // Eje X secundario (arriba): ingresos generados — naranja
-  const freqPaqG = {};
-  const ingPaqG  = {};
+  // 2. Bar: Ingresos por Salón (panel-ventas)
+  const ingSalon = {};
+  arr.forEach(r => { if (r.salonSeleccionado) ingSalon[r.salonSeleccionado] = (ingSalon[r.salonSeleccionado]||0) + (r.montoTotal||0); });
+  if (chartIngresosSalonInstance) chartIngresosSalonInstance.destroy();
+  const ctxB = document.getElementById('chartIngresosSalon')?.getContext('2d');
+  if (ctxB && Object.keys(ingSalon).length) {
+    chartIngresosSalonInstance = new Chart(ctxB, {
+      type: 'bar',
+      data: { labels: Object.keys(ingSalon), datasets: [{ label: 'Ingresos', data: Object.values(ingSalon), backgroundColor: ['#C9A227','#1F5A3D','#3b82f6'], borderRadius: 8, barThickness: 48 }] },
+      options: { responsive: true, plugins: { legend: { display: false } }, scales: {
+        x: { ticks: { color: theme.textMuted, font: { weight: 600 } }, grid: { display: false } },
+        y: { ticks: { color: theme.textMuted, callback: v => '$'+v.toLocaleString('es-MX') }, grid: { color: theme.gridLine } }
+      }}
+    });
+  }
+  } // Fin panel-ventas
+
+  if (isLogisticaVis) {
+  // 4. Radar: Densidad Invitados (panel-logistica)
+  const guestsSalon = { 'Balam': { total: 0, count: 0 }, 'Kukulcán': { total: 0, count: 0 }, 'Diamante': { total: 0, count: 0 } };
   arr.forEach(r => {
-    if (r.tipoPaquete) {
-      freqPaqG[r.tipoPaquete] = (freqPaqG[r.tipoPaquete] || 0) + 1;
-      ingPaqG[r.tipoPaquete]  = (ingPaqG[r.tipoPaquete]  || 0) + (r.montoTotal || 0);
+    if (r.salonSeleccionado && guestsSalon[r.salonSeleccionado] !== undefined && r.numeroInvitados) {
+      guestsSalon[r.salonSeleccionado].total += parseInt(r.numeroInvitados);
+      guestsSalon[r.salonSeleccionado].count += 1;
     }
   });
-  if (chartPaquetesInstance) chartPaquetesInstance.destroy();
-  const ctxP = document.getElementById('chartPaquetes')?.getContext('2d');
-  const paqLabels = Object.keys(freqPaqG);
-  if (ctxP && paqLabels.length) {
-    chartPaquetesInstance = new Chart(ctxP, {
-      type: 'bar',
+  const radarLabels = Object.keys(guestsSalon);
+  const radarData = radarLabels.map(s => guestsSalon[s].count ? Math.round(guestsSalon[s].total / guestsSalon[s].count) : 0);
+  if (chartRadarDensidadInstance) chartRadarDensidadInstance.destroy();
+  const ctxRadar = document.getElementById('chartRadarDensidad')?.getContext('2d');
+  if (ctxRadar && radarData.some(v => v > 0)) {
+    chartRadarDensidadInstance = new Chart(ctxRadar, {
+      type: 'radar',
       data: {
-        labels: paqLabels,
-        datasets: [
-          {
-            label: '# Reservas',
-            data: paqLabels.map(p => freqPaqG[p] || 0),
-            backgroundColor: 'rgba(201,162,39,.8)',
-            borderColor: 'rgba(201,162,39,1)',
-            borderWidth: 1,
-            borderRadius: 6,
-            borderSkipped: false,
-            xAxisID: 'xCount',
-          },
-          {
-            label: 'Ingresos (MXN)',
-            data: paqLabels.map(p => ingPaqG[p] || 0),
-            backgroundColor: 'rgba(249,115,22,.75)',
-            borderColor: 'rgba(249,115,22,1)',
-            borderWidth: 1,
-            borderRadius: 6,
-            borderSkipped: false,
-            xAxisID: 'xIng',
-          },
-        ]
+        labels: radarLabels,
+        datasets: [{
+          label: 'Promedio Invitados',
+          data: radarData,
+          backgroundColor: 'rgba(31, 90, 61, 0.4)',
+          borderColor: '#1F5A3D',
+          pointBackgroundColor: '#C9A227',
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: '#C9A227'
+        }]
       },
       options: {
-        indexAxis: 'y',
         responsive: true,
-        interaction: { mode: 'index', axis: 'y' },
-        plugins: {
-          legend: { display: false }, // leyenda manual en HTML
-          tooltip: {
-            backgroundColor: getThemeColors().tooltipBg,
-            borderColor: 'rgba(255,255,255,.1)',
-            borderWidth: 1,
-            titleColor: '#C9A227',
-            bodyColor: getThemeColors().textMain,
-            padding: 10,
-            callbacks: {
-              label: ctx => {
-                if (ctx.datasetIndex === 0) return `  Reservas: ${ctx.raw}`;
-                return `  Ingresos: $${Number(ctx.raw).toLocaleString('es-MX')}`;
-              }
-            }
-          }
-        },
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
         scales: {
-          y: {
-            ticks: { color: getThemeColors().textMain, font: { weight: 700, size: 13 } },
-            grid: { display: false },
-          },
-          xCount: {
-            axis: 'x',
-            position: 'bottom',
-            ticks: { color: 'rgba(201,162,39,.8)', font: { weight: 600 }, maxTicksLimit: 6 },
-            grid:  { color: getThemeColors().gridLine },
-            title: { display: true, text: 'Número de Reservas', color: '#C9A227', font: { size: 10, weight: 700 } }
-          },
-          xIng: {
-            axis: 'x',
-            position: 'top',
-            ticks: {
-              color: 'rgba(249,115,22,.85)',
-              font: { weight: 600 },
-              maxTicksLimit: 6,
-              callback: v => {
-                if (v === 0) return '$0';
-                return v >= 1000 ? '$' + (v / 1000).toFixed(0) + 'k' : '$' + v;
-              }
-            },
-            grid: { display: false },
-            title: { display: true, text: 'Ingresos (MXN)', color: '#f97316', font: { size: 10, weight: 700 } }
+          r: {
+            angleLines: { color: theme.gridLine },
+            grid: { color: theme.gridLine },
+            pointLabels: { color: theme.textMain, font: { family: "'Source Sans 3'", weight: 600, size: 13 } },
+            ticks: { display: false, backdropColor: 'transparent' }
           }
         }
       }
     });
   }
+
+  // 5. Pie: Días de la semana (panel-logistica)
+  const freqDias = { 'Dom':0, 'Lun':0, 'Mar':0, 'Mié':0, 'Jue':0, 'Vie':0, 'Sáb':0 };
+  const diasArr = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+  arr.forEach(r => {
+    if (r.fechaEvento) {
+      const [y, m, d] = r.fechaEvento.split('-');
+      const date = new Date(y, m - 1, d);
+      freqDias[diasArr[date.getDay()]] += 1;
+    }
+  });
+  if (chartPieDiasInstance) chartPieDiasInstance.destroy();
+  const ctxPie = document.getElementById('chartPieDias')?.getContext('2d');
+  const validDias = Object.keys(freqDias).filter(k => freqDias[k] > 0);
+  if (ctxPie && validDias.length) {
+    chartPieDiasInstance = new Chart(ctxPie, {
+      type: 'pie',
+      data: {
+        labels: validDias,
+        datasets: [{
+          data: validDias.map(d => freqDias[d]),
+          backgroundColor: PALETTE,
+          borderWidth: 1,
+          borderColor: theme.bgModal
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'right', labels: { color: theme.textMuted, usePointStyle: true, boxWidth: 8 } } }
+      }
+    });
+  }
+
+  // 6. Dona: Estados de solicitudes (panel-logistica)
+  const freqEstados = {};
+  arr.forEach(r => { if (r.estado) freqEstados[r.estado] = (freqEstados[r.estado]||0)+1; });
+  if (chartDonaEstadosInstance) chartDonaEstadosInstance.destroy();
+  const ctxEstados = document.getElementById('chartDonaEstados')?.getContext('2d');
+  if (ctxEstados && Object.keys(freqEstados).length) {
+    const estadoColors = Object.keys(freqEstados).map(e => ESTADO_COLOR[e] || '#C9A227');
+    chartDonaEstadosInstance = new Chart(ctxEstados, {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(freqEstados),
+        datasets: [{ data: Object.values(freqEstados), backgroundColor: estadoColors, borderWidth: 1, borderColor: theme.bgModal }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: theme.textMuted, usePointStyle: true, boxWidth: 8 } } }, cutout: '65%' }
+    });
+  }
+  } // Fin panel-logistica
+
+  if (isClientesVis) {
+  // 7. Dona: Tipo de Evento (panel-clientes)
+  const freqEvento = {};
+  arr.forEach(r => { if (r.tipoEvento) freqEvento[r.tipoEvento] = (freqEvento[r.tipoEvento]||0)+1; });
+  if (chartTipoEventoInstance) chartTipoEventoInstance.destroy();
+  const ctxD = document.getElementById('chartTipoEvento')?.getContext('2d');
+  if (ctxD && Object.keys(freqEvento).length) {
+    chartTipoEventoInstance = new Chart(ctxD, {
+      type: 'doughnut',
+      data: { labels: Object.keys(freqEvento), datasets: [{ data: Object.values(freqEvento), backgroundColor: PALETTE, borderWidth: 0, hoverOffset: 8 }] },
+      options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: theme.textMuted, font: { family: "'Source Sans 3'", weight: 600 }, padding: 16, usePointStyle: true } } }, cutout: '60%' }
+    });
+  }
+
+  // 8. Horizontal Bar: Ticket Promedio por Evento (panel-clientes)
+  const ticketEvento = {};
+  arr.forEach(r => {
+    if (r.tipoEvento && r.montoTotal) {
+      if (!ticketEvento[r.tipoEvento]) ticketEvento[r.tipoEvento] = { total: 0, count: 0 };
+      ticketEvento[r.tipoEvento].total += r.montoTotal;
+      ticketEvento[r.tipoEvento].count += 1;
+    }
+  });
+  if (chartBarTicketPromedioInstance) chartBarTicketPromedioInstance.destroy();
+  const ctxTicket = document.getElementById('chartBarTicketPromedio')?.getContext('2d');
+  const ticketLabels = Object.keys(ticketEvento);
+  if (ctxTicket && ticketLabels.length) {
+    const avgData = ticketLabels.map(t => Math.round(ticketEvento[t].total / ticketEvento[t].count));
+    chartBarTicketPromedioInstance = new Chart(ctxTicket, {
+      type: 'bar',
+      data: {
+        labels: ticketLabels,
+        datasets: [{
+          label: 'Ticket Promedio',
+          data: avgData,
+          backgroundColor: '#C9A227',
+          borderRadius: 4
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: theme.textMuted, callback: v => '$'+v.toLocaleString('es-MX') }, grid: { color: theme.gridLine } },
+          y: { ticks: { color: theme.textMuted, font: { weight: 600 } }, grid: { display: false } }
+        }
+      }
+    });
+  }
+
+  // 9. Scatter: Correlación Invitados vs Inversión (panel-clientes)
+  const scatterData = [];
+  arr.forEach(r => {
+    if (r.numeroInvitados && r.montoTotal) {
+      scatterData.push({ x: parseInt(r.numeroInvitados), y: r.montoTotal, label: r.tipoEvento || 'Otro' });
+    }
+  });
+  if (chartScatterCorrelacionInstance) chartScatterCorrelacionInstance.destroy();
+  const ctxScatter = document.getElementById('chartScatterCorrelacion')?.getContext('2d');
+  if (ctxScatter && scatterData.length) {
+    chartScatterCorrelacionInstance = new Chart(ctxScatter, {
+      type: 'scatter',
+      data: {
+        datasets: [{
+          label: 'Reservaciones',
+          data: scatterData,
+          backgroundColor: 'rgba(31, 90, 61, 0.6)',
+          borderColor: '#1F5A3D',
+          pointRadius: 6,
+          pointHoverRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { 
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => {
+                const d = ctx.raw;
+                return `${d.label}: ${d.x} px, $${d.y.toLocaleString('es-MX')}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: { title: { display: true, text: 'Número de Invitados', color: theme.textMain }, ticks: { color: theme.textMuted }, grid: { color: theme.gridLine } },
+          y: { title: { display: true, text: 'Monto Total', color: theme.textMain }, ticks: { color: theme.textMuted, callback: v => '$'+v.toLocaleString('es-MX') }, grid: { color: theme.gridLine } }
+        }
+      }
+    });
+  }
+  } // Fin panel-clientes
+
 } // fin actualizarGraficas
 
 // ── Módulo 5: FullCalendar ────────────────────────────────────
@@ -357,10 +494,8 @@ function aplicarFiltros(arr) {
 function refrescar() {
   const f = aplicarFiltros(reservacionesCache);
   actualizarKPIsBI(f);
-  // Solo redibuja las gráficas si la sección analítica es visible.
-  // Chart.js lanza una excepción con canvas de display:none (dimensiones 0)
-  // que cortaría la ejecución antes de llegar a renderizarLista.
-  const analyticsVisible = !document.getElementById('sec-analytics')?.classList.contains('hidden');
+  // Redibuja las gráficas si cualquier panel analítico es visible
+  const analyticsVisible = ['panel-ventas', 'panel-logistica', 'panel-clientes'].some(id => !document.getElementById(id)?.classList.contains('hidden'));
   if (analyticsVisible) {
     try { actualizarGraficas(f); } catch (e) { console.warn('Charts skip:', e); }
   }
@@ -496,20 +631,40 @@ async function cambiarEstado(id, nuevoEstado) {
 
 // ── Módulo 9: Navegación entre secciones ──────────────────────
 function showSection(id) {
-  ['sec-reservaciones','sec-analytics'].forEach(s => {
+  ['sec-reservaciones', 'panel-ventas', 'panel-logistica', 'panel-clientes'].forEach(s => {
     document.getElementById(s)?.classList.toggle('hidden', s !== id);
   });
   document.querySelectorAll('.nav-link[id^="nav-"]').forEach(l => l.classList.remove('active'));
-  const navId = 'nav-' + id.replace('sec-','');
+  const navId = 'nav-' + id.replace('sec-', '');
   document.getElementById(navId)?.classList.add('active');
-  // Forzar resize de charts al mostrar analytics
-  if (id === 'sec-analytics') {
-    setTimeout(() => {
-      chartDonaInstance?.resize();
-      chartBarrasInstance?.resize();
-      chartPaquetesInstance?.resize();
-    }, 100);
-  }
+}
+
+function showAnalyticsSection(panelId) {
+  ['sec-reservaciones', 'panel-ventas', 'panel-logistica', 'panel-clientes'].forEach(s => {
+    document.getElementById(s)?.classList.toggle('hidden', s !== panelId);
+  });
+  document.querySelectorAll('.nav-link[id^="nav-"]').forEach(l => l.classList.remove('active'));
+  const navId = 'nav-analytics-' + panelId.replace('panel-', '');
+  document.getElementById(navId)?.classList.add('active');
+  
+  // Al cambiar de panel, forzamos actualizar las gráficas
+  refrescar();
+  
+  // Forzar redibujado de charts en el panel activo
+  setTimeout(() => {
+    if (panelId === 'panel-ventas') {
+      chartLineIngresosInstance?.resize();
+      chartIngresosSalonInstance?.resize();
+    } else if (panelId === 'panel-logistica') {
+      chartRadarDensidadInstance?.resize();
+      chartPieDiasInstance?.resize();
+      chartDonaEstadosInstance?.resize();
+    } else if (panelId === 'panel-clientes') {
+      chartTipoEventoInstance?.resize();
+      chartBarTicketPromedioInstance?.resize();
+      chartScatterCorrelacionInstance?.resize();
+    }
+  }, 100);
 }
 
 // limpiarFiltros — función global: usada por la barra de filtros
@@ -723,5 +878,6 @@ window.limpiarFiltros = limpiarFiltros;
 window.exportarExcel = exportarExcel;
 window.exportarCSV = exportarCSV;
 window.showSection = showSection;
+window.showAnalyticsSection = showAnalyticsSection;
 window.refrescar = refrescar;
 window.cerrarExportMenu = cerrarExportMenu;
