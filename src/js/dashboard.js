@@ -607,13 +607,13 @@ function renderizarLista(arr) {
 async function cambiarEstado(id, nuevoEstado) {
   const result = await Swal.fire({
     title: '¿Cambiar estado?',
-    text: `La reservación pasará a: ${nuevoEstado}`,
+    text: `La reservación pasará a: ${nuevoEstado}. Se enviará una notificación por correo al cliente.`,
     icon: 'question',
     showCancelButton: true,
     confirmButtonText: 'Confirmar',
     cancelButtonText: 'Cancelar',
     confirmButtonColor: '#C9A227',
-    cancelButtonColor: 'rgba(255,255,255,.1)',
+    cancelButtonColor: '#6b7280',
     background: getThemeColors().bgModal,
     color: getThemeColors().textModal,
     iconColor: '#C9A227'
