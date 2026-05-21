@@ -14,6 +14,9 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db   = firebase.firestore();
 
+// ── Inicialización de EmailJS (notificaciones de cambio de estado) ──
+emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
+
 // ── Estado global ──────────────────────────────────────────────
 let reservacionesCache = [];
 let calendarInstance    = null;
@@ -600,7 +603,7 @@ function renderizarLista(arr) {
   }).join('');
 }
 
-// ── Módulo 8: Cambiar Estado con SweetAlert2 ──────────────────
+// ── Módulo 8: Cambiar Estado con SweetAlert2 + Notificación EmailJS ──
 async function cambiarEstado(id, nuevoEstado) {
   const result = await Swal.fire({
     title: '¿Cambiar estado?',
@@ -621,10 +624,38 @@ async function cambiarEstado(id, nuevoEstado) {
     return;
   }
   try {
+    // Recuperar datos actuales de la reservación para el correo
+    const doc = await db.collection('reservaciones').doc(id).get();
+    if (!doc.exists) {
+      Swal.fire({ title: 'Error', text: 'La reservación no fue encontrada.', icon: 'error', background: getThemeColors().bgModal, color: getThemeColors().textModal });
+      refrescar();
+      return;
+    }
+    const data = doc.data();
+
+    // Actualizar estado en Firestore
     await db.collection('reservaciones').doc(id).update({
       estado: nuevoEstado,
       actualizadoEn: firebase.firestore.FieldValue.serverTimestamp()
     });
+
+    // Enviar notificación por correo al cliente vía EmailJS
+    emailjs.send(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      import.meta.env.VITE_EMAILJS_TEMPLATE_STATUS_ID,
+      {
+        clienteEmpresa:    data.clienteEmpresa || 'Cliente',
+        estado:            nuevoEstado,
+        salonSeleccionado: data.salonSeleccionado || '—',
+        fechaEvento:       data.fechaEvento || '—',
+        tipoEvento:        data.tipoEvento || '—',
+        tipoPaquete:       data.tipoPaquete || '—',
+        email_cliente:     data.usuario || data.email
+      }
+    ).then(
+      (response) => console.log('EmailJS: correo de cambio de estado enviado con éxito', response),
+      (error) => console.error('EmailJS: error al enviar correo de cambio de estado', error)
+    );
     // onSnapshot actualizará automáticamente
   } catch (e) {
     Swal.fire({ title: 'Error', text: e.message, icon: 'error', background: getThemeColors().bgModal, color: getThemeColors().textModal });
