@@ -38,8 +38,6 @@ function iniciarGoogleIdentity() {
   });
   gsiInited = true;
 }
-iniciarGoogleAPI();
-iniciarGoogleIdentity();
 
 // ── Estado global ──────────────────────────────────────────────
 let reservacionesCache = [];
@@ -82,6 +80,8 @@ auth.onAuthStateChanged(async (user) => {
 
 // ── Módulo 2: onSnapshot (tiempo real) ────────────────────────
 function inicializarDashboard() {
+  iniciarGoogleAPI();
+  iniciarGoogleIdentity();
   inicializarCalendario();
   setupListeners();
   mostrarSkeletons();   // Estado de carga antes del primer onSnapshot
