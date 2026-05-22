@@ -17,6 +17,30 @@ const db   = firebase.firestore();
 // ── Inicialización de EmailJS (notificaciones de cambio de estado) ──
 emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
 
+// ── Google Calendar API & Identity Services ──
+let tokenClient;
+let gapiInited = false;
+let gsiInited = false;
+
+function iniciarGoogleAPI() {
+  gapi.load('client', async () => {
+    await gapi.client.init({
+      discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
+    });
+    gapiInited = true;
+  });
+}
+function iniciarGoogleIdentity() {
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+    scope: 'https://www.googleapis.com/auth/calendar.events',
+    callback: '',
+  });
+  gsiInited = true;
+}
+iniciarGoogleAPI();
+iniciarGoogleIdentity();
+
 // ── Estado global ──────────────────────────────────────────────
 let reservacionesCache = [];
 let calendarInstance    = null;
@@ -603,6 +627,52 @@ function renderizarLista(arr) {
   }).join('');
 }
 
+// ── Integración con Google Calendar ───────────────────────────
+async function registrarEventoEnGoogle(reservaData) {
+  const correoCliente = reservaData.usuario || reservaData.email || '';
+  const event = {
+    'summary': `EVENTO: ${reservaData.tipoEvento} - ${reservaData.clienteEmpresa}`.toUpperCase(),
+    'location': `Salón ${reservaData.salonSeleccionado}, Terraza Alborada, Valladolid, Yuc.`,
+    'description': `Paquete: ${reservaData.tipoPaquete}\nCorreo cliente: ${correoCliente}`,
+    'start': {
+      'dateTime': `${reservaData.fechaEvento}T12:00:00`,
+      'timeZone': 'America/Merida',
+    },
+    'end': {
+      'dateTime': `${reservaData.fechaEvento}T22:00:00`,
+      'timeZone': 'America/Merida',
+    },
+    'attendees': [
+      {'email': correoCliente}
+    ],
+  };
+
+  const insertEvent = async () => {
+    try {
+      await gapi.client.calendar.events.insert({
+        'calendarId': 'primary',
+        'resource': event,
+      });
+      Swal.fire({ title: 'Éxito', text: 'Evento sincronizado en Google Calendar', icon: 'success', background: getThemeColors().bgModal, color: getThemeColors().textModal });
+    } catch (err) {
+      console.error("Error al insertar en Google Calendar:", err);
+      Swal.fire({ title: 'Error', text: 'No se pudo sincronizar con Google Calendar', icon: 'error', background: getThemeColors().bgModal, color: getThemeColors().textModal });
+    }
+  };
+
+  if (gapi.client.getToken() === null) {
+    tokenClient.callback = async (resp) => {
+      if (resp.error !== undefined) {
+        throw (resp);
+      }
+      await insertEvent();
+    };
+    tokenClient.requestAccessToken({ prompt: 'consent' });
+  } else {
+    await insertEvent();
+  }
+}
+
 // ── Módulo 8: Cambiar Estado con SweetAlert2 + Notificación EmailJS ──
 async function cambiarEstado(id, nuevoEstado) {
   const result = await Swal.fire({
@@ -638,6 +708,13 @@ async function cambiarEstado(id, nuevoEstado) {
       estado: nuevoEstado,
       actualizadoEn: firebase.firestore.FieldValue.serverTimestamp()
     });
+
+    if (nuevoEstado === "Confirmado") {
+      const reservaDoc = await db.collection('reservaciones').doc(id).get();
+      if (reservaDoc.exists) {
+        await registrarEventoEnGoogle(reservaDoc.data());
+      }
+    }
 
     // Enviar notificación por correo al cliente vía EmailJS
     emailjs.send(
