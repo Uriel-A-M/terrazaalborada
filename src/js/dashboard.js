@@ -633,7 +633,7 @@ async function registrarEventoEnGoogle(reservaData) {
   const event = {
     'summary': `EVENTO: ${reservaData.tipoEvento} - ${reservaData.clienteEmpresa}`.toUpperCase(),
     'location': `Salón ${reservaData.salonSeleccionado}, Terraza Alborada, Valladolid, Yuc.`,
-    'description': `Paquete: ${reservaData.tipoPaquete}\nCorreo cliente: ${correoCliente}`,
+    'description': `Paquete: ${reservaData.tipoPaquete}\nInvitados: ${reservaData.numeroInvitados || '—'}\nCorreo cliente: ${correoCliente}`,
     'start': {
       'dateTime': `${reservaData.fechaEvento}T12:00:00`,
       'timeZone': 'America/Merida',
@@ -677,7 +677,7 @@ async function registrarEventoEnGoogle(reservaData) {
 async function cambiarEstado(id, nuevoEstado) {
   const result = await Swal.fire({
     title: '¿Cambiar estado?',
-    text: `La reservación pasará a: ${nuevoEstado}. Se enviará una notificación por correo al cliente.`,
+    text: `La reservación pasará a: ${nuevoEstado}.${nuevoEstado !== 'Finalizado' ? ' Se enviará una notificación por correo al cliente.' : ''}`,
     icon: 'question',
     showCancelButton: true,
     confirmButtonText: 'Confirmar',
@@ -716,23 +716,25 @@ async function cambiarEstado(id, nuevoEstado) {
       }
     }
 
-    // Enviar notificación por correo al cliente vía EmailJS
-    emailjs.send(
-      import.meta.env.VITE_EMAILJS_SERVICE_ID,
-      import.meta.env.VITE_EMAILJS_TEMPLATE_STATUS_ID,
-      {
-        clienteEmpresa:    data.clienteEmpresa || 'Cliente',
-        estado:            nuevoEstado,
-        salonSeleccionado: data.salonSeleccionado || '—',
-        fechaEvento:       data.fechaEvento || '—',
-        tipoEvento:        data.tipoEvento || '—',
-        tipoPaquete:       data.tipoPaquete || '—',
-        email_cliente:     data.usuario || data.email
-      }
-    ).then(
-      (response) => console.log('EmailJS: correo de cambio de estado enviado con éxito', response),
-      (error) => console.error('EmailJS: error al enviar correo de cambio de estado', error)
-    );
+    // Enviar notificación por correo al cliente vía EmailJS (excepto si es Finalizado)
+    if (nuevoEstado !== 'Finalizado') {
+      emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_STATUS_ID,
+        {
+          clienteEmpresa:    data.clienteEmpresa || 'Cliente',
+          estado:            nuevoEstado,
+          salonSeleccionado: data.salonSeleccionado || '—',
+          fechaEvento:       data.fechaEvento || '—',
+          tipoEvento:        data.tipoEvento || '—',
+          tipoPaquete:       data.tipoPaquete || '—',
+          email_cliente:     data.usuario || data.email
+        }
+      ).then(
+        (response) => console.log('EmailJS: correo de cambio de estado enviado con éxito', response),
+        (error) => console.error('EmailJS: error al enviar correo de cambio de estado', error)
+      );
+    }
     // onSnapshot actualizará automáticamente
   } catch (e) {
     Swal.fire({ title: 'Error', text: e.message, icon: 'error', background: getThemeColors().bgModal, color: getThemeColors().textModal });
