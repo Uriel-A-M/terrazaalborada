@@ -87,10 +87,15 @@ function inicializarDashboard() {
   mostrarSkeletons();   // Estado de carga antes del primer onSnapshot
   unsubscribeSnapshot = db.collection('reservaciones').onSnapshot(snapshot => {
     reservacionesCache = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    
+    // Automatizar transiciones de estado para eventos pasados
+    verificarEventosFinalizados(reservacionesCache);
+    
     const filtradas = aplicarFiltros(reservacionesCache);
+    const filtradasBI = aplicarFiltrosBI(reservacionesCache);
     actualizarKPIs(reservacionesCache);     // KPIs de gestión: siempre globales
-    actualizarKPIsBI(filtradas);            // KPIs de BI: responden a filtros
-    actualizarGraficas(filtradas);
+    actualizarKPIsBI(filtradasBI);            // KPIs de BI: responden a filtros
+    actualizarGraficas(filtradasBI);
     actualizarCalendario(filtradas);
     renderizarLista(filtradas);
   }, err => console.error('onSnapshot error:', err));
@@ -521,13 +526,63 @@ function aplicarFiltros(arr) {
     return true;
   });
 }
+function aplicarFiltrosBI(arr) {
+  const elEstadoBI = document.querySelector('.filtro-estado-bi');
+  const elDesdeBI  = document.querySelector('.filtro-fecha-desde-bi');
+  const elHastaBI  = document.querySelector('.filtro-fecha-hasta-bi');
+
+  const estadoBI = elEstadoBI ? elEstadoBI.value : 'Confirmado';
+  const desdeBI  = elDesdeBI ? elDesdeBI.value : '';
+  const hastaBI  = elHastaBI ? elHastaBI.value : '';
+
+  return arr.filter(r => {
+    if (estadoBI !== 'Todos' && r.estado !== estadoBI) return false;
+    if (desdeBI && r.fechaEvento < desdeBI) return false;
+    if (hastaBI && r.fechaEvento > hastaBI) return false;
+    return true;
+  });
+}
+async function verificarEventosFinalizados(reservaciones) {
+  // Obtener la fecha de hoy en formato local YYYY-MM-DD
+  const hoyStr = new Date().toLocaleDateString('sv-SE');
+  
+  // Filtrar reservaciones que ya pasaron y siguen en estado "Confirmado"
+  const pasadas = reservaciones.filter(r => 
+    r.estado === 'Confirmado' && 
+    r.fechaEvento && 
+    r.fechaEvento < hoyStr
+  );
+  
+  if (pasadas.length === 0) return;
+  
+  console.log(`Automatización: Detectadas ${pasadas.length} reservaciones pasadas por finalizar.`);
+  
+  // Crear lote de escritura atómico
+  const batch = db.batch();
+  
+  pasadas.forEach(r => {
+    const ref = db.collection('reservaciones').doc(r.id);
+    batch.update(ref, {
+      estado: 'Finalizado',
+      actualizadoEn: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  });
+  
+  try {
+    await batch.commit();
+    console.log(`Automatización: Se finalizaron automáticamente ${pasadas.length} reservaciones de forma exitosa.`);
+  } catch (err) {
+    console.error("Error al finalizar reservaciones automáticamente:", err);
+  }
+}
 function refrescar() {
   const f = aplicarFiltros(reservacionesCache);
-  actualizarKPIsBI(f);
+  const fBI = aplicarFiltrosBI(reservacionesCache);
+  actualizarKPIsBI(fBI);
   // Redibuja las gráficas si cualquier panel analítico es visible
   const analyticsVisible = ['panel-ventas', 'panel-logistica', 'panel-clientes'].some(id => !document.getElementById(id)?.classList.contains('hidden'));
   if (analyticsVisible) {
-    try { actualizarGraficas(f); } catch (e) { console.warn('Charts skip:', e); }
+    try { actualizarGraficas(fBI); } catch (e) { console.warn('Charts skip:', e); }
   }
   actualizarCalendario(f);
   renderizarLista(f);
@@ -787,6 +842,18 @@ function limpiarFiltros() {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
+  
+  // Limpiar filtros analíticos de BI
+  document.querySelectorAll('.filtro-estado-bi').forEach(s => {
+    s.value = 'Confirmado';
+  });
+  document.querySelectorAll('.filtro-fecha-desde-bi').forEach(i => {
+    i.value = '';
+  });
+  document.querySelectorAll('.filtro-fecha-hasta-bi').forEach(i => {
+    i.value = '';
+  });
+  
   refrescar();
 }
 
@@ -910,6 +977,69 @@ function setupListeners() {
     document.getElementById(id)?.addEventListener('change', refrescar);
   });
   document.getElementById('btnLimpiarFiltros')?.addEventListener('click', limpiarFiltros);
+
+  // Asociar botones de limpiar locales de BI
+  document.querySelectorAll('.btn-limpiar-bi').forEach(btn => {
+    btn.addEventListener('click', limpiarFiltros);
+  });
+
+  // Sincronización trilateral de filtros analíticos BI
+  
+  // 1. Sincronización de Estado Analítico
+  document.querySelectorAll('.filtro-estado-bi').forEach(select => {
+    select.addEventListener('change', (e) => {
+      const nuevoValor = e.target.value;
+      document.querySelectorAll('.filtro-estado-bi').forEach(s => {
+        s.value = nuevoValor;
+      });
+      refrescar();
+    });
+  });
+
+  // 2. Sincronización de Fecha Desde Analítica e Interacción con Filtro Global
+  document.querySelectorAll('.filtro-fecha-desde-bi').forEach(input => {
+    input.addEventListener('change', (e) => {
+      const nuevoValor = e.target.value;
+      // Sincronizar todos los inputs 'Desde' de la analítica
+      document.querySelectorAll('.filtro-fecha-desde-bi').forEach(i => {
+        i.value = nuevoValor;
+      });
+      // Sincronizar con el input global de la barra principal
+      const elGlobal = document.getElementById('filtroFechaDesde');
+      if (elGlobal) elGlobal.value = nuevoValor;
+      refrescar();
+    });
+  });
+
+  // 3. Sincronización de Fecha Hasta Analítica e Interacción con Filtro Global
+  document.querySelectorAll('.filtro-fecha-hasta-bi').forEach(input => {
+    input.addEventListener('change', (e) => {
+      const nuevoValor = e.target.value;
+      // Sincronizar todos los inputs 'Hasta' de la analítica
+      document.querySelectorAll('.filtro-fecha-hasta-bi').forEach(i => {
+        i.value = nuevoValor;
+      });
+      // Sincronizar con el input global de la barra principal
+      const elGlobal = document.getElementById('filtroFechaHasta');
+      if (elGlobal) elGlobal.value = nuevoValor;
+      refrescar();
+    });
+  });
+
+  // Sincronizar filtros globales de fecha hacia filtros de BI
+  document.getElementById('filtroFechaDesde')?.addEventListener('change', (e) => {
+    const nuevoValor = e.target.value;
+    document.querySelectorAll('.filtro-fecha-desde-bi').forEach(i => {
+      i.value = nuevoValor;
+    });
+  });
+  
+  document.getElementById('filtroFechaHasta')?.addEventListener('change', (e) => {
+    const nuevoValor = e.target.value;
+    document.querySelectorAll('.filtro-fecha-hasta-bi').forEach(i => {
+      i.value = nuevoValor;
+    });
+  });
 
   // Exportar: toggle dropdown
   const btnExportar = document.getElementById('btnExportar');

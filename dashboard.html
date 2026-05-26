@@ -212,10 +212,35 @@
 
       <!-- ===== PANEL VENTAS COMERCIAL ===== -->
       <div id="panel-ventas" class="hidden analytics-panel">
-        <div class="mb-6">
-          <h1 class="font-display text-3xl font-bold text-[#0F2A1F] dark:text-white">Ventas Comercial</h1>
-          <p class="text-sm text-[#0F2A1F]/60 dark:text-white/50 mt-1">Rendimiento financiero y distribución de
-            ingresos.</p>
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+          <div>
+            <h1 class="font-display text-3xl font-bold text-[#0F2A1F] dark:text-white">Ventas Comercial</h1>
+            <p class="text-sm text-[#0F2A1F]/60 dark:text-white/50 mt-1">Rendimiento financiero y distribución de ingresos.</p>
+          </div>
+          <!-- Barra de Filtros Analíticos -->
+          <div class="flex flex-wrap items-center gap-3 bg-white/40 dark:bg-white/5 p-2 rounded-xl border border-[#0F2A1F]/5 dark:border-white/5 transition-colors duration-[400ms]">
+            <div class="flex items-center gap-1.5">
+              <label for="filtroEstadoBIVentas" class="text-[10px] font-bold uppercase tracking-wider text-[#0F2A1F]/50 dark:text-white/40">Estatus:</label>
+              <select id="filtroEstadoBIVentas" class="filtro-estado-bi filter-input py-1 px-2.5 rounded-lg text-xs bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 text-[#0F2A1F] dark:text-white focus:border-gold focus:outline-none transition-all cursor-pointer">
+                <option value="Todos">Todos</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Confirmado" selected>Confirmado</option>
+                <option value="Finalizado">Finalizado</option>
+                <option value="Cancelado">Cancelado</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <label for="filtroFechaDesdeBIVentas" class="text-[10px] font-bold uppercase tracking-wider text-[#0F2A1F]/50 dark:text-white/40">Desde:</label>
+              <input type="date" id="filtroFechaDesdeBIVentas" class="filtro-fecha-desde-bi filter-input py-1 px-2 rounded-lg text-xs bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 text-[#0F2A1F] dark:text-white focus:border-gold focus:outline-none transition-all">
+            </div>
+            <div class="flex items-center gap-1.5">
+              <label for="filtroFechaHastaBIVentas" class="text-[10px] font-bold uppercase tracking-wider text-[#0F2A1F]/50 dark:text-white/40">Hasta:</label>
+              <input type="date" id="filtroFechaHastaBIVentas" class="filtro-fecha-hasta-bi filter-input py-1 px-2 rounded-lg text-xs bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 text-[#0F2A1F] dark:text-white focus:border-gold focus:outline-none transition-all">
+            </div>
+            <button class="btn-limpiar-bi flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold text-[#0F2A1F]/70 dark:text-white/60 border border-[#0F2A1F]/10 dark:border-white/10 hover:border-gold hover:text-gold transition-all duration-300">
+              <i class="fa-solid fa-broom"></i> Limpiar
+            </button>
+          </div>
         </div>
 
         <!-- KPIs de BI -->
@@ -307,10 +332,35 @@
 
       <!-- ===== PANEL GESTIÓN OPERATIVA ===== -->
       <div id="panel-logistica" class="hidden analytics-panel">
-        <div class="mb-6">
-          <h1 class="font-display text-3xl font-bold text-[#0F2A1F] dark:text-white">Gestión Operativa</h1>
-          <p class="text-sm text-[#0F2A1F]/60 dark:text-white/50 mt-1">Análisis de la demanda y ocupación de las
-            instalaciones.</p>
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+          <div>
+            <h1 class="font-display text-3xl font-bold text-[#0F2A1F] dark:text-white">Gestión Operativa</h1>
+            <p class="text-sm text-[#0F2A1F]/60 dark:text-white/50 mt-1">Análisis de la demanda y ocupación de las instalaciones.</p>
+          </div>
+          <!-- Barra de Filtros Analíticos -->
+          <div class="flex flex-wrap items-center gap-3 bg-white/40 dark:bg-white/5 p-2 rounded-xl border border-[#0F2A1F]/5 dark:border-white/5 transition-colors duration-[400ms]">
+            <div class="flex items-center gap-1.5">
+              <label for="filtroEstadoBILogistica" class="text-[10px] font-bold uppercase tracking-wider text-[#0F2A1F]/50 dark:text-white/40">Estatus:</label>
+              <select id="filtroEstadoBILogistica" class="filtro-estado-bi filter-input py-1 px-2.5 rounded-lg text-xs bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 text-[#0F2A1F] dark:text-white focus:border-gold focus:outline-none transition-all cursor-pointer">
+                <option value="Todos">Todos</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Confirmado" selected>Confirmado</option>
+                <option value="Finalizado">Finalizado</option>
+                <option value="Cancelado">Cancelado</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <label for="filtroFechaDesdeBILogistica" class="text-[10px] font-bold uppercase tracking-wider text-[#0F2A1F]/50 dark:text-white/40">Desde:</label>
+              <input type="date" id="filtroFechaDesdeBILogistica" class="filtro-fecha-desde-bi filter-input py-1 px-2 rounded-lg text-xs bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 text-[#0F2A1F] dark:text-white focus:border-gold focus:outline-none transition-all">
+            </div>
+            <div class="flex items-center gap-1.5">
+              <label for="filtroFechaHastaBILogistica" class="text-[10px] font-bold uppercase tracking-wider text-[#0F2A1F]/50 dark:text-white/40">Hasta:</label>
+              <input type="date" id="filtroFechaHastaBILogistica" class="filtro-fecha-hasta-bi filter-input py-1 px-2 rounded-lg text-xs bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 text-[#0F2A1F] dark:text-white focus:border-gold focus:outline-none transition-all">
+            </div>
+            <button class="btn-limpiar-bi flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold text-[#0F2A1F]/70 dark:text-white/60 border border-[#0F2A1F]/10 dark:border-white/10 hover:border-gold hover:text-gold transition-all duration-300">
+              <i class="fa-solid fa-broom"></i> Limpiar
+            </button>
+          </div>
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
           <div
@@ -344,9 +394,35 @@
 
       <!-- ===== PANEL COMPORTAMIENTO DE CLIENTES ===== -->
       <div id="panel-clientes" class="hidden analytics-panel">
-        <div class="mb-6">
-          <h1 class="font-display text-3xl font-bold text-[#0F2A1F] dark:text-white">Comportamiento de Clientes</h1>
-          <p class="text-sm text-[#0F2A1F]/60 dark:text-white/50 mt-1">Preferencias y correlaciones de gastos.</p>
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+          <div>
+            <h1 class="font-display text-3xl font-bold text-[#0F2A1F] dark:text-white">Comportamiento de Clientes</h1>
+            <p class="text-sm text-[#0F2A1F]/60 dark:text-white/50 mt-1">Preferencias y correlaciones de gastos.</p>
+          </div>
+          <!-- Barra de Filtros Analíticos -->
+          <div class="flex flex-wrap items-center gap-3 bg-white/40 dark:bg-white/5 p-2 rounded-xl border border-[#0F2A1F]/5 dark:border-white/5 transition-colors duration-[400ms]">
+            <div class="flex items-center gap-1.5">
+              <label for="filtroEstadoBIClientes" class="text-[10px] font-bold uppercase tracking-wider text-[#0F2A1F]/50 dark:text-white/40">Estatus:</label>
+              <select id="filtroEstadoBIClientes" class="filtro-estado-bi filter-input py-1 px-2.5 rounded-lg text-xs bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 text-[#0F2A1F] dark:text-white focus:border-gold focus:outline-none transition-all cursor-pointer">
+                <option value="Todos">Todos</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Confirmado" selected>Confirmado</option>
+                <option value="Finalizado">Finalizado</option>
+                <option value="Cancelado">Cancelado</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <label for="filtroFechaDesdeBIClientes" class="text-[10px] font-bold uppercase tracking-wider text-[#0F2A1F]/50 dark:text-white/40">Desde:</label>
+              <input type="date" id="filtroFechaDesdeBIClientes" class="filtro-fecha-desde-bi filter-input py-1 px-2 rounded-lg text-xs bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 text-[#0F2A1F] dark:text-white focus:border-gold focus:outline-none transition-all">
+            </div>
+            <div class="flex items-center gap-1.5">
+              <label for="filtroFechaHastaBIClientes" class="text-[10px] font-bold uppercase tracking-wider text-[#0F2A1F]/50 dark:text-white/40">Hasta:</label>
+              <input type="date" id="filtroFechaHastaBIClientes" class="filtro-fecha-hasta-bi filter-input py-1 px-2 rounded-lg text-xs bg-white/60 dark:bg-white/5 border border-[#0F2A1F]/10 dark:border-white/10 text-[#0F2A1F] dark:text-white focus:border-gold focus:outline-none transition-all">
+            </div>
+            <button class="btn-limpiar-bi flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold text-[#0F2A1F]/70 dark:text-white/60 border border-[#0F2A1F]/10 dark:border-white/10 hover:border-gold hover:text-gold transition-all duration-300">
+              <i class="fa-solid fa-broom"></i> Limpiar
+            </button>
+          </div>
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
           <div
