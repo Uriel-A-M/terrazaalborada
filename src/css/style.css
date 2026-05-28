@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --alborada-gold: #c9a227;
   --alborada-green: #1f5a3d;

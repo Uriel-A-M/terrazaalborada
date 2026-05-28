@@ -45,7 +45,7 @@ emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
 const CONFIG_NEGOCIO = {
   salones: {
     Balam:     { precio: 5000,  capacidad: 150 },
-    "Kukulc\u00e1n": { precio: 7500,  capacidad: 200 },
+  "Kukulcán": { precio: 7500,  capacidad: 200 },
     Diamante:  { precio: 12000, capacidad: 300 },
   },
   paquetes: {
